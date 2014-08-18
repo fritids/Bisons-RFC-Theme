@@ -101,6 +101,10 @@ margin-left:10px;
 #custom-form .small { width:auto; ;height:100px;}
 #custom-form img { max-width:100%;}
 
+.wp-list-table ul, .wp-list-table li  {
+    margin:0;
+}
+
 
 #custom-form .submit {
 margin:0.5em !important;
