@@ -288,7 +288,7 @@ Class Wordpress_Form
         	  $output .= $this->forminfo_tag_classes ? " class='".implode ( ' ', $this->forminfo_tag_classes )."'" : null;
               $output .= ">$forminfo</$this->forminfo_tag>";
           }
-          $output .= $this->field_parent_tag ? "<$this->field_parent_tag>" : null;
+          $output .= $this->field_parent_tag ? "</$this->field_parent_tag>" : null;
           
           // If the fieldset array is not already create, initialize it as an array
           if ( ! isset( $this->fields[$fieldset] ) ) $this->fields[$fieldset] = array();
@@ -314,7 +314,7 @@ Class Wordpress_Form
           $output = "";
           $output .= $this->label_parent_tag ? "<$this->label_parent_tag>" : null;
           $output .= "<label for='$name'>$label</label>";
-	    $output .= $this->label_parent_tag ? "</$this->label_parent_tag>" : null;
+	      $output .= $this->label_parent_tag ? "</$this->label_parent_tag>" : null;
           $output .= $this->field_parent_tag ? "<$this->field_parent_tag>" : null;
           $output .= "<input type='text'";
           $output .= $classes ? " class='$classes'" : ''; 
@@ -330,7 +330,7 @@ Class Wordpress_Form
         	  $output .= $this->forminfo_tag_classes ? " class='".implode ( ' ', $this->forminfo_tag_classes )."'" : null;
               $output .= ">$forminfo</$this->forminfo_tag>";
           }
-          $output .= $this->field_parent_tag ? "<$this->field_parent_tag>" : null;
+          $output .= $this->field_parent_tag ? "</$this->field_parent_tag>" : null;
           
           // If the fieldset array is not already create, initialize it as an array
           if ( ! isset( $this->fields[$fieldset] ) ) $this->fields[$fieldset] = array();
