@@ -57,41 +57,48 @@ function send_bison_mail($user, $subject, $content, $tags = false )
 }
 
 
-function send_mandrill_template ( $user, $template, $data, $tags = false, $subject = false )
+    function send_mandrill_template ( $user, $template, $data, $tags = false, $subject = false )
 {
-    // Get user information from Wordpress
-    $info = get_userdata( $user );
-    $email = $info->user_email;
-    $firstname = $info->user_firstname;
-    $lastname = $info->user_lastname;
     
+    $user = is_array ( $user ) ? $user : array ( $user );
+    $to = array();
+    
+    
+    foreach ( $user as $id )
+    {
+        // Get user information from Wordpress
+        $info = get_userdata( $id );
+        $email = $info->user_email;
+        $firstname = $info->user_firstname;
+        $lastname = $info->user_lastname;
+        $to[] =  array(
+                      'email' => $email,
+                      'name' => "$firstname $lastname",
+                      'type' => 'to'
+                );
+    }
     // Get email options
     $emailopt = get_option('email-settings-page');
     
     // Initialise Mandrill  
-    $mandrill = new Mandrill('ZzbBwttWRHJ41GL4BZmmsQ');
-    
-    // Prepare merge variables
-    $merge_vars = array(); 
-    foreach ($data as $key => $value )
-    {
-          $merge_vars[] = array (
-                'name'    => $key,
-                'content'  => $value
-          );
+        $mandrill = new Mandrill('ZzbBwttWRHJ41GL4BZmmsQ');
+        
+        // Prepare merge variables
+        $merge_vars = array(); 
+        foreach ($data as $key => $value )
+        {
+              $merge_vars[] = array (
+                    'name'    => $key,
+                    'content'  => $value
+              );
     }
-      
+    
+
     // Prepare message settings
     $message = array(
         'from_email' => $emailopt['new-user-email-replyto-address'],
         'from_name' => $emailopt['new-user-email-replyto-name'],
-        'to' => array(
-                array(
-                      'email' => $email,
-                      'name' => "$firstname $lastname",
-                      'type' => 'to'
-                )
-        ),
+        'to' => $to,
         'headers' => array('Reply-To' => $emailopt['new-user-email-replyto-name']),
         'important' => false,
         'track_opens' => true,
@@ -104,6 +111,7 @@ function send_mandrill_template ( $user, $template, $data, $tags = false, $subje
         'global_merge_vars' => $merge_vars,
         'tags' => array('password-resets')
     );
+    
     
     // Add optional settings
     if ( $subject ) 
@@ -128,5 +136,4 @@ function send_mandrill_template ( $user, $template, $data, $tags = false, $subje
     	echo 'A mandrill error occurred: ' . get_class($e) . ' - ' . $e->getMessage();
       throw $e;
     }
-
 }
