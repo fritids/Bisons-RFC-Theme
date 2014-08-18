@@ -2,8 +2,6 @@
 
 function redirect_restricted_areas( $query )
 {
-    
-
     global $pagenow; 
     
     // Determine whether we are currently viewing the login page
@@ -32,24 +30,19 @@ function redirect_restricted_areas( $query )
                   // If the user has the permission and the current page 
                   // is a single pageOR the archive for that post type
                   // 
-          		if ( ( ! current_user_can( $permission ) ) && (
-                  ( $query->is_single && $current_post_type == $type ) ||
-                  $query->is_post_type_archive ( $type)  ) )
-                        
-                  {
-                        // Redirect to the login url, passing the current url in the querystring
+          		if ( ( ! current_user_can( $permission ) ) 
+          		&& ( ( $query->is_single && $current_post_type == $type ) 
+          		|| $query->is_post_type_archive ( $type)  ) )     
+                {
+                    // Redirect to the login url, passing the current url in the querystring
             		$url = wp_login_url( add_query_arg ( array() ) );
-                        wp_redirect ( $url );
+                    wp_redirect ( $url );
                         
-                        // Stop script execution
-                        exit ( );
-                  }
-                        
-
+                    // Stop script execution
+                    exit ( );
+                }       
           }      
-           
     }
-
 }
 
 add_action ( 'pre_get_posts', 'redirect_restricted_areas' );
