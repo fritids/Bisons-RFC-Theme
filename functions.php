@@ -17,11 +17,21 @@ add_filter('wp_mail_content_type',create_function('', 'return "text/html"; '));
 include_once('Mandrill/Mandrill.php');
 $mandrill = new Mandrill('ZzbBwttWRHJ41GL4BZmmsQ');
 
+// Modify Dashboard menus
+include_once( 'init/admin_menus.php' );
+include_once( 'init/set_bloginfo.php' );
+include_once( 'init/enqueue_header_linked_files.php');
+include_once( 'init/sidebar.php' );
+include_once( 'init/menus.php' );
+
 // Classes
 include_once('classes/Wordpress_Form.php');
 include_once('classes/WP_List_table_copy.php');
+
+// List tables
 include_once('listTables/fixtures.php');
-include_once('helper_functions/login_fix.php');
+include_once('listTables/players_no_mem_form.php');
+include_once('listTables/membership_forms.php');
 
 // Feeds
 include_once('feeds/ical-all.php');
@@ -68,13 +78,9 @@ include_once('helper_functions/fixture_usort_by_date.php');
 include_once('helper_functions/getage.php');
 include_once('helper_functions/pencetopounds.php');
 include_once('helper_functions/datetime_string.php');
+include_once('helper_functions/login_fix.php');
 
-// Modify Dashboard menus
-include_once( 'init/admin_menus.php' );
-include_once( 'init/set_bloginfo.php' );
-include_once( 'init/enqueue_header_linked_files.php');
-include_once( 'init/sidebar.php' );
-include_once( 'init/menus.php' );
+
 
 // API Customization
 include_once( 'init/custom_roles.php' );
