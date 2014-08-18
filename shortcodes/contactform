@@ -1,0 +1,12 @@
+<?php
+function contact_form_shortcode ()
+{
+      $contactform = new Wordpress_Form ( null, null, 'post', 'Submit', 'contactform' );
+      $contactform->add_fieldset( 'contact', 'Contact Us');
+      $contactform->add_text_input('contact', 'prospective_player_name', 'Name');
+      $contactform->add_text_input('contact', 'prospective_player_email', 'Email');
+	$contactform->add_text_input('contact', 'message_subject', 'Subject');
+      $contactform->add_textarea('contact', 'message_body', 'Body');
+      return $contactform->form_output ( false ); 
+}
+add_shortcode('contactform', 'contact_form_shortcode');

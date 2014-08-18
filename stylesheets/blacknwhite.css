@@ -1,0 +1,11 @@
+/* Colors */
+h2 { color:black; } 
+h2 a { color:black; }
+a { color:black; }
+#mainheader { background:url('../images/wood-texture.jpg'); }
+#mainheader nav a { color:white; }
+.post header { border-bottom: 1px solid #efefef; }
+#sidebar h2 { border-bottom: 1px solid #efefef; }
+td { background-color: white;  }
+footer { background:black; color:white;  }
+#menu .current-menu-item a { color:black; }

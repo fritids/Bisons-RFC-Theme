@@ -1,0 +1,18 @@
+/* Colors */
+
+
+h2 { color:white; } 
+h2 a { color:white; }
+a { color:white; }
+#mainheader { color: black; }
+#mainheader { background:white; }
+#mainheader nav a { color:black; }
+.post header { border-bottom: 1px solid #5C5C5C; }
+.post a img { background: white;}
+#sidebar h2 { border-bottom: 1px solid #5C5C5C; }
+td { background-color: white;  }
+footer { background:black; color:white;  }
+#menu .current-menu-item a { color:white;  }
+#menu .current-menu-item { background-color: black;  }
+html { background: black; }
+body { color: white; }

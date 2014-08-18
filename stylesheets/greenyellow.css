@@ -1,0 +1,10 @@
+/* Colors */
+h2 { color:#7AA61D} 
+h2 a { color:#7AA61D; }
+a { color:#bfbf62;; }
+#mainheader, footer { background:#7AA61D; color:white; }
+#mainheader nav a { color:white; }
+.post header { border-bottom: 1px solid #efefef; }
+#sidebar h2 { border-bottom: 1px solid #efefef; }
+td { background-color: white;  }
+#menu .current-menu-item a { color:#7AA61D; }

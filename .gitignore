@@ -1,0 +1,5 @@
+*.class
+*.pyc
+*.pyo
+API_Wrapper/cache
+API_Wrapper/cache

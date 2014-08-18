@@ -1,0 +1,918 @@
+<?php
+    wp_enqueue_script('dynamicforms');
+    wp_enqueue_script('formvalidation');
+
+
+    // If the form has been submitted, but not by the 'edit details button'
+   if( $_POST && ! isset( $_POST['edit_details']) ) 
+    {
+        
+        // Setup new post array
+        $post = array(
+            'post_title'    => $_POST['firstname'].' '.$_POST['surname'].' '.date('Y'),
+            'post_type'     => 'membership_form',
+            'post_status'   => 'publish',
+        );
+        
+        // If a form ID has been submitted as part of the form data, then we must just be editing, if not, create a new one
+        $post = $_POST['form_id'] ? $_POST['form_id'] : wp_insert_post( $post );
+        
+      // If there is no form_id, therefore it is a newly submitted form
+      if ( ! $_POST['form_id'] )
+      {
+          
+          $user = array(
+            'first_name'            => $_POST['firstname'],
+            'last_name'             => $_POST['surname'],
+            'email'                 => $_POST['email_addy'],
+            'billing_address1'      => $_POST['streetaddyl1'],
+            'billing_address2'      => $_POST['streetaddyl2'],
+            'billing_town'          => $_POST['streetaddytown'],
+            'billing_postcode'      => $_POST['postcode'],
+          );
+            
+         
+          $return_addy = "http://".$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+          switch (  $_POST['paymethod']  ) 
+          {
+
+
+               case "Monthly Direct Debit": 
+                	$feeid = ( $_POST['playermembershiptypemonthly'] != '' ) 
+                        ? $_POST['playermembershiptypemonthly'] 
+                        : $_POST['supportermembershiptypemonthly'];
+                  
+                  $amount = pence_to_pounds ( get_post_meta( $feeid, 'fee-amount', true ), false );
+                  $setup_fee = pence_to_pounds ( $amount - get_post_meta( $feeid, 'initial-payment', true ), false );
+                
+                  $subscription_details = array(
+                        'amount'           => $amount,
+                        'setup_fee'		 => $setup_fee,
+                        'name'             => get_post_meta( $feeid, 'fee-name', true ),
+                        'description'	 => get_post_meta( $feeid, 'fee-description', true ),
+                        'interval_length'  => 1,
+                        'interval_unit'    => 'month',
+                        'currency'         => 'GBP',
+                        'user'             => $user,
+                        'state'            => $post . "+DD",
+                    ); 
+                
+                  break;
+               
+               case "Single Payment":
+			$feeid = ( $_POST['playermembershiptypesingle'] != '' ) 
+                        ? $_POST['playermembershiptypesingle'] 
+                        : $_POST['supportermembershiptypesingle'];
+
+                  $subscription_details = array(
+                        'amount'           => pence_to_pounds ( get_post_meta( $feeid, 'fee-amount', true ), false ),
+                        'name'             => get_post_meta( $feeid, 'fee-name', true ),
+                        'description'	 => get_post_meta( $feeid, 'fee-description', true ),
+                        'currency'         => 'GBP',
+                        'user'             => $user, 
+                        'state'            => $post . "+SP",                       
+                  );
+                
+                  break;
+            }
+    
+            $gocardless_url = GoCardless::new_subscription_url($subscription_details);
+            
+      }
+      
+      $errors = array();
+              
+        $singlelinefields = array(
+            'Joining as' => 'joiningas',
+            'First Name' => 'firstname',
+            'Surname' => 'surname',
+            'Gender' => 'gender',
+            'Other Gender Details'  => 'othergender',
+            'Date of Birth' => array(
+                'dob-day', 'dob-month', 'dob-year'
+            ),
+            'Email Address' => 'email_addy',
+            'Contact Number' => 'contact_number',
+            'Line 1 (Address)' => 'streetaddyl1',
+            'Line 2 (Address)' => 'streetaddyl2',
+            'Town (Address)' => 'streetaddytown',
+            'Postcode' => 'postcode',
+            'Medical Conditions or Disabilities?' => 'medconsdisabyesno',
+            'Allergies?' => 'allergiesyesno',
+            'Injuries?' => 'injuredyesno',
+            'First Name (Next of Kin)' => 'nokfirstname',
+            'Surname (Next of Kin)'    => 'noksurname',
+            'Relationship (Next of Kin)' => 'nokrelationship',
+            'Contact Number (Next of Kin)' => 'nokcontactnumber',
+            'Next of Kin Lives at Same Address?' => 'sameaddress',
+            'Street Address (Next of Kin)' => 'nokstreetaddy',
+            'Postcode (Next of Kin)' => 'nokpostcode',
+            'Other Sports and Fitness?' => 'othersports',
+            'Training hours a week?' => 'hoursaweektrain',
+            'Played Before?' => 'playedbefore',
+            'Where and for how many seasons?' => 'whereandseasons',
+            'Height' => 'height',
+            'Weight' => 'weight',
+            'How many cigarettes per day?' => 'howmanycigsperday',
+            'How did you hear about the Bisons?' => 'howdidyouhear',
+            'What can you bring to the Bisons' => 'whatcanyoubring'
+
+        );
+        
+
+        foreach ( $singlelinefields as $label => $fieldname)
+        {
+            switch ($label)
+            {
+                case "Date of Birth":
+
+                $olddobday = get_post_meta($post, 'dob-day', true);
+                $olddobmonth = get_post_meta($post, 'dob-month', true ); 
+                $olddobyear = get_post_meta($post, 'dob-year', true );
+                
+                if( $_POST['dob-day'] != $olddobday
+                 || $_POST['dob-month'] != $olddobmonth
+                 || $_POST['dob-year'] != $olddobyear )
+                {
+
+                    $infotable .= "<tr><th>Date of Birth</th>";
+                    if ( $_POST['form_id'] ) $infotable .= "<td>$olddobday/$olddobmonth/$olddobyear</td>";
+                    $infotable .= '<td>'.$_POST['dob-day'].'/'.$_POST['dob-month'].'/'.$_POST['dob-year'].'</td>';
+                    $infotable .= "</tr>";
+                    update_post_meta($post, 'dob-day', $_POST['dob-day']);
+                    update_post_meta($post, 'dob-month', $_POST['dob-month']);
+                    update_post_meta($post, 'dob-year', $_POST['dob-year']);
+                }                        
+                break;
+                
+                
+                default:
+
+                if ( $_POST[$fieldname] != ($oldfield = get_post_meta($post, $fieldname, true) ) ) 
+                {
+                    
+                    if ( $label == $email_addy) wp_update_user( array ('user_email' => $_POST['email_addy'] ) );
+                    $infotable .= "<tr><th>$label</th>";
+                    if ( $_POST['form_id'] ) $infotable .= "<td>".str_replace("\n", "<br />", $oldfield)."</td>";
+                    $infotable .= '<td>'.str_replace("\n", "<br />", $_POST[$fieldname]).'</td>';
+                    $infotable .= "</tr>";
+                    update_post_meta($post, $fieldname, $_POST[$fieldname]);
+                }
+            }
+        }
+           
+        if ( $_POST['fainting'] != get_post_meta($post, 'fainting', true) ||
+             $_POST['dizzyturns'] != get_post_meta($post, 'dizzyturns', true) ||
+             $_POST['breathlessness'] != get_post_meta($post, 'breathlessness', true) ||
+             $_POST['bloodpressure'] != get_post_meta($post, 'bloodpressure', true) ||
+             $_POST['diabetes'] != get_post_meta($post, 'diabetes', true) ||
+             $_POST['palpitations'] != get_post_meta($post, 'palpitations', true) ||
+             $_POST['chestpain'] != get_post_meta($post, 'chestpain', true) ||
+             $_POST['suddendeath'] != get_post_meta($post, 'suddendeath', true) ||
+             $_POST['smoking'] != get_post_meta($post, 'suddendeath', true) )
+        {
+            $conditions = array();
+            
+            
+            if ( get_post_meta($post, 'fainting', true) == 'on') $oldconditions[] = 'Fainting';
+            update_post_meta($post, 'fainting', $_POST['fainting']);
+            if ( $_POST['fainting'] == 'on' ) $conditions[] = 'Fainting';
+            
+            if ( get_post_meta($post, 'fainting', true) == 'on') $oldconditions[] = 'Dizzy Turns';
+            update_post_meta($post, 'dizzyturns', $_POST['dizzyturns']);
+            if ( $_POST['dizzyturns'] == 'on' ) $conditions[] = 'Dizzy Turns';
+
+            if ( get_post_meta($post, 'fainting', true) == 'on') $oldconditions[] = 'Breathlessness or being more easily tired than teammates';
+            update_post_meta($post, 'breathlessness', $_POST['breathlessness']);
+            if ( $_POST['breathlessness'] == 'on' ) $conditions[] = 'Breathlessness or being more easily tired than teammates';
+
+            if ( get_post_meta($post, 'fainting', true) == 'on') $oldconditions[] = 'History of high blood pressure';
+            update_post_meta($post, 'bloodpressure', $_POST['bloodpressure']);
+            if ( $_POST['bloodpressure'] == 'on' ) $conditions[] = 'History of high blood pressure';
+
+            if ( get_post_meta($post, 'fainting', true) == 'on') $oldconditions[] = 'Diabetes';
+            update_post_meta($post, 'diabetes', $_POST['diabetes']);
+            if ( $_POST['diabetes'] == 'on' ) $conditions[] = 'Diabetes';
+
+            if ( get_post_meta($post, 'fainting', true) == 'on') $oldconditions[] = 'Palpatations';
+            update_post_meta($post, 'palpitations', $_POST['palpitations']);
+            if ( $_POST['palpitations'] == 'on' ) $conditions[] = 'Palpatations';
+
+            if ( get_post_meta($post, 'fainting', true) == 'on') $oldconditions[] = 'Chest pain or tightness';
+            update_post_meta($post, 'chestpain', $_POST['chestpain']);
+            if ( $_POST['chestpain'] == 'on' ) $conditions[] = 'Chest Pain';
+
+            if ( get_post_meta($post, 'fainting', true) == 'on') $oldconditions[] = 'Sudden death in immediate family of anyone under 50';
+            update_post_meta($post, 'suddendeath', $_POST['suddendeath']);
+            if ( $_POST['suddendeath'] == 'on' ) $conditions[] = 'suddendeath';
+
+            if ( get_post_meta($post, 'fainting', true) == 'on') $oldconditions[] = 'Smoking';
+            update_post_meta($post, 'smoking', $_POST['smoking']);
+            if ( $_POST['smoking'] == 'on' ) $conditions[] = 'Smoking';
+
+            $conditionsstring = "";
+            for ( $ii = 0; $conditions[$ii]; $ii++ ) $conditionsstring .= ( $ii ? ', ' : null ).$conditions[$ii];
+            
+            $oldconditionstring = "";
+            for ( $ii = 0; $oldconditions[$ii]; $ii++ ) $oldconditionstring .= ( $ii ? ', ' : null ).$oldconditions[$ii];
+
+
+            $infotable .= '<tr><th>Cardiac Questionnaire</th><td>';
+            $infotable .=  $oldconditionstring ? $oldconditionstring : "None";
+            $infotable .= '</td><td>';
+            $infotable .=  $conditionsstring ? $conditionsstring : "None";
+            $infotable .= '</td></tr>';
+       }
+        
+      
+
+        $infotable .= "</tbody></table>";
+
+        for ( $i = 1; isset( $_POST['condsdisablities_name_row' . $i] ); $i++ )
+        {
+            if ( $_POST['condsdisablities_name_row' . $i] != get_post_meta($post, 'condsdisablities_name_row' . $i, true) ||
+                 $_POST['condsdisablities_drugname_row' . $i] != get_post_meta($post, 'condsdisablities_drugname_row' . $i, true) ||
+                 $_POST['condsdisablities_drugdose_freq_row' . $i] != get_post_meta($post, 'condsdisablities_drugdose_freq_row' . $i, true) ) 
+                 $newinfotable = "<h2>Conditions or Disabilities</h2><table><thead><tr><td>Condition</td><td>Medication</td><td>Dose</td></tr></thead><tbody>";
+         }
+
+        if ($_POST['medconsdisabyesno'] == "Yes")
+        { 
+            for ( $i = 1; isset( $_POST['condsdisablities_name_row' . $i] ); $i++ )
+            {
+                
+       
+        
+                update_post_meta($post, 'condsdisablities_name_row' . $i, $_POST['condsdisablities_name_row' . $i]);
+                update_post_meta($post, 'condsdisablities_drugname_row' . $i, $_POST['condsdisablities_drugname_row' . $i]);
+                update_post_meta($post, 'condsdisablities_drugdose_freq_row' . $i, $_POST['condsdisablities_drugdose_freq_row' . $i]);
+                update_post_meta($post, 'condsdisablities_rowcount', $i);
+                
+                $newinfotable .= $newinfotable ? "<tr><td>".get_post_meta($post, 'condsdisablities_name_row' . $i, true)."</td><td>".get_post_meta($post, 'condsdisablities_drugname_row' . $i, true)."</td><td>".get_post_meta($post, 'condsdisablities_drugdose_freq_row' . $i, true)."</td></tr>": null;
+            }
+        }
+        $infotable .= $newinfotable ? $newinfotable.'</tbody></table>' : null ;
+       
+  
+        for ( $i = 1; isset( $_POST['allergies_name_row' . $i] ); $i++ )
+        {
+            if ( $_POST['allergies_name_row' . $i] != get_post_meta($post, 'allergies_name_row' . $i, true) ||
+                 $_POST['allergies_drugname_row' . $i] != get_post_meta($post, 'allergies_drugname_row' . $i, true) ||
+                 $_POST['allergies_drugdose_freq_row' . $i] != get_post_meta($post, 'allergies_drugdose_freq_row' . $i, true) ) $newinfotable2 = "<h2>Allergies</h2><table><thead><tr><td>Allergy</td><td>Medication</td><td>Dose</td></tr></thead><tbody>";
+         }
+        
+        if ($_POST['allergiesyesno'] == "Yes")
+        { 
+            for ( $i = 1; isset( $_POST['allergies_name_row' . $i] ); $i++ )
+            {
+                update_post_meta($post, 'allergies_name_row' . $i, $_POST['allergies_name_row' . $i]);
+                update_post_meta($post, 'allergies_drugname_row' . $i, $_POST['allergies_drugname_row' . $i]);
+                update_post_meta($post, 'allergies_drugdose_freq_row' . $i, $_POST['allergies_drugdose_freq_row' . $i]);
+                update_post_meta($post, 'allergies_rowcount', $i);
+                $newinfotable2 .= $newinfotable2 ? "<tr><td>".get_post_meta($post, 'allergies_name_row' . $i, true)."</td><td>".get_post_meta($post, 'allergies_drugname_row' . $i, true)."</td><td>".get_post_meta($post, 'allergies_drugdose_freq_row' . $i, true)."</td></tr>": null;
+            }
+        }
+        
+        $infotable .= $newinfotable2 ? $newinfotable2.'</tbody></table>' : null;
+        
+
+        
+        for ( $i = 1; isset( $_POST['injuries_name_row' . $i] ); $i++ )
+        {
+            if ( $_POST['injuries_name_row' . $i] != get_post_meta($post, 'injuries_name_row' . $i, true) ||
+                 $_POST['injuries_when_row' . $i] != get_post_meta($post, 'injuries_when_row' . $i, true) ||
+                 $_POST['injuries_treatmentreceived_row' . $i] != get_post_meta($post, 'injuries_treatmentreceived_row' . $i, true) || 
+                 $_POST['injuries_who_row' . $i] != get_post_meta($post, 'injuries_who_row' . $i, true) ||
+                 $_POST['injuries_status_row' . $i] != get_post_meta($post, 'injuries_status_row' . $i, true) ) $newinfotable3 = "<h2>Injuries</h2><table><thead><tr><td>Injury</td><td>When</td><td>What treatment</td><td>Who treated</td><td>Injury status</td></tr></thead><tbody>";
+        }
+         
+        if ($_POST['injuredyesno'] == "Yes")
+        { 
+            for ( $i = 1; isset( $_POST['injuries_name_row' . $i] ); $i++ )
+            {
+                update_post_meta($post, 'injuries_name_row' . $i, $_POST['injuries_name_row' . $i]);
+                update_post_meta($post, 'injuries_when_row' . $i, $_POST['injuries_when_row' . $i]);
+                update_post_meta($post, 'injuries_treatmentreceived_row' . $i, $_POST['injuries_treatmentreceived_row' . $i]);
+                update_post_meta($post, 'injuries_who_row' . $i, $_POST['injuries_who_row' . $i]);
+                update_post_meta($post, 'injuries_status_row' . $i, $_POST['injuries_status_row' . $i]);
+                update_post_meta($post, 'injuries_rowcount', $i);
+                $newinfotable3 .= $newinfotable3 ? "<tr><td>".get_post_meta($post, 'injuries_name_row' . $i, true)."</td><td>".get_post_meta($post, 'injuries_when_row' . $i, true)."</td><td>".get_post_meta($post, 'injuries_treatmentreceived_row' . $i, true)."</td><td>".get_post_meta($post, 'injuries_who_row' . $i, true)."</td><td>".get_post_meta($post, 'injuries_status_row' . $i, true)."</td></tr>": null;
+            }
+        }
+        $infotable .= $newinfotable3 ? $newinfotable3.'</tbody></table>' : null;
+        
+
+        
+        update_post_meta($post, 'current', 'true');
+        update_post_meta($post, 'memtype', $_POST['memtype']);
+  
+        if ( $infotable ) 
+        {
+            // Construct info table for email
+            $infotablestart = "<table>";
+            if ( $_POST['form_id'] ) $infotablestart .= "<thead><tr><th>&nbsp;</th><th>Previous</th><th>Updated</th></tr></thead><tbody>";    
+            else $infotablestart .= "<tbody>";
+
+            $infotable = $infotablestart.$infotable;
+            $email_options = get_option('email-settings-page');
+            $subject = $email_options['newmember-information-email-subject '];
+            $content = wpautop ( $email_options['member-information-email-content'] );
+            $content = preg_replace("/(.*)@@name@@(.*)/", "$1".get_post_meta($post, 'firstname', true).' '.get_post_meta($post, 'surname', true)."$2", $content);       
+            $content = preg_replace("/(.*)@@updatetable@@(.*)/", "$1$infotable$2", $content);
+
+            send_bison_mail( $email_options['member-email-send-to'], $subject, $content );
+        }     
+}
+    
+        
+// Load the previous form data if their is one
+$current_form = new WP_Query ( array (
+    'post_type' => 'membership_form',
+    'posts_per_page' => 1,
+    'orderby'   => 'date',
+    'order'     => 'ASC',
+    'author'    => get_current_user_id()
+));
+    
+while ( $current_form->have_posts() ) 
+{
+    $current_form->the_post();
+    $date = get_the_date();
+    $form_id = get_the_id();
+    $disabled = isset( $_POST['edit_details']) ? false : true; 
+} 
+
+// If there is a resource_id in the querystring, it must returning from Gocardless, so confirm the payment and then save the resource information if it confirms properly
+if ( isset ( $_GET['resource_id'] ) )
+{
+    $confirm_params = array(
+      'resource_id'    => $_GET['resource_id'],
+      'resource_type'  => $_GET['resource_type'],
+      'resource_uri'   => $_GET['resource_uri'],
+      'signature'      => $_GET['signature']
+    );
+    
+    if (isset($_GET['state'])) {
+      $confirm_params['state'] = $_GET['state'];
+    }
+    
+    $confirmed_resource = GoCardless::confirm_resource($confirm_params);
+    
+    if ( $confirmed_resource )
+    {
+        
+        $state = explode ('+', $_GET['state']);
+        $the_post = $state[0];
+        $type = $state[1];
+        $post_author = get_post_field ( 'post_author', $the_post );
+        
+        switch ( $type )
+        {
+            
+            case "DD": 
+                
+                update_post_meta($the_post, 'payment_type', "Direct Debit" ); 
+                $resource = GoCardless_Subscription::find($_GET['resource_id']);
+                update_post_meta($the_post, 'payment_status', 7 );  // DD created, not yet taken payments
+                
+            break;
+            
+            case "SP": 
+                update_post_meta($the_post, 'payment_type', "Single Payment" );
+                $resource = GoCardless_Bill::find($_GET['resource_id']);
+                update_post_meta($the_post, 'payment_status', 2 );  // Single payment pending         
+            break;
+            
+        }
+        
+        // If user is a guest player, upgrade them
+        if ( check_user_role( 'guest_player' ) )
+        {
+            $user = new WP_User($post_author);
+            $user->remove_role( 'guest_player');
+            $user->add_role( 'player');
+        }
+        update_post_meta($the_post, 'gcl_sub_id', $_GET['resource_id'] );
+        update_post_meta($the_post, 'gcl_sub_uri', $_GET['resource_uri'] );
+        update_post_meta($the_post, 'mem_name', $resource->name );
+        update_post_meta($the_post, 'mem_status', 'Active' );
+    }
+    
+}
+  
+
+if ( ! isset ( $disabled ) )
+	$disabled = false; 
+
+if ( ! isset ( $form_id ) )
+      $form_id = NULL; 
+?>
+
+<header>
+<h2>Bristol Bisons RFC Membership Form </h2>
+</header>
+
+<?php if ( isset ( $gocardless_url ) ) : ?>
+<p class="flashmessage">In a moment, you will be redirected to a direct debit mandate form at GoCardless. Once you have finished setting up your payment information, you will be returned to this site. See you in a bit!</p>
+<script type='text/javascript'> setTimeout(function(){ document.location = '<?php echo $gocardless_url ?>'; }, 3000); </script>
+<?php endif ?>
+<?php if ( isset ( $confirmed_resource ) ) : ?>
+<p class="flashmessage">Congratulations! Your direct debit (or full payment) has now been setup - you should receive an email from GoCardless (our payment processor) very shortly. 
+<?php endif ?>           
+<?php if ( $current_form->have_posts() ) : ?>
+<p><strong>Please note that it is your responsibility to ensure that the information supplied below (particularly medical information) remains up to date</strong>. You can return to this form and make changes at any time; to do so, scroll down to the bottom and click 'Edit Details'. When you have finished, click 'Save Changes' and the committee will be notified of any changes you have made.</p>
+<?php else: ?>
+<p>Please take a moment to fill out the form below. Note that all the information supplied will remain completely <strong>confidential</strong>. Should you have any questions about anything on this form, please contact the <strong>membership secretary</strong> using the contact details at the top of the <a href='<?php echo home_url ('/players-area/') ?>'>players area</a>...</p>
+<?php endif; ?>
+<ul class='invalidformerrors'>
+    <?php foreach ( $errors as $error ) : ?>
+    <li><?php echo $error ?></li>
+    <?php endforeach ?>
+</ul>
+<form id='membershipform_payment' method="post" role="form">
+    
+    <?php get_currentuserinfo(); ?>
+
+    <?php if ($disabled) : ?>
+    <input type="hidden" name="disabled" id="disabled" value="true" />
+    <?php endif ?>
+    
+    
+    <fieldset>
+        <legend>Player or Supporter</legend>
+        <div>
+            <label>Joining as</label>
+            <select class="mustselect" name='joiningas' id='joiningas' <?php if ( $disabled ) { ?> disabled='true'<?php } ?>>
+                <option></option>
+                <option<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'joiningas', true) == "Player") { echo " selected='selected'"; } ?>>Player</option>
+                <option<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'joiningas', true) == "Supporter") { echo " selected='selected'"; } ?>>Supporter</option>
+            </select>
+            <p class='forminfo'>Please note that a supporter membership is specifically for those that want to support the team but do not want to play any rugby. If you will be playing with us, pleae make sure you choose 'player' here because we will need to take some details of your medical history for you as part of our duty of care.</p>
+        </div>
+    </fieldset>
+    
+    <fieldset>
+        <legend>Personal Details</legend>
+        <div>
+            <label class="smalllabel" for="firstname">First name</label>
+            <input type="text" class="smalltextbox notempty" name="firstname" id="firstname"<?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value='<?php echo get_post_meta($form_id, 'firstname', true) ?>'<?php } else { ?> value='<?php global $current_user; echo $current_user->user_firstname ?>'<?php } ?> />
+        </div>
+        <div>
+            <label class="smalllabel" for="surname">Surname</label>
+            <input type="text" class="smalltextbox notempty" name="surname" id="surname"<?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value='<?php echo get_post_meta($form_id, 'surname', true) ?>'<?php }  else { ?> value='<?php echo $current_user->user_lastname ?>'<?php } ?> />
+        </div>
+        <div>
+            <label>Gender</label>
+            <select class="mustselect" name='gender' id='gender' <?php if ( $disabled ) { ?> disabled='true'<?php } ?>>
+                <option></option>
+                <option<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'gender', true) == "Male") { echo " selected='selected'"; } ?>>Male</option>
+                <option<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'gender', true) == "Female") { echo " selected='selected'"; } ?>>Female</option>
+                <option<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'gender', true) == "Other") { echo " selected='selected'"; } ?>>Other</option>
+            </select>
+        </div>
+        <div id="othergender"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'gender', true) == "Other") { ?> style="display:block"<?php } ?>>
+            <label class="smalllabel" for="othergender">Other Gender Details</label>
+            <input type="text" class="smalltextbox notempty" name="othergender" <?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value='<?php echo get_post_meta($form_id, 'othergender', true) ?>'<?php } ?> />
+            <p class="forminfo">As a fully inclusive rugby club, we completely recognise that a gender designation of 'male' or 'female' is far too simplistic for the real world. However, because we are a rugby team, we are bound by <a href='http://www.rfu.com/' title='RFU Website'>RFU</a> regulations which unfortunately are categorised in simple male/female terms. Please be aware therefore that only a person who self-identifies as 'male' in some way can play in 'male' rugby. Likewise, only a person who self-identifies as 'female' in some way can play in 'female' rugby.</p>
+        </div>
+        <div>
+            <label class="smalllabel" for="dob">Date of Birth</label>
+             <div class="inlinediv">
+             <select class="norightmargin" id="dob-year" name="dob-day" <?php if ( $disabled ) { ?> disabled='true'<?php } ?>>
+                    <option value="0"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "0") { echo " selected='selected'"; } ?>></option>
+                    <option value="1"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "1") { echo " selected='selected'"; } ?>>1st</option>
+                    <option value="2"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "2") { echo " selected='selected'"; } ?>>2nd</option>
+                    <option value="3"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "3") { echo " selected='selected'"; } ?>>3rd</option>
+                    <option value="4"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "4") { echo " selected='selected'"; } ?>>4th</option>
+                    <option value="5"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "5") { echo " selected='selected'"; } ?>>5th</option>
+                    <option value="6"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "6") { echo " selected='selected'"; } ?>>6th</option>
+                    <option value="7"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "7") { echo " selected='selected'"; } ?>>7th</option>
+                    <option value="8"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "8") { echo " selected='selected'"; } ?>>8th</option>
+                    <option value="9"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "9") { echo " selected='selected'"; } ?>>9th</option>
+                    <option value="10"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "10") { echo " selected='selected'"; } ?>>10th</option>
+                    <option value="11"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "11") { echo " selected='selected'"; } ?>>11th</option>
+                    <option value="12"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "12") { echo " selected='selected'"; } ?>>12th</option>
+                    <option value="13"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "13") { echo " selected='selected'"; } ?>>13th</option>
+                    <option value="14"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "14") { echo " selected='selected'"; } ?>>14th</option>
+                    <option value="15"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "15") { echo " selected='selected'"; } ?>>15th</option>
+                    <option value="16"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "16") { echo " selected='selected'"; } ?>>16th</option>
+                    <option value="17"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "17") { echo " selected='selected'"; } ?>>17th</option>
+                    <option value="18"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "18") { echo " selected='selected'"; } ?>>18th</option>
+                    <option value="19"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "19") { echo " selected='selected'"; } ?>>19th</option>
+                    <option value="20"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "20") { echo " selected='selected'"; } ?>>20th</option>
+                    <option value="21"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "21") { echo " selected='selected'"; } ?>>21st</option>
+                    <option value="22"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "22") { echo " selected='selected'"; } ?>>22nd</option>
+                    <option value="23"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "23") { echo " selected='selected'"; } ?>>23rd</option>
+                    <option value="24"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "24") { echo " selected='selected'"; } ?>>24th</option>
+                    <option value="25"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "25") { echo " selected='selected'"; } ?>>25th</option>
+                    <option value="26"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "26") { echo " selected='selected'"; } ?>>26th</option>
+                    <option value="27"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "27") { echo " selected='selected'"; } ?>>27th</option>
+                    <option value="28"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "28") { echo " selected='selected'"; } ?>>28th</option>
+                    <option value="29"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "29") { echo " selected='selected'"; } ?>>29th</option>
+                    <option value="30"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "30") { echo " selected='selected'"; } ?>>30th</option>
+                    <option value="31"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-day', true) == "31") { echo " selected='selected'"; } ?>>31st</option>
+                </select>
+             <select class="norightmargin" id="dob-year" name="dob-month" <?php if ( $disabled ) { ?> disabled='true'<?php } ?>>
+                    <option value="0"></option>
+                    <option value="01"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-month', true) == "01") { echo " selected='selected'"; } ?>>January</option>
+                    <option value="02"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-month', true) == "02") { echo " selected='selected'"; } ?>>February</option>
+                    <option value="03"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-month', true) == "03") { echo " selected='selected'"; } ?>>March</option>
+                    <option value="04"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-month', true) == "04") { echo " selected='selected'"; } ?>>April</option>
+                    <option value="05"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-month', true) == "05") { echo " selected='selected'"; } ?>>May</option>
+                    <option value="06"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-month', true) == "06") { echo " selected='selected'"; } ?>>June</option>
+                    <option value="07"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-month', true) == "07") { echo " selected='selected'"; } ?>>July</option>
+                    <option value="08"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-month', true) == "08") { echo " selected='selected'"; } ?>>August</option>
+                    <option value="09"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-month', true) == "09") { echo " selected='selected'"; } ?>>September</option>
+                    <option value="10"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-month', true) == "10") { echo " selected='selected'"; } ?>>October</option>
+                    <option value="11"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-month', true) == "11") { echo " selected='selected'"; } ?>>November</option>
+                    <option value="12"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-month', true) == "12") { echo " selected='selected'"; } ?>>December</option>
+                </select>
+            <select class="norightmargin" id="dob-year" name="dob-year" <?php if ( $disabled ) { ?> disabled='true'<?php } ?>>
+                <option value="0"></option>
+                <?php for ($i = 1901; $i < 2014; $i++ ) : ?>
+                <option<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'dob-year', true) == $i) { echo " selected='selected'"; } ?>><?php echo $i ?></option>
+                <?php endfor ?>
+            </select>
+            </div>
+        </div>
+        <div>
+            <label class="smalllabel" for="email_addy">Email</label>
+            <input type="text" class="smalltextbox needemail" name="email_addy" id="email_addy"<?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value='<?php echo get_post_meta($form_id, 'email_addy', true) ?>'<?php } else { ?> value='<?php global $user_email; echo $user_email ?>'<?php } ?> />
+        </div>
+        <div>
+            <label class="smalllabel" for="contact_number">Contact Number</label>
+            <input type="text" class="smalltextbox needphonenum" name="contact_number" id="contact_number"<?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value='<?php echo get_post_meta($form_id, 'contact_number', true) ?>'<?php } ?> />
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Home Address</legend>
+        <div>
+            <label  class="smalllabel" for="streetaddyl1">Line 1</label>
+            <input type="text" class="smalltextbox notempty" name="streetaddyl1" id="streetaddyl1"<?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value='<?php echo get_post_meta($form_id, 'streetaddyl1', true) ?>'<?php } ?> />
+        </div>
+        <div>
+            <label  class="smalllabel" for="streetaddyl2">Line 2</label>
+            <input type="text" class="smalltextbox" name="streetaddyl2" id="streetaddyl2"<?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value='<?php echo get_post_meta($form_id, 'streetaddyl2', true) ?>'<?php } ?> />
+        </div>
+        <div>
+            <label  class="smalllabel" for="streetaddytown">Town</label>
+            <input type="text" class="smalltextbox" name="streetaddytown" id="streetaddytown"<?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value='<?php echo get_post_meta($form_id, 'streetaddytown', true) ?>'<?php } ?> />
+        </div>
+        <div>
+            <label  class="smalllabel" for="postcode">Postcode</label>
+            <input type="text" class="smalltextbox needpostcode" name="postcode" id="postcode"<?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value='<?php echo get_post_meta($form_id, 'postcode', true) ?>'<?php } ?> />
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Next of Kin</legend>
+        <p class="info">This person will be contacted in case of emergencies.</p>
+        <div>
+            <label class="smalllabel" for="nokfirstname">First name</label>
+            <input type="text" class="smalltextbox notempty" name="nokfirstname" id="nokfirstname"<?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value='<?php echo get_post_meta($form_id, 'nokfirstname', true) ?>'<?php } ?> />
+        </div>
+        <div>
+            <label class="smalllabel" for="noksurname">Surname</label>
+            <input type="text" class="smalltextbox notempty" name="noksurname" id="noksurname"<?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value='<?php echo get_post_meta($form_id, 'noksurname', true) ?>'<?php } ?> />
+        </div>
+        <div>
+            <label class="smalllabel" for="nokrelationship">Relationship</label>
+            <input type="text" class="smalltextbox notempty" name="nokrelationship" id="nokrelationship"<?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value='<?php echo get_post_meta($form_id, 'nokrelationship', true) ?>'<?php } ?> />
+        </div>
+       <div>
+            <label class="smalllabel" for="nok">Phone Number</label>
+            <input type="text" class="smalltextbox needphonenum" name="nokcontactnumber" id="nokcontactnumber"<?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value='<?php echo get_post_meta($form_id, 'nokcontactnumber', true) ?>'<?php } ?> />
+        </div>
+        <div>
+            <label>Lives at same address</label>
+            <select name='sameaddress' id='sameaddress' <?php if ( $disabled ) { ?> disabled='true'<?php } ?>>
+                <option></option>
+                <option<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'sameaddress', true) == "No") { echo " selected='selected'"; } ?>>No</option>
+                <option<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'sameaddress', true) == "Yes") { echo " selected='selected'"; } ?>>Yes</option>
+            </select>
+        </div>
+        <div id="nokaddygroup"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'sameaddress', true) == "No") { ?> style="display:block"<?php } ?>>
+            <div>
+                <label for="nokstreetaddy">Street address</label>
+                <textarea name="nokstreetaddy notempty" id="nokstreetaddy"<?php if ( $disabled ) { ?> disabled='true'<?php } ?>><?php if ( $current_form->have_posts() ) { echo get_post_meta($form_id, 'nokstreetaddy', true); } ?></textarea>
+            </div>
+            <div>
+                <label  class="smalllabel" for="nokpostcode">Postcode</label>
+                <input type="text" class="smalltextbox needpostcode" name="nokpostcode" id="nokpostcode"<?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value='<?php echo get_post_meta($form_id, 'nokpostcode', true) ?>'<?php } ?> />
+            </div>
+        </div>
+    </fieldset>
+    <div class="playersonly"<?php if ( get_post_meta($form_id, 'joiningas', true) == 'Supporter' ) echo ' style="display:none"' ?>>
+    <fieldset>
+        <legend>Medical Declaration</legend>
+        <p class="info">Please answer the next few sections as accurately and honestly as you can. In the very rare event of some kind of injury occurring, this information will help insure that medical professionals are able to do their job properly. </p>
+        <div>
+            <label>Do you have any current medical conditions or disabilities?</label>
+            <select class="mustselect" name='medconsdisabyesno' id='medconsdisabyesno' <?php if ( $disabled ) { ?> disabled='true'<?php } ?>>
+                <option></option>
+                <option<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'medconsdisabyesno', true) == "No") { echo " selected='selected'"; } ?>>No</option>
+                <option<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'medconsdisabyesno', true) == "Yes") { echo " selected='selected'"; } ?>>Yes</option>
+            </select>
+            <p class="forminfo">For example, asthma, diabetes, epilepsy, anaemia, haemophilia, viral illness, etc.</p>
+        </div>
+
+        <div>
+            <label>Do you have any allergies?</label>
+            <select class="mustselect" name='allergiesyesno' id='allergiesyesno' <?php if ( $disabled ) { ?> disabled='true'<?php } ?>>
+                <option></option>
+                <option<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'allergiesyesno', true) == "No") { echo " selected='selected'"; } ?>>No</option>
+                <option<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'allergiesyesno', true) == "Yes") { echo " selected='selected'"; } ?>>Yes</option>
+            </select>
+            <p class="forminfo">For example, bee-stings, peanut butter etc.</p>
+        </div>
+        <div>
+            <label>Have you ever been injured?</label>
+            <select class="mustselect" name='injuredyesno' id='injuredyesno' <?php if ( $disabled ) { ?> disabled='true'<?php } ?>>
+                <option></option>
+                <option<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'injuredyesno', true) == "No") { echo " selected='selected'"; } ?>>No</option>
+                <option<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'injuredyesno', true) == "Yes") { echo " selected='selected'"; } ?>>Yes</option>
+            </select>
+            <p class="forminfo">For example, concussion or a broken rib.</p>
+        </div>
+    </fieldset>
+    
+    <fieldset id="conddisablefieldset"<?php if (get_post_meta($form_id, 'medconsdisabyesno', true) == "Yes" && get_post_meta($form_id, 'joiningas', true) == "Player" ) { ?> style="display:block;"<?php } else { echo " style='display:none'"; } ?>>
+        <legend>Conditions or disabilities</legend>
+        <p class="info">Please enter the details of your condition or disability, and any medication (e.g. tablets, inhalers or creams) you take for each condition, making sure to give drug names.</p>
+        <table id="conditionsdisabilitiestable" class='center'>
+            <thead>
+                <tr>
+                    <th>Condition or disability</th>
+                    <th>Medication</th>
+                    <th>Dose and frequency</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php for ( $i = 1; $i == 1 || $i <= get_post_meta($form_id, 'condsdisablities_rowcount', true); $i++ ) : ?>
+                <tr class='clonerow'>
+                    <td><input name="condsdisablities_name_row<?php echo $i; ?>" type='text' <?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value="<?php echo get_post_meta($form_id, 'condsdisablities_name_row' . $i, true); } ?>" /></td>
+                    <td><input name="condsdisablities_drugname_row<?php echo $i; ?>" type='text' <?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value="<?php echo get_post_meta($form_id, 'condsdisablities_drugname_row' . $i, true); } ?>" /></td>
+                    <td><input name="condsdisablities_drugdose_freq_row<?php echo $i; ?>" type='text' <?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value="<?php echo get_post_meta($form_id, 'condsdisablities_drugdose_freq_row' . $i, true); } ?>" /></td>
+                </tr>
+                <?php endfor; ?>
+            </tbody>
+        </table>
+        <?php if ( ! $disabled ) { ?>
+        <button class="smallbutton removerow"<?php if ( get_post_meta($form_id, 'condsdisablities_rowcount', true) > 1 ) { ?> style='display:inline'<?php } ?>>Remove Row</button>
+        <button class="smallbutton addrow">Add Row</button>
+        <?php } ?>
+    </fieldset>
+    <fieldset id="allergiesfieldset"<?php if (get_post_meta($form_id, 'allergiesyesno', true) == "Yes" && get_post_meta($form_id, 'joiningas', true) == "Player" ) { ?> style="display:block;"<?php } else { echo " style='display:none'"; } ?>>
+        <legend>Allergies</legend>
+        <p class="info">Please enter the details of your allergy, and any medication (e.g. tablets, inhalers, creams) you use for each, making sure to give drug names.</p>
+        <table id="allergiestable" class='center'>
+            <thead>
+                <tr>
+                    <th>Allergy</th>
+                    <th>Medication</th>
+                    <th>Dose and frequency</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php for ( $i = 1; $i == 1 || $i <= get_post_meta($form_id, 'allergies_rowcount', true); $i++ ) : ?>
+                <tr class='clonerow'>
+                    <td><input name="allergies_name_row<?php echo $i; ?>" type='text' <?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value="<?php echo get_post_meta($form_id, 'allergies_name_row' . $i, true); } ?>" /></td>
+                    <td><input name="allergies_drugname_row<?php echo $i; ?>" type='text' <?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value="<?php echo get_post_meta($form_id, 'allergies_drugname_row' . $i, true); } ?>" /></td>
+                    <td><input name="allergies_drugdose_freq_row<?php echo $i; ?>" type='text' <?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value="<?php echo get_post_meta($form_id, 'allergies_drugdose_freq_row' . $i, true); } ?>" /></td>
+                </tr>
+                <?php endfor; ?>
+            </tbody>
+        </table>
+        <?php if ( ! $disabled ) { ?>
+        <button class="smallbutton removerow"<?php if ( get_post_meta($form_id, 'allergies_rowcount', true) > 1 ) { ?> style='display:inline'<?php } ?>>Remove Row</button>
+        <button class="smallbutton addrow">Add Row</button>
+        <?php } ?>
+    </fieldset>
+        <fieldset id="injuriesfieldset"<?php if (get_post_meta($form_id, 'injuredyesno', true) == "Yes" && get_post_meta($form_id, 'joiningas', true) == "Player" ) { ?> style="display:block;"<?php } else { echo " style='display:none'"; } ?>>
+        <legend>Injuries</legend>
+        <p class="info">Please list any injuries (e.g. concussion), indicating when they happened, who treated you (e.g. your doctor) and the current status of your injuries (e.g. whether they are fully recovered or not).</p>
+        <table id="injuriestable" class='center'>
+            <thead>
+                <tr>
+                    <th>Injury</th>
+                    <th>When</th>
+                    <th>Treatment received</th>
+                    <th>Who treated you</th>
+                    <th>Current status of injury</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php for ( $i = 1; $i == 1 || $i <= get_post_meta($form_id, 'injuries_rowcount', true); $i++ ) : ?>
+                <tr class='clonerow'>
+                    <td><input name="injuries_name_row<?php echo $i; ?>" type='text' <?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value="<?php echo get_post_meta($form_id, 'injuries_name_row' . $i, true); } ?>" /></td>
+                    <td><input name="injuries_when_row<?php echo $i; ?>" type='text' <?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value="<?php echo get_post_meta($form_id, 'injuries_when_row' . $i, true); } ?>" /></td>
+                    <td><input name="injuries_treatmentreceived_row<?php echo $i; ?>" type='text' <?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value="<?php echo get_post_meta($form_id, 'injuries_treatmentreceived_row' . $i, true); } ?>" /></td>
+                    <td><input name="injuries_who_row<?php echo $i; ?>" type='text' <?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value="<?php echo get_post_meta($form_id, 'injuries_who_row' . $i, true); } ?>" /></td>
+                    <td><input name="injuries_status_row<?php echo $i; ?>" type='text' <?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value="<?php echo get_post_meta($form_id, 'injuries_status_row' . $i, true); } ?>" /></td>
+
+                </tr>
+                <?php endfor; ?>
+            </tbody>
+        </table>
+        <?php if ( ! $disabled ) { ?>            
+        <button class="smallbutton removerow"<?php if ( get_post_meta($form_id, 'injuries_rowcount', true) > 1 ) { ?> style='display:inline'<?php } ?>>Remove Row</button>
+        <button class="smallbutton addrow">Add Row</button>
+        <?php } ?>
+    </fieldset>
+    
+    <fieldset>
+        <legend>Health and Fitness Assessment</legend>
+        <div>
+            <label class="smalllabel" for="othersports">In which other sports or physical activities are you involved?</label>
+            <input type="text" class="smalltextbox notempty" name="othersports" id="othersports"<?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value='<?php echo get_post_meta($form_id, 'othersports', true) ?>'<?php } ?>>
+        </div>
+        <div>
+            <label class="smalllabel" for="hoursaweektrain">How many hours a week do you train?</label>
+            <input type="text" class="smalltextbox notempty" name="hoursaweektrain" id="hoursaweektrain"<?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value='<?php echo get_post_meta($form_id, 'hoursaweektrain', true) ?>'<?php } ?>>
+        </div>
+        <div>
+            <label class="smalllabel" for="playedbefore">Have you played rugby before?</label>
+            <select name='playedbefore' id='playedbefore' <?php if ( $disabled ) { ?> disabled='true'<?php } ?>>
+                <option></option>
+                <option<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'playedbefore', true) == "No") { echo " selected='selected'"; } ?>>No</option>
+                <option<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'playedbefore', true) == "Yes") { echo " selected='selected'"; } ?>>Yes</option>
+            </select>        
+        </div>
+        <div id="howmanyseasonsgroup"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'playedbefore', true) == "Yes") { ?> style="display:block"<?php } ?>>
+            <label class="smalllabel" for="whereandseasons">Where did you play and for how many seasons?</label>
+            <input type="text" class="smalltextbox notempty" name="whereandseasons" id="whereandseasons"<?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value='<?php echo get_post_meta($form_id, 'whereandseasons', true) ?>'<?php } ?>>
+        </div>
+        <div>
+            <label class="smalllabel" for="height">Height</label>
+            <input type="text" class="smalltextbox notempty" name="height" id="height"<?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value='<?php echo get_post_meta($form_id, 'height', true) ?>'<?php } ?>>
+            <p class="forminfo">Please make sure to indicate units</p>
+        </div>
+        <div>
+            <label class="smalllabel" for="weight">Weight</label>
+            <input type="text" class="smalltextbox notempty" name="weight" id="weight"<?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value='<?php echo get_post_meta($form_id, 'weight', true) ?>'<?php } ?>>
+            <p class="forminfo">Please make sure to indicate units</p>
+
+        </div>
+    </fieldset>
+    
+    <fieldset>
+        <legend>Cardiac Questionairre</legend>
+        <p class="info">Please tick each box that applies to you.</p>
+        <div>
+        <label><input type="checkbox" name="fainting" <?php if ( $disabled ) { ?> disabled='true'<?php } if ( get_post_meta($form_id, 'fainting', true) == "on") { ?> checked="checked"<?php } ?> />Fainting</label>
+        <label><input type="checkbox" name="dizzyturns" <?php if ( $disabled ) { ?> disabled='true'<?php } if ( get_post_meta($form_id, 'dizzyturns', true) == "on") { ?> checked="checked"<?php } ?>  />Dizzy Turns</label>
+        <label><input type="checkbox" name="breathlessness" <?php if ( $disabled ) { ?> disabled='true'<?php } if ( get_post_meta($form_id, 'breathlessness', true) == "on") { ?> checked="checked"<?php } ?>  />Breathlessness or more easily tired than team-mates</label>
+        <label><input type="checkbox" name="bloodpressure" <?php if ( $disabled ) { ?> disabled='true'<?php } if ( get_post_meta($form_id, 'bloodpressure', true) == "on") { ?> checked="checked"<?php } ?>  />History of high blood pressure</label>
+        </div>
+        <div>
+        <label><input type="checkbox" name="diabetes" <?php if ( $disabled ) { ?> disabled='true'<?php } if ( get_post_meta($form_id, 'diabetes', true) == "on") { ?> checked="checked"<?php } ?>  />Diabetes</label>
+        <label><input type="checkbox" name="palpitations" <?php if ( $disabled ) { ?> disabled='true'<?php } if ( get_post_meta($form_id, 'palpitations', true) == "on") { ?> checked="checked"<?php } ?>  />Palpitations</label>
+        <label><input type="checkbox" name="chestpain" <?php if ( $disabled ) { ?> disabled='true'<?php } if ( get_post_meta($form_id, 'chestpain', true) == "on") { ?> checked="checked"<?php } ?>  />Chest Pain or Tightness</label>
+        <label><input type="checkbox" name="suddendeath" <?php if ( $disabled ) { ?> disabled='true'<?php } if ( get_post_meta($form_id, 'suddendeath', true) == "on") { ?> checked="checked"<?php } ?>  />Sudden death in immediate family of anyone under 50</label>
+        </div>
+        <div>
+        <label><input type="checkbox" id="smoking" name="smoking" <?php if ( $disabled ) { ?> disabled='true'<?php } if ( get_post_meta($form_id, 'smoking', true) == "on") { ?> checked="checked"<?php } ?>  />Smoking </label>
+        </div>
+        <div id="howmanycigs"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'smoking', true) == "On") { ?> style="display:block"<?php } ?>>
+            <label class="smalllabel" for="howmanycigsperday">How many cigarettes do you smoke per day?</label>
+            <input type="text" class="smalltextbox notempty" name="howmanycigsperday" id="weight"<?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value='<?php echo get_post_meta($form_id, 'howmanycigsperday', true) ?>'<?php } ?> />
+        </div>
+    </fieldset>
+    </div>
+    <fieldset>
+        <legend>Other</legend>
+        <div>
+            <label for="howdidyouhear">How did you hear about The Bisons?</label>
+            <textarea class='notempty' name="howdidyouhear" id="howdidyouhear"<?php if ( $disabled ) { ?> disabled='true'<?php } ?>><?php if ( $current_form->have_posts() ) { echo get_post_meta($form_id, 'howdidyouhear', true); } ?></textarea>
+        </div>
+        <div>
+            <label for="whatcanyoubring">Is there anything you can bring to the Bisons?</label>
+            <textarea name="whatcanyoubring" id="whatcanyoubring"<?php if ( $disabled ) { ?> disabled='true'<?php } ?>><?php if ( $current_form->have_posts() ) { echo get_post_meta($form_id, 'whatcanyoubring', true); } ?></textarea>
+            <p class='forminfo'><strong>Optional</strong> The Bisons is run by a team of dedicated volunteers and we are always looking for people with useful skills that could make the team even better. This doesn't have to be rugby related, for example: perhaps you are good at numbers and might be a potential treasurer, or you have some serious marketing skills to help us get the club name out there.</p>
+        </div>
+    </fieldset>
+    <?php if ( ! $current_form->have_posts() ) : ?>
+    <fieldset>
+        <legend>Payment</legend>
+        <p class="info">Please indicate how you will be paying your membership fees. Note that if you select either a direct debit or a single payment, saving this form will cause you to be redirected to another website in order to setup the direct debit. You will be returned here afterwards. If you have already paid, a committee member will need to manually approve your membership.</p>
+        <div>
+            <label class="smalllabel" for="paymethod">Payment Method</label>
+            <select class="mustselect" name="paymethod" id="paymethod">
+                <option></option>
+                <option>Monthly Direct Debit</option>
+                <option>Single Payment</option>
+            </select>
+        </div>
+        <?php 
+        $fees = new WP_Query ( array( 'post_type' => 'membership_fee', 'nopaging' => true ));
+        while ( $fees->have_posts() ) 
+        {
+            $fees->the_post();
+            
+            $the_fee = array (
+                'id'    => get_the_id(),
+                'name' => get_post_meta( get_the_id(), 'fee-name', true),
+                'initial-payment' => get_post_meta( get_the_id(), 'initial-payment', true),
+                'amount' => get_post_meta( get_the_id(), 'fee-amount', true),
+                'description' => get_post_meta( get_the_id(), 'fee-description', true)
+            );
+            
+            
+            if ( get_post_meta( get_the_id(), 'supporter-player', true) == 'Supporter' && get_post_meta( get_the_id(), 'fee-type', true) == "Monthly Direct Debit" )
+            {
+                  $supporterfees[ 'direct_debits' ] [ ] = $the_fee;
+            }
+            else if ( get_post_meta( get_the_id(), 'supporter-player', true) == 'Supporter' && get_post_meta( get_the_id(), 'fee-type', true) != "Monthly Direct Debit")
+            {
+			$supporterfees[ 'single_payments' ] [ ] = $the_fee;
+            }
+            else if ( get_post_meta( get_the_id(), 'supporter-player', true) == 'Player' && get_post_meta( get_the_id(), 'fee-type', true) == "Monthly Direct Debit")
+            {
+            	$playerfees[ 'direct_debits' ] [ ] = $the_fee;
+            }
+            else if ( get_post_meta( get_the_id(), 'supporter-player', true) == 'Player' && get_post_meta( get_the_id(), 'fee-type', true) != "Monthly Direct Debit")
+            {
+            	$playerfees[ 'single_payments' ] [ ] = $the_fee;
+            }
+            
+        }
+		?>
+	  <div id="playerfees" class='playersonly'>
+        <div id="playermempaymonthly" style="display:none" >
+            <label class="smalllabel" for="playermembershiptypemonthly">Membership Type</label>
+            <select class="mustselect" name="playermembershiptypemonthly" id="playermembershiptypemonthly">
+                <option></option>
+            <?php foreach ($playerfees[ 'direct_debits' ] as $fee) : ?>
+                <option value="<?php echo $fee['id'] ?> ?>"><?php echo $fee['name'] ?></option>
+            <?php endforeach ?>
+            </select>
+             <ul class='feeslist'>
+            <?php foreach ($playerfees[ 'direct_debits' ] as $fee) : ?><li><strong><?php echo $fee['name'] ?></strong><br />Initial payment of <?php echo pence_to_pounds ( $fee['initial-payment'] ) ?> followed by monthly payments of <?php echo pence_to_pounds ( $fee['amount'] ) ?>. <?php echo $fee['description'] ?></li><?php endforeach ?>
+             </ul>
+        </div>
+        <div id="playermempaysingle" style="display:none" >
+            <label class="smalllabel" for="playermembershiptypesingle">Membership Type</label>
+            <select class="mustselect" name="playermembershiptypesingle" id="playermembershiptypesingle">
+                <option></option>
+            <?php foreach ($playerfees[ 'single_payments' ] as $fee) : ?>
+                <option value="<?php echo $fee['id'] ?> ?>"><?php echo $fee['name'] ?></option>
+            <?php endforeach ?>
+            </select>
+           <ul class='feeslist'>
+            <?php foreach ($playerfees[ 'single_payments' ] as $fee) : ?><li><strong><?php echo $fee['name'] ?></strong><br />A single payment of <?php echo pence_to_pounds ( $fee['initial-payment'] ) ?>. <?php echo $fee['description'] ?></li><?php endforeach ?>
+             </ul>
+        </div>
+	</div>
+          
+	  <div id="supporterfees" class='supportersonly'>
+        <div id="supportermempaymonthly" style="display:none" >
+            <label class="smalllabel" for="supportermembershiptypemonthly">Membership Type</label>
+            <select class="mustselect" name="supportermembershiptypemonthly" id="supportermembershiptypemonthly">
+                <option></option>
+            <?php foreach ($supporterfees[ 'direct_debits' ] as $fee) : ?>
+                <option value="<?php echo $fee['id'] ?> ?>"><?php echo $fee['name'] ?></option>
+            <?php endforeach ?>
+            </select>
+            <ul class='feeslist'>
+            <?php foreach ($supporterfees[ 'direct_debits' ] as $fee) : ?><li><strong><?php echo $fee['name'] ?></strong><br />Initial payment of <?php echo pence_to_pounds ( $fee['initial-payment'] ) ?> followed by monthly payments of <?php echo pence_to_pounds ( $fee['amount'] ) ?>. <?php echo $fee['description'] ?></li><?php endforeach ?>
+             </ul>
+        </div>
+        <div id="supportermempaysingle" style="display:none" >
+            <label class="smalllabel" for="supportermembershiptypesingle">Membership Type</label>
+            <select class="mustselect" name="supportermembershiptypesingle" id="supportermembershiptypesingle">
+                <option></option>
+            <?php foreach ($supporterfees[ 'single_payments' ] as $fee) : ?>
+                <option value="<?php echo $fee['id'] ?> ?>"><?php echo $fee['name'] ?></option>
+            <?php endforeach ?>
+            </select>
+            <ul class='feeslist'>
+                  <?php foreach ($supporterfees[ 'single_payments' ] as $fee) : ?><li><strong><?php echo $fee['name'] ?></strong><br />A single payment of <?php echo pence_to_pounds ( $fee['initial-payment'] ) ?>. <?php echo $fee['description'] ?></li><?php endforeach ?>
+                   </ul>
+              </div>
+	</div>
+    </fieldset>
+    <?php endif ?>
+    <fieldset>
+        <legend>Declaration and submission</legend>
+        <div>
+            <label class='checkboxlabel' for='codeofconduct'><input class='mustcheck' type="checkbox" name="codeofconduct" id="codeofconduct"<?php if ( $current_form->have_posts() ) { ?> disabled='true' checked='checked' <?php } ?>/>
+I wish to become a member of the Bisons and have read and agree to abide by the club <a href='<?php echo $GLOBALS['blog_info']['url'] ?>/players-area/code-of-conduct/'>code of conduct</a>.</label>
+        </div>
+        <div>
+            <label class='checkboxlabel' for='photographicpolicy'><input class='mustcheck'  type="checkbox" name="photographicpolicy" id="photographicpolicy"<?php if ( $current_form->have_posts() ) { ?> disabled='true' checked='checked' <?php } ?>/>
+I have read and fully understand the club <a href='<?php echo $GLOBALS['blog_info']['url'] ?>/players-area/photographic-policy/'>photographic policy</a>.</label>
+        </div>
+        <div>
+            <label class='checkboxlabel' for='physicalsport'><input class='mustcheck'  type="checkbox" name="physicalsport" id="physicalsport"<?php if ( $current_form->have_posts() ) { ?> disabled='true' checked='checked' <?php } ?>/>
+I understand that Rugby is a contact sport, and like all contact sports, players may be exposed to the risk of physical injury. Should injury occur, I understand that the club cannot accept responsibility for any injuries which arise.</label>
+        </div>
+        <div>
+            <?php if ( $disabled ) : ?>
+            <button type='submit' name='edit_details' /><?php if ($current_form->have_posts() ) { echo "Edit Details"; } ?>
+            <?php else : ?>
+            <button type='submit'><?php if ($current_form->have_posts() ) { echo "Save Changes"; } else { echo "Submit"; } ?></button>
+            <?php endif ?>       
+         </div>
+    </fieldset>
+    <?php if ($current_form->have_posts() ) { ?><input type='hidden' name='form_id' value='<?php echo $form_id ?>' /><?php } ?>
+    
+</form>
