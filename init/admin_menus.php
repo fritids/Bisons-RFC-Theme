@@ -1,17 +1,45 @@
 <?php
 
+function Membership_Forms_Table_Add_Options() {
+    
+    global $membershipFormsTable;
+
+    $option = 'per_page';
+    $args = array(
+             'label' => 'Membership Forms',
+             'default' => 10,
+             'option' => 'forms_per_page'
+    );
+    add_screen_option( $option, $args );
+    
+    $membershipFormsTable = new Membership_Forms_Table;
+}
+
+function Membership_Forms_Table_Set_Options($status, $option, $value) 
+{
+  return $value;
+}
+add_filter('set-screen-option', 'Membership_Forms_Table_Set_Options', 10, 3);
 
 function add_admin_menus()
 {
     
     // Create 'players' submenu
-    add_menu_page ( 'Manage Players', 'Players', 'committee_perms', 'players', 'players_menu_callback', 'dashicons-groups', 8);
-    add_submenu_page ( 'players', 'Manage Players', 'Manage Players', 'committee_perms', 'players');
+    $membership_form_hook = add_menu_page ( 'Manage Membership Form', 'Players', 'committee_perms', 'players', 'membership_forms_callback', 'dashicons-groups', 8);
+    add_action( "load-$membership_form_hook", 'Membership_Forms_Table_Add_Options' );
+
+    add_submenu_page ( 'players', 'Manage Players', 'Manage Players', 'committee_perms', 'players' );
+    
+
+    add_submenu_page ( 'players', 'Awaiting Membership', 'Awaiting Membership', 'committee_perms', 'awaiting-membership', 'awaiting_membership_callback');
     add_submenu_page ( 'players', 'Add Player', 'Add Player', 'committee_perms', 'add-player', 'add_player_callback');
     add_submenu_page ( 'players', 'Profiles', 'Profiles', 'committee_perms', 'edit.php?post_type=playerprofile' );
     add_submenu_page ( 'players', 'Pages', 'Pages', 'committee_perms', 'edit.php?post_type=player-page' );
     add_submenu_page ( 'players', 'Page Groups', 'Page Groups', 'committee_perms', 'edit-tags.php?taxonomy=player-page-groups&post_type=player-page' );
     
+    
+
+
     
     // Move 'results' page into the Fixtures submenu
     add_submenu_page ( 'edit.php?post_type=fixture', 'Results', 'Results', 'committee_perms', 'edit.php?post_type=result' );
@@ -53,6 +81,12 @@ function fees_callback()
 
 function webhook_log_callback()
 { include_once( dirname(__FILE__) . '/../dashboardpages/webhook_log.php');  }
+
+function awaiting_membership_callback()
+{ include_once( dirname(__FILE__) . '/../dashboardpages/awaiting_membership_form.php');  }
+
+function membership_forms_callback()
+{ include_once( dirname(__FILE__) . '/../dashboardpages/membership_forms.php');  }
 
 
 function players_menu_callback()
