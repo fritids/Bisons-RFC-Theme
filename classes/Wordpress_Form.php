@@ -239,7 +239,27 @@ Class Wordpress_Form
         // If the page is a submitted form and the nonce is correct, save the meta information ready to be updated.  
         if ( $_POST ) $this->meta_array[$name] = $_POST[$name];
     }
-      
+    function add_hidden_field ( $fieldset, $name, $value, $classes = false )
+    {
+        $fieldset = $fieldset ? $fieldset : 'none';
+        
+        $this->check_uniqueness ( $name );
+          
+        // Add to name list for uniqueness checks
+        array_push ( $this->name_list, $name );
+        
+        $labelclass = false;
+          
+        // Construct the HTML
+        $fieldhtml = $this->create_input_html( $name, $label, 'hidden', $classes, false, false, $value );
+          
+        // If the fieldset array is not already created, initialize it as an array
+        if ( ! isset( $this->fields[$fieldset] ) ) $this->fields[$fieldset] = array();
+          
+        // Add the html to the end of the array
+        array_push( $this->fields[$fieldset], array( 'html' => $fieldhtml )  );
+        
+    }
     function add_list_box ( $fieldset, $name, $label, $options, $classes = false, $forminfo = false,  $value = false )
     {
           $fieldset = $fieldset ? $fieldset : 'none';
@@ -515,7 +535,8 @@ Class Wordpress_Form
      * @param string forminfo Text for the forminfo tag
      * @param string value text for the 'value' attribute
      */
-      
+
+
     private function create_input_html( $name, $label, $type, $classes = false, $forminfo = false, $labelclasses = false, $value = false )
     {
         
@@ -523,11 +544,14 @@ Class Wordpress_Form
         if ( $this->is_errors() ) $value = $_POST[ $name ];
         
         $output = "";
-        $output .= $this->label_parent_tag ? "<$this->label_parent_tag>" : null;
-        $output .= "<label for='$name'>$label</label>";
-	  $output .= $this->label_parent_tag ? "</$this->label_parent_tag>" : null;
-        $output .= $this->field_parent_tag ? "<$this->field_parent_tag>" : null;
-          
+        
+        if ( $type != 'hidden' )
+        {
+            $output .= $this->label_parent_tag ? "<$this->label_parent_tag>" : null;
+            $output .= "<label for='$name'>$label</label>";
+	        $output .= $this->label_parent_tag ? "</$this->label_parent_tag>" : null;
+            $output .= $this->field_parent_tag ? "<$this->field_parent_tag>" : null;
+        }
         if ( $type == 'textarea' ) $output .= "<textarea";
         else $output .= "<input type='$type'";
         $output .= $classes ? " class='$classes'" : '';
@@ -545,12 +569,15 @@ Class Wordpress_Form
         
         if ( $forminfo )
         {
-              
               $output .= "<$this->forminfo_tag";
         	  $output .= $this->forminfo_tag_classes ? " class='".implode ( ' ', $this->forminfo_tag_classes )."'" : null;
               $output .= ">$forminfo</$this->forminfo_tag>";
         }
-        $output .= $this->field_parent_tag ? "<$this->field_parent_tag>" : null;
+        
+        if ( $type != 'hidden' )
+        {
+            $output .= $this->field_parent_tag ? "</$this->field_parent_tag>" : null;
+        }
         return $output; 
     }
 }
