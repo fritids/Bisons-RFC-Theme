@@ -173,6 +173,23 @@ Class Wordpress_Form
         if ( $_POST ) $this->meta_array[$name] = $_POST[$name];
     }
     
+    function add_static_text ( $fieldset, $name, $label, $classes = false, $forminfo = false, $value = false )
+    {
+            
+        $output = "";
+        $output .= $this->label_parent_tag ? "<$this->label_parent_tag>" : null;
+        $output .= "<label for='$name'>$label</label>";
+        $output .= $this->label_parent_tag ? "</$this->label_parent_tag>" : null;
+        $output .= $this->field_parent_tag ? "<$this->field_parent_tag>" : null;
+        $output .= $value;
+        $output .= $this->field_parent_tag ? "</$this->field_parent_tag>" : null;
+        // If the fieldset array is not already create, initialize it as an array
+        if ( ! isset( $this->fields[$fieldset] ) ) $this->fields[$fieldset] = array();
+          
+        // Add the html to the end of the array
+        array_push( $this->fields[$fieldset], array( 'html' => $output )  );
+    }
+    
     function add_text_input ( $fieldset, $name, $label, $classes = false, $forminfo = false, $value = false )
     {
         
