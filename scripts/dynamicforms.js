@@ -2,17 +2,15 @@ jQuery(document).ready(function() {
     
     jQuery('input, select, textarea').focus(function() {
         jQuery(this).siblings('.forminfo').show();
-        jQuery(this).siblings('label').css("color","#5F8C6A");
-        jQuery(this).css("background-color","#C0FACE");
-        jQuery(this).css("color","#5F8C6A");
         
+        jQuery(this).addClass('focusedinput');
+        jQuery(this).siblings('label').addClass('focusedinput');
     });
     
     jQuery('input, select, textarea').focusout(function() {
         jQuery(this).siblings('.forminfo').hide();
-        jQuery(this).siblings('label').css("color","#2E2E2E");
-        jQuery(this).css("background-color","white");
-        jQuery(this).css("color","#2E2E2E");
+        jQuery(this).removeClass('focusedinput');
+        jQuery(this).siblings('label').removeClass('focusedinput');
     });
 
     jQuery('#joiningas').change(function() {

@@ -206,10 +206,10 @@ fieldset table th { padding:0; margin:0; font-weight:300; border:0; }
 fieldset table  { margin:0; }
 fieldset table td { padding:0.2em 0.4em; border:0; }
 fieldset label { padding:0 5px 0 0; margin:0;  }
-#wrapper fieldset .forminfo, p.paymentreceived { margin-top:1em; display:none; padding: 0.5em; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; color: #5F8C6A; background-color: #C0FACE; }
+#wrapper fieldset .forminfo, p.paymentreceived { margin-top:1em; display:none; padding: 0.5em; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; color: #5F8C6A; background-color: #C0FACE; border:1px solid #5F8C6A }
 #wrapper fieldset .forminfo:before { content: '\f455'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 32px/1 'Genericons'; vertical-align: middle; padding-right:5px; }
 #wrapper p.flashmessage { margin-top: 1em; padding: 0.5em; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; background-color: #C0FACE; border: 1px solid #5F8C6A; }
-#wrapper fieldset .formerror { margin: 1em 0; color: #D45F57; padding: 0.3em; background-color: #FAE5E3; border:1px solid #FCC3BD}
+#wrapper fieldset .formerror { margin: 1em 0; color: #D45F57; padding: 0.3em; background-color: #FAE5E3; border:1px solid #D45F57}
 #wrapper fieldset .formerrorlight { font-weight: normal; margin: 1em 0; color: #D45F57; border: 1px solid; padding:0.3em 0.7em 0.3em 0.3em; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; background-color: #FAE5E3;}
 #wrapper fieldset .formerror:before { content: '\f456'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 32px/1 'Genericons'; vertical-align: middle; margin-right: 5px; }
 #wrapper fieldset .errorlabel { color: #D45F57; }
@@ -354,6 +354,18 @@ ol.comment-list li { background-color: #F7F7F7; margin: 20px 0 0 0; padding: 10p
 
 ul.feeslist {
       margin-top: 1em;
+}
+
+input.focusedinput, select.focusedinput, textarea.focusedinput, option.focusedinput
+{
+	background-color:#C0FACE;
+	color:#5F8C6A;
+	border: 1px solid #5F8C6A;
+}
+
+label.focusedinput
+{
+	color:#5F8C6A
 }
 
 /* Small screen CSS */
