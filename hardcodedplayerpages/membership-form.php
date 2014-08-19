@@ -880,7 +880,7 @@ if ( ! isset ( $form_id ) )
             <select class="mustselect" name="playermembershiptypemonthly" id="playermembershiptypemonthly">
                 <option></option>
             <?php foreach ($playerfees[ 'direct_debits' ] as $fee) : ?>
-                <option value="<?php echo $fee['id'] ?> ?>"><?php echo $fee['name'] ?></option>
+                <option value="<?php echo $fee['id'] ?>"><?php echo $fee['name'] ?></option>
             <?php endforeach ?>
             </select>
              <ul class='feeslist'>
@@ -892,7 +892,7 @@ if ( ! isset ( $form_id ) )
             <select class="mustselect" name="playermembershiptypesingle" id="playermembershiptypesingle">
                 <option></option>
             <?php foreach ($playerfees[ 'single_payments' ] as $fee) : ?>
-                <option value="<?php echo $fee['id'] ?> ?>"><?php echo $fee['name'] ?></option>
+                <option value="<?php echo $fee['id'] ?>"><?php echo $fee['name'] ?></option>
             <?php endforeach ?>
             </select>
            <ul class='feeslist'>
@@ -907,7 +907,7 @@ if ( ! isset ( $form_id ) )
             <select class="mustselect" name="supportermembershiptypemonthly" id="supportermembershiptypemonthly">
                 <option></option>
             <?php foreach ($supporterfees[ 'direct_debits' ] as $fee) : ?>
-                <option value="<?php echo $fee['id'] ?> ?>"><?php echo $fee['name'] ?></option>
+                <option value="<?php echo $fee['id'] ?>"><?php echo $fee['name'] ?></option>
             <?php endforeach ?>
             </select>
             <ul class='feeslist'>
@@ -919,7 +919,7 @@ if ( ! isset ( $form_id ) )
             <select class="mustselect" name="supportermembershiptypesingle" id="supportermembershiptypesingle">
                 <option></option>
             <?php foreach ($supporterfees[ 'single_payments' ] as $fee) : ?>
-                <option value="<?php echo $fee['id'] ?> ?>"><?php echo $fee['name'] ?></option>
+                <option value="<?php echo $fee['id'] ?>"><?php echo $fee['name'] ?></option>
             <?php endforeach ?>
             </select>
             <ul class='feeslist'>
