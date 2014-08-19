@@ -1,8 +1,18 @@
 jQuery(document).ready(function() {
     
+    jQuery('#committeeSelectPlayer').change(function() {
+            if ( jQuery(this).val() == 'me' )
+            {
+                document.location = '/membership-form/';
+            }
+            else
+            {
+                document.location = '/membership-form/?player_id=' + jQuery(this).val();
+            }
+    });
+    
     jQuery('input, select, textarea').focus(function() {
         jQuery(this).siblings('.forminfo').show();
-        
         jQuery(this).addClass('focusedinput');
         jQuery(this).siblings('label').addClass('focusedinput');
     });

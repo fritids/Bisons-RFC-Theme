@@ -3,17 +3,22 @@
     wp_enqueue_script('formvalidation');
 
 
-    // If the form has been submitted, but not by the 'edit details button'
-   if( $_POST && ! isset( $_POST['edit_details']) ) 
+// If the form has been submitted, but not by the 'edit details button'
+if( $_POST && ! isset( $_POST['edit_details']) ) 
+{
+        
+    // Setup new post array
+    $post = array(
+        'post_title'    => $_POST['firstname'].' '.$_POST['surname'].' '.date('Y'),
+        'post_type'     => 'membership_form',
+        'post_status'   => 'publish',
+    );
+    
+    if ( current_user_can ('committee_perms') )
     {
-        
-        // Setup new post array
-        $post = array(
-            'post_title'    => $_POST['firstname'].' '.$_POST['surname'].' '.date('Y'),
-            'post_type'     => 'membership_form',
-            'post_status'   => 'publish',
-        );
-        
+        $post['post_author'] = $_POST['form_belongs_to'];
+    }
+    
         // If a form ID has been submitted as part of the form data, then we must just be editing, if not, create a new one
         $post = $_POST['form_id'] ? $_POST['form_id'] : wp_insert_post( $post );
         
@@ -324,15 +329,20 @@
         }     
 }
     
-        
+
+$form_user = ( isset ( $_GET['player_id'] ) && current_user_can ('committee_perms') ) 
+                ? $_GET['player_id'] : get_current_user_id();
+
 // Load the previous form data if their is one
 $current_form = new WP_Query ( array (
     'post_type' => 'membership_form',
     'posts_per_page' => 1,
     'orderby'   => 'date',
     'order'     => 'ASC',
-    'author'    => get_current_user_id()
+    'author'    => $form_user
 ));
+
+$userdata = get_userdata ( $form_user );
     
 while ( $current_form->have_posts() ) 
 {
@@ -431,13 +441,26 @@ if ( ! isset ( $form_id ) )
 </ul>
 <form id='membershipform_payment' method="post" role="form">
     
-    <?php get_currentuserinfo(); ?>
-
     <?php if ($disabled) : ?>
     <input type="hidden" name="disabled" id="disabled" value="true" />
     <?php endif ?>
-    
-    
+    <?php if  ( current_user_can ('committee_perms') ) : ?>
+    <fieldset>
+        <legend>Select Player</legend>
+        <?php if ( is_numeric ( $_GET['player_id' ] ) ) : ?>
+        <p class='info'>This is NOT YOUR MEMBERSHIP form. You can fill in someone else's form below or use the dropdown box below to return to your membership form.</p>
+        <input type='hidden' name='form_belongs_to' value='<?php echo $_GET['player_id' ] ?>' />
+        <?php else : ?>
+        <p class='info'>This is your own membership form. As a committee member, you can use the dropdown box below to select and edit the membership form of another player.</p>
+        <?php endif ?>
+        <select id='committeeSelectPlayer'>
+            <option value='me'>Me</option>
+        <?php $users = get_users(); foreach ($users as $user) : ?>
+            <option value='<?php echo $user->data->ID."'"; if (  $_GET['player_id' ] == $user->data->ID ) { echo " selected='selected'"; } ?>><?php echo $user->data->display_name ?></option>
+        <?php endforeach ?>
+        </select>
+    </fieldset>
+    <?php endif ?>
     <fieldset>
         <legend>Player or Supporter</legend>
         <div>
@@ -455,11 +478,11 @@ if ( ! isset ( $form_id ) )
         <legend>Personal Details</legend>
         <div>
             <label class="smalllabel" for="firstname">First name</label>
-            <input type="text" class="smalltextbox notempty" name="firstname" id="firstname"<?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value='<?php echo get_post_meta($form_id, 'firstname', true) ?>'<?php } else { ?> value='<?php global $current_user; echo $current_user->user_firstname ?>'<?php } ?> />
+            <input type="text" class="smalltextbox notempty" name="firstname" id="firstname"<?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value='<?php echo get_post_meta($form_id, 'firstname', true) ?>'<?php } else { ?> value='<?php echo $userdata->user_firstname ?>'<?php } ?> />
         </div>
         <div>
             <label class="smalllabel" for="surname">Surname</label>
-            <input type="text" class="smalltextbox notempty" name="surname" id="surname"<?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value='<?php echo get_post_meta($form_id, 'surname', true) ?>'<?php }  else { ?> value='<?php echo $current_user->user_lastname ?>'<?php } ?> />
+            <input type="text" class="smalltextbox notempty" name="surname" id="surname"<?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value='<?php echo get_post_meta($form_id, 'surname', true) ?>'<?php }  else { ?> value='<?php echo $userdata->user_lastname ?>'<?php } ?> />
         </div>
         <div>
             <label>Gender</label>
@@ -537,7 +560,7 @@ if ( ! isset ( $form_id ) )
         </div>
         <div>
             <label class="smalllabel" for="email_addy">Email</label>
-            <input type="text" class="smalltextbox needemail" name="email_addy" id="email_addy"<?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value='<?php echo get_post_meta($form_id, 'email_addy', true) ?>'<?php } else { ?> value='<?php global $user_email; echo $user_email ?>'<?php } ?> />
+            <input type="text" class="smalltextbox needemail" name="email_addy" id="email_addy"<?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value='<?php echo get_post_meta($form_id, 'email_addy', true) ?>'<?php } else { ?> value='<?php echo $userdata->user_email ?>'<?php } ?> />
         </div>
         <div>
             <label class="smalllabel" for="contact_number">Contact Number</label>
