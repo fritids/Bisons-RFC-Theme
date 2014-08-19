@@ -467,8 +467,6 @@ Class Wordpress_Form
     function form_output ( $echo = true )
     {
           
-          new dBug ($this->fields);
-          new dBug ($_POST);
         $output = '';
 
         if ( ! $this->no_form_tag )
