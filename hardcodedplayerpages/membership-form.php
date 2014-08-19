@@ -884,7 +884,7 @@ if ( ! isset ( $form_id ) )
             <?php endforeach ?>
             </select>
              <ul class='feeslist'>
-            <?php foreach ($playerfees[ 'direct_debits' ] as $fee) : ?><li><strong><?php echo $fee['name'] ?></strong><br />Initial payment of <?php echo pence_to_pounds ( $fee['initial-payment'] ) ?> followed by monthly payments of <?php echo pence_to_pounds ( $fee['amount'] ) ?>. <?php echo $fee['description'] ?></li><?php endforeach ?>
+            <?php foreach ($playerfees[ 'direct_debits' ] as $fee) : ?><li><strong><?php echo $fee['name'] ?></strong><br />An initial payment of <?php echo pence_to_pounds ( $fee['initial-payment'] ) ?> and monthly payments of <?php echo pence_to_pounds ( $fee['amount'] ) ?>. <?php echo $fee['description'] ?></li><?php endforeach ?>
              </ul>
         </div>
         <div id="playermempaysingle" style="display:none" >
@@ -911,7 +911,7 @@ if ( ! isset ( $form_id ) )
             <?php endforeach ?>
             </select>
             <ul class='feeslist'>
-            <?php foreach ($supporterfees[ 'direct_debits' ] as $fee) : ?><li><strong><?php echo $fee['name'] ?></strong><br />Initial payment of <?php echo pence_to_pounds ( $fee['initial-payment'] ) ?> followed by monthly payments of <?php echo pence_to_pounds ( $fee['amount'] ) ?>. <?php echo $fee['description'] ?></li><?php endforeach ?>
+            <?php foreach ($supporterfees[ 'direct_debits' ] as $fee) : ?><li><strong><?php echo $fee['name'] ?></strong><br />An initial payment of <?php echo pence_to_pounds ( $fee['initial-payment'] ) ?> and monthly payments of <?php echo pence_to_pounds ( $fee['amount'] ) ?>. <?php echo $fee['description'] ?></li><?php endforeach ?>
              </ul>
         </div>
         <div id="supportermempaysingle" style="display:none" >
