@@ -47,41 +47,56 @@ if( $_POST && ! isset( $_POST['edit_details']) )
                         ? $_POST['playermembershiptypemonthly'] 
                         : $_POST['supportermembershiptypemonthly'];
                   
-                  $amount = pence_to_pounds ( get_post_meta( $feeid, 'fee-amount', true ), false );
-                  $setup_fee = pence_to_pounds ( $amount - get_post_meta( $feeid, 'initial-payment', true ), false );
-                
+                  $amount = get_post_meta( $feeid, 'fee-amount', true );
+                  $amount_in_pounds = pence_to_pounds ( $amount, false );               
+                  $setup_fee = pence_to_pounds ( get_post_meta( $feeid, 'initial-payment', true ), false );
                   $subscription_details = array(
-                        'amount'           => $amount,
-                        'setup_fee'		 => $setup_fee,
+                        'amount'           => $amount_in_pounds,
                         'name'             => get_post_meta( $feeid, 'fee-name', true ),
-                        'description'	 => get_post_meta( $feeid, 'fee-description', true ),
                         'interval_length'  => 1,
                         'interval_unit'    => 'month',
                         'currency'         => 'GBP',
                         'user'             => $user,
                         'state'            => $post . "+DD",
                     ); 
-                
+                   
+                   if ( $description = get_post_meta( $feeid, 'fee-description', true ) ) 
+                        $subscription_details['description'] = $description;
+                        
+                   if ( $setup_fee > 0 ) 
+                   {
+                       $subscription_details['setup_fee'] = $setup_fee;
+                       $subscription_details['description'] .= ' Note that your first payment will be debited as a separate payment on the same date as the one off fee, therefore your statement will show two payments totalling ' .  pence_to_pounds ( get_post_meta( $feeid, 'initial-payment', true ) ); 
+                   }
+                   $gocardless_url = GoCardless::new_subscription_url($subscription_details);
+
+                   
                   break;
                
                case "Single Payment":
-			$feeid = ( $_POST['playermembershiptypesingle'] != '' ) 
-                        ? $_POST['playermembershiptypesingle'] 
-                        : $_POST['supportermembershiptypesingle'];
-
+    			$feeid = ( $_POST['playermembershiptypesingle'] != '' ) 
+                            ? $_POST['playermembershiptypesingle'] 
+                            : $_POST['supportermembershiptypesingle'];
+                  
+                  
                   $subscription_details = array(
-                        'amount'           => pence_to_pounds ( get_post_meta( $feeid, 'fee-amount', true ), false ),
+                        'amount'           => pence_to_pounds ( get_post_meta( $feeid, 'initial-payment', true ), false ),
                         'name'             => get_post_meta( $feeid, 'fee-name', true ),
-                        'description'	 => get_post_meta( $feeid, 'fee-description', true ),
                         'currency'         => 'GBP',
                         'user'             => $user, 
                         'state'            => $post . "+SP",                       
                   );
-                
+                  
+                  if ( $description = get_post_meta( $feeid, 'fee-description', true ) ) 
+                        $subscription_details['description'] = $description;
+                  
+                   $gocardless_url = GoCardless::new_bill_url($subscription_details);
+
                   break;
             }
-    
-            $gocardless_url = GoCardless::new_subscription_url($subscription_details);
+            
+            ;
+            
             
       }
       
@@ -325,7 +340,7 @@ if( $_POST && ! isset( $_POST['edit_details']) )
             $content = preg_replace("/(.*)@@name@@(.*)/", "$1".get_post_meta($post, 'firstname', true).' '.get_post_meta($post, 'surname', true)."$2", $content);       
             $content = preg_replace("/(.*)@@updatetable@@(.*)/", "$1$infotable$2", $content);
 
-            send_bison_mail( $email_options['member-email-send-to'], $subject, $content );
+            send_bison_mail( false, $subject, $content, false, $email_options['member-email-send-to-text'] );
         }     
 }
     
