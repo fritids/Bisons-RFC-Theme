@@ -367,7 +367,7 @@ Class Wordpress_Form
         // If the fieldset array is not already create, initialize it as an array
         if ( ! isset( $this->fields[$fieldset] ) ) $this->fields[$fieldset] = array();
         
-        $field_array = array( 'html' => fieldhtml );
+        $field_array = array( 'html' => $fieldhtml );
           
         switch ( $_FILES[$name]["error"] )
         {
