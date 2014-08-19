@@ -464,20 +464,13 @@ function initialize_email_settings( )
         'email-settings-page'
     );
     
-    $committee_members = get_users ( array( 'role' => 'committee_member' ) );
-    $committee_admin = get_users ( array( 'role' => 'committee_admin' ) );
-    $administrators = get_users ( array( 'role' => 'administrator' ) );
-    $roles = array_merge ( $committee_members, $committee_admin, $administrators );
-    $listbox_options = array();
-    foreach ($roles as $role) $listbox_options[$role->data->ID] = $role->data->display_name; 
-    
     add_settings_field(
-        'member-email-send-to',
+        'member-email-send-to-text',
         'Send Member Updates to',
-        'dropdown',
+        'singleline_input_field',
         'email-settings-page',
         'member-email-settings-section',
-        array( 'member-email-send-to', 'email-settings-page', false, $listbox_options )
+        array( 'member-email-send-to-text', 'email-settings-page' )
     );
     
     add_settings_field(
