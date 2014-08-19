@@ -340,5 +340,10 @@ class Membership_Forms_Table extends WP_List_Table_Copy
             '<input type="checkbox" name="id[]" value="%s" />', $item['id']
         );    
     }
+    
+    function column_email ($item)
+    {
+        return "<a href='mailto:".$item['email']."'>".$item['email']."</a>";
+    }
 }
 
