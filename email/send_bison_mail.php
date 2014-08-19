@@ -1,10 +1,10 @@
 <?php
-function send_bison_mail($user, $subject, $content, $tags = false )
+function send_bison_mail($user, $subject, $content, $tags = false, $emailaddy = false )
 {
 
     // Get email to send to from Wordpress
     $info = get_userdata( $user );
-    $email = $info->user_email;
+    $email = $emailaddy ? $emailaddy : $info->user_email;
     $firstname = $info->user_firstname;
     $lastname = $info->user_lastname;
 
@@ -16,18 +16,19 @@ function send_bison_mail($user, $subject, $content, $tags = false )
     if ( $emailopt['email-css'] ) { $content = '<style type="text/css">'.$emailopt['email-css'].'</style>'.$content; }
     if ( $emailopt['email-css-ext'] ) { $content = '<link rel="stylesheet" href="'.$emailopt['email-css-ext'].'" type="text/css" />'.$content; }
 
+    $to = array(
+                    'email' => $email,
+                    'type' => 'to'
+            );
+            
+    if ($user) $to['name'] = "$firstname $lastname";
+    
     $message = array(
             'html' => $content,
             'subject' => $subject,
             'from_email' => $emailopt['new-user-email-replyto-address'],
             'from_name' => $emailopt['new-user-email-replyto-name'],
-            'to' => array(
-                  array(
-                        'email' => $email,
-                        'name' => "$firstname $lastname",
-                        'type' => 'to'
-                  )
-            ),
+            'to' => array( $to ),
             'headers' => array('Reply-To' => $emailopt['new-user-email-replyto-name']),
             'important' => false,
             'track_opens' => true,
