@@ -13,7 +13,7 @@ function fees_direct_debit_shortcode(  )
            $return .= "<td>".get_post_meta( get_the_id(), 'fee-name', true);
            $return .= ( $description = get_post_meta( get_the_id(), 'fee-description', true) ) ? "<span class='feedescription'>$description</span>" : null;
            $return .= "</td><td>";
-           $return .= get_post_meta( get_the_id(), 'initial-payment', true) ? 'Initial payment of '.pence_to_pounds ( get_post_meta( get_the_id(), 'initial-payment', true) ). ' and then ' : null;
+           $return .= get_post_meta( get_the_id(), 'initial-payment', true) ? 'Initial payment of '.pence_to_pounds ( get_post_meta( get_the_id(), 'initial-payment', true) ). ' and a direct debit of ' : null;
            $return .= pence_to_pounds ( get_post_meta( get_the_id(), 'fee-amount', true) )." per month</td>";
            $return .= "</tr>";
           
