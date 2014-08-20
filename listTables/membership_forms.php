@@ -324,16 +324,7 @@ class Membership_Forms_Table extends WP_List_Table_Copy
         
         return $actions;
     }
-    function column_fullname ( $item )
-    {
-        
-        $actions = array(
-            'resetPass' => sprintf('<a href="?page=%s&action=%s&user=%s">Reset Password</a>',$_REQUEST['page'],'pass_reset',$item['id']),
-            'email' => sprintf('<a href="?page=%s&action=%s&user=%s">Email</a>',$_REQUEST['page'],'single_email',$item['id'])
-        );
-        
-        return sprintf('%1$s %2$s', $item['fullname'], $this->row_actions($actions) );
-    }
+
     
     function column_cb($item) {
         return sprintf(
