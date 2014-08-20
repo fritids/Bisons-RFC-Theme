@@ -4,6 +4,7 @@ include_once('dBug.php');
 
 
 
+include_once('helper_functions/reset_password.php');
 include_once('init/login_css.php');
 include_once('init/current_user.php');
 include_once('helper_functions/timer.php');

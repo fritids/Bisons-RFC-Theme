@@ -79,7 +79,11 @@ if ($_POST['action'] == 'bulk_email_submit')
               break;
               
               case 'reset_pass': 
-              
+                foreach ( $_POST['id'] as $id )
+                {
+                    $user_id = get_post_field( 'post_author', $id );
+                    reset_bisons_password( $user_id );
+                }
               break;
           }
       }
