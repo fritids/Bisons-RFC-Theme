@@ -77,7 +77,18 @@ if ( isset ( $_POST['user_id'] ) )
         $this_column = array();
         foreach ($table as $column)
         {
-            $this_column[] = $column[$ii];
+            if ( strstr($column[$ii], ',') 
+            || strstr($column[$ii], "\n") 
+            || strstr($column[$ii], "\r") 
+            || strstr($column[$ii], "\""))
+            {
+                $value = str_replace('"', '""', $column[$ii]);
+                $this_column[] = "\"$value\"";
+            }
+            else
+            {
+                $this_column[] = $column[$ii];
+            }
         }
         
         echo implode (',', $this_column);
