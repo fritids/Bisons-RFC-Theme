@@ -4,10 +4,10 @@ if ( isset ( $_POST['user_id'] ) )
     header('Content-type: text/csv');
     header('Content-Disposition: attachment; filename="membership_data.csv"');
 
-    echo "\n";
     
     $table = array();
     $count = 0;
+    $i = 0;
     foreach ( $_POST['user_id'] as $user )
     {
         $user_form = new WP_Query ( array (
@@ -17,7 +17,6 @@ if ( isset ( $_POST['user_id'] ) )
             'order'     => 'ASC',
             'author'    => $user
         ));
-        $i = 0;
         while ($user_form->have_posts()) 
         {
             $user_form->the_post();
@@ -57,8 +56,9 @@ if ( isset ( $_POST['user_id'] ) )
                 $table["Injury Status ($ii)"][$i] = get_post_meta(get_the_id(), 'injuries_status_row' . $ii, true);
             }
 
-            $i++;
-        } 
+        }
+        $i++;
+ 
     } 
     echo implode (',', array_keys($table))."\n";
     for ( $ii = 0; $ii < $i; $ii++ )
@@ -70,6 +70,7 @@ if ( isset ( $_POST['user_id'] ) )
         }
         
         echo implode (',', $this_column);
+        echo "\n";
     } 
     
     // Stop the rest of Wordpress from displaying\
