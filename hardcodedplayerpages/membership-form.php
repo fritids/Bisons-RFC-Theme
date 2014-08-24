@@ -361,15 +361,15 @@ $userdata = get_userdata ( $form_user );
     
 while ( $current_form->have_posts() ) 
 {
-    $current_form->the_post();
-    $date = get_the_date();
-    $form_id = get_the_id();
-    $disabled = isset( $_POST['edit_details']) ? false : true; 
+        $current_form->the_post();
+        $date = get_the_date();
+        $form_id = get_the_id();
+        $disabled = isset( $_POST['edit_details']) ? false : true; 
 } 
 
 // If there is a resource_id in the querystring, it must returning from Gocardless, so confirm the payment and then save the resource information if it confirms properly
 if ( isset ( $_GET['resource_id'] ) )
-{
+{   
     $confirm_params = array(
       'resource_id'    => $_GET['resource_id'],
       'resource_type'  => $_GET['resource_type'],
@@ -381,8 +381,14 @@ if ( isset ( $_GET['resource_id'] ) )
       $confirm_params['state'] = $_GET['state'];
     }
     
-    $confirmed_resource = GoCardless::confirm_resource($confirm_params);
-    
+    try { 
+        $confirmed_resource = GoCardless::confirm_resource($confirm_params);
+    }
+    catch ( Exception  $error )
+    {
+        echo "GoCardless Error: $e->getMessage()";
+    }
+        
     if ( $confirmed_resource )
     {
         
