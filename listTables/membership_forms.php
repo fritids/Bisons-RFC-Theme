@@ -120,13 +120,7 @@ class Membership_Forms_Table extends WP_List_Table_Copy
                    $injuries = '<ul>';
                    for ( $ii = 1; $ii == 1 || $ii <= get_post_meta(get_the_id(), 'injuries_rowcount', true); $ii++ )
                    {
-                        $condition = array(
-                            '<strong>'.get_post_meta(get_the_id(), 'injuries_name_row' . $ii, true).'</strong>',
-                            '<em>When:</em>'.get_post_meta(get_the_id(), 'injuries_when_row' . $ii, true),
-                            '<em>Treatment received:</em>'.get_post_meta(get_the_id(), 'injuries_treatmentreceived_row' . $ii, true),
-                            '<em>Who treated:</em>'.get_post_meta(get_the_id(), 'injuries_who_row' . $ii, true),
-                            '<em>Status:</em>'.get_post_meta(get_the_id(), 'injuries_status_row' . $ii, true)
-                        );
+
                        $condition = array();
                        if ( get_post_meta(get_the_id(), 'injuries_name_row' . $ii, true) )
                             $condition[] = '<strong>'.get_post_meta(get_the_id(), 'injuries_name_row' . $ii, true).'</strong>';
