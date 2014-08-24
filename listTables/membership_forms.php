@@ -78,7 +78,7 @@ class Membership_Forms_Table extends WP_List_Table_Copy
                        if ( get_post_meta(get_the_id(), 'condsdisablities_drugname_row' . $ii, true) )
                             $condition[] = '<em>Dose/Frequency:</em> '.get_post_meta(get_the_id(), 'condsdisablities_drugdose_freq_row' . $ii, true);
                         
-                        if ( sizeof ( $conditions) )
+                        if ( sizeof ( $condition ) )
                             $medCons .= '<li>'.implode ( '<br />', $condition ).'</li>';
                    }
                    $medCons .= '</ul>';
