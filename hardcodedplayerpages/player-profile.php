@@ -3,7 +3,7 @@
     wp_enqueue_script('formvalidation');
 
 
-$ppform = new Wordpress_Form ( 'playerprofile', 'name', 'post', 'Submit', 'playerprofileform' );
+$ppform = new Wordpress_Form ( 'playerprofile', 'name', 'post', 'Submit', 'submit_player_profile' );
 
 $ppform->add_fieldset( 'aboutyou', 'About You');
 $ppform->add_file_upload ( 'aboutyou', 'photo', 'Photograph', 'image_id');
