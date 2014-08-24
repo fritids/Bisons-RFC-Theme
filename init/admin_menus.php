@@ -15,11 +15,31 @@ function Membership_Forms_Table_Add_Options() {
     $membershipFormsTable = new Membership_Forms_Table;
 }
 
+function Awaiting_Membership_Forms_Table_Add_Options() {
+  $option = 'per_page';
+  $args = array(
+         'label' => 'Users',
+         'default' => 10,
+         'option' => 'awaiting_users_per_page'
+         );
+  add_screen_option( $option, $args );
+}
+
+
 function Membership_Forms_Table_Set_Options($status, $option, $value) 
 {
   return $value;
 }
 add_filter('set-screen-option', 'Membership_Forms_Table_Set_Options', 10, 3);
+
+
+function Awaiting_Membership_Forms_Table_Set_Options($status, $option, $value) 
+{
+  return $value;
+}
+add_filter('set-screen-option', 'Awaiting_Membership_Forms_Table_Set_Options', 10, 3);
+
+
 
 function add_admin_menus()
 {
@@ -31,7 +51,9 @@ function add_admin_menus()
     add_submenu_page ( 'players', 'Manage Players', 'Manage Players', 'committee_perms', 'players' );
     
 
-    add_submenu_page ( 'players', 'Awaiting Membership', 'Awaiting Membership', 'committee_perms', 'awaiting-membership', 'awaiting_membership_callback');
+    $awaitingmembershiphook = add_submenu_page ( 'players', 'Awaiting Membership', 'Awaiting Membership', 'committee_perms', 'awaiting-membership', 'awaiting_membership_callback');
+    add_action( "load-$awaitingmembershiphook", 'Awaiting_Membership_Forms_Table_Add_Options' );
+
     add_submenu_page ( 'players', 'Add Player', 'Add Player', 'committee_perms', 'add-player', 'add_player_callback');
     add_submenu_page ( 'players', 'Profiles', 'Profiles', 'committee_perms', 'edit.php?post_type=playerprofile' );
     add_submenu_page ( 'players', 'Pages', 'Pages', 'committee_perms', 'edit.php?post_type=player-page' );
