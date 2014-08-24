@@ -1,8 +1,8 @@
 <?php
 if ( isset ( $_POST['user_id'] ) )
 {
-    //header('Content-type: text/csv');
-    //header('Content-Disposition: attachment; filename="membership_data.csv"');
+    header('Content-type: text/csv');
+    header('Content-Disposition: attachment; filename="membership_data.csv"');
 
     
     $table = array();
@@ -32,37 +32,45 @@ if ( isset ( $_POST['user_id'] ) )
             $table['Street Address 2'][$i] = get_post_meta(get_the_id(), 'streetaddyl2', true);
             $table['Town'][$i] = get_post_meta(get_the_id(), 'streetaddytown', true);
             $table['Postcode'][$i] = get_post_meta(get_the_id(), 'postcode', true);
-            $table['Medical Conditions or Disabilities'][$i] = get_post_meta(get_the_id(), 'medconsdisabyesno', true);
-            for ( $ii = 1; get_post_meta(get_the_id(), 'condsdisablities_name_row' . $ii, true); $ii++ )
-            {
-                $table["Condition ($ii)"][$i] = get_post_meta(get_the_id(), 'condsdisablities_name_row' . $ii, true);
-                $table["Medication ($ii)"][$i] = get_post_meta(get_the_id(), 'condsdisablities_drugname_row' . $ii, true);
-                $table["Medication Dose/Freq ($ii)"][$i] = get_post_meta(get_the_id(), 'condsdisablities_drugdose_freq_row' . $ii, true);
-            }
             
-            $table['Allergies'][$i] = get_post_meta(get_the_id(), 'allergiesyesno', true);
-            for ( $ii = 1; get_post_meta(get_the_id(), 'allergies_name_row' . $ii, true); $ii++ )
+            $table['Medical Conditions or Disabilities'][$i] = get_post_meta(get_the_id(), 'medconsdisabyesno', true);
+            if ( $table['Medical Conditions or Disabilities'][$i] == 'Yes')
             {
-                $table["Allergy ($ii)"][$i] = get_post_meta(get_the_id(), 'allergies_name_row' . $ii, true);
-                $table["Allergy Medication ($ii)"][$i] = get_post_meta(get_the_id(), 'allergies_drugname_row' . $ii, true);
-                $table["Allergy Medication Dose/Freq ($ii)"][$i] = get_post_meta(get_the_id(), 'allergies_drugdose_freq_row' . $ii, true);
+                for ( $ii = 1; get_post_meta(get_the_id(), 'condsdisablities_name_row' . $ii, true); $ii++ )
+                {
+                    $table["Condition ($ii)"][$i] = get_post_meta(get_the_id(), 'condsdisablities_name_row' . $ii, true);
+                    $table["Medication ($ii)"][$i] = get_post_meta(get_the_id(), 'condsdisablities_drugname_row' . $ii, true);
+                    $table["Medication Dose/Freq ($ii)"][$i] = get_post_meta(get_the_id(), 'condsdisablities_drugdose_freq_row' . $ii, true);
+                }
+            }
+            $table['Allergies'][$i] = get_post_meta(get_the_id(), 'allergiesyesno', true);
+            if( $table['Allergies'][$i] == 'Yes')
+            {
+                for ( $ii = 1; get_post_meta(get_the_id(), 'allergies_name_row' . $ii, true); $ii++ )
+                {
+                    $table["Allergy ($ii)"][$i] = get_post_meta(get_the_id(), 'allergies_name_row' . $ii, true);
+                    $table["Allergy Medication ($ii)"][$i] = get_post_meta(get_the_id(), 'allergies_drugname_row' . $ii, true);
+                    $table["Allergy Medication Dose/Freq ($ii)"][$i] = get_post_meta(get_the_id(), 'allergies_drugdose_freq_row' . $ii, true);
+                }
             }
             
             $table['Injuries'][$i] = get_post_meta(get_the_id(), 'injuredyesno', true);
-            for ( $ii = 1; get_post_meta(get_the_id(), 'injuries_name_row' . $ii, true); $ii++ )
+            if ( $table['Injuries'][$i] == 'Yes')
             {
-                $table["Injury ($ii)"][$i] = get_post_meta(get_the_id(), 'injuries_name_row' . $ii, true);
-                $table["When Injured ($ii)"][$i] = get_post_meta(get_the_id(), 'injuries_when_row' . $ii, true);
-                $table["Treatment Received ($ii)"][$i] = get_post_meta(get_the_id(), 'injuries_treatmentreceived_row' . $ii, true);
-                $table["Who Treated ($ii)"][$i] = get_post_meta(get_the_id(), 'injuries_who_row' . $ii, true);
-                $table["Injury Status ($ii)"][$i] = get_post_meta(get_the_id(), 'injuries_status_row' . $ii, true);
+                for ( $ii = 1; get_post_meta(get_the_id(), 'injuries_name_row' . $ii, true); $ii++ )
+                {
+                    $table["Injury ($ii)"][$i] = get_post_meta(get_the_id(), 'injuries_name_row' . $ii, true);
+                    $table["When Injured ($ii)"][$i] = get_post_meta(get_the_id(), 'injuries_when_row' . $ii, true);
+                    $table["Treatment Received ($ii)"][$i] = get_post_meta(get_the_id(), 'injuries_treatmentreceived_row' . $ii, true);
+                    $table["Who Treated ($ii)"][$i] = get_post_meta(get_the_id(), 'injuries_who_row' . $ii, true);
+                    $table["Injury Status ($ii)"][$i] = get_post_meta(get_the_id(), 'injuries_status_row' . $ii, true);
+                }
             }
 
         }
         $i++;
  
     } 
-    new dBug ($table);
     echo implode (',', array_keys($table))."\n";
     for ( $ii = 0; $ii < $i; $ii++ )
     {
