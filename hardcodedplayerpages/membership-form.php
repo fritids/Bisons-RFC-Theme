@@ -257,18 +257,22 @@ if( $_POST && ! isset( $_POST['edit_details']) )
          }
 
         if ($_POST['medconsdisabyesno'] == "Yes")
-        { 
-            for ( $i = 1; isset( $_POST['condsdisablities_name_row' . $i] ); $i++ )
+        {   
+            $i = 1;
+            $realcount = 1;
+            while ( isset( $_POST['condsdisablities_name_row' . $i] ) )
             {
                 
-       
-        
-                update_post_meta($post, 'condsdisablities_name_row' . $i, $_POST['condsdisablities_name_row' . $i]);
-                update_post_meta($post, 'condsdisablities_drugname_row' . $i, $_POST['condsdisablities_drugname_row' . $i]);
-                update_post_meta($post, 'condsdisablities_drugdose_freq_row' . $i, $_POST['condsdisablities_drugdose_freq_row' . $i]);
-                update_post_meta($post, 'condsdisablities_rowcount', $i);
-                
-                $newinfotable .= $newinfotable ? "<tr><td>".get_post_meta($post, 'condsdisablities_name_row' . $i, true)."</td><td>".get_post_meta($post, 'condsdisablities_drugname_row' . $i, true)."</td><td>".get_post_meta($post, 'condsdisablities_drugdose_freq_row' . $i, true)."</td></tr>": null;
+                if ( $_POST['condsdisablities_name_row' . $i] != '' )
+                {
+                    update_post_meta($post, 'condsdisablities_name_row' . $realcount, $_POST['condsdisablities_name_row' . $i]);
+                    update_post_meta($post, 'condsdisablities_drugname_row' . $realcount, $_POST['condsdisablities_drugname_row' . $i]);
+                    update_post_meta($post, 'condsdisablities_drugdose_freq_row' . $realcount, $_POST['condsdisablities_drugdose_freq_row' . $i]);
+                    update_post_meta($post, 'condsdisablities_rowcount', $realcount);                
+                    $newinfotable .= $newinfotable ? "<tr><td>".get_post_meta($post, 'condsdisablities_name_row' . $realcount, true)."</td><td>".get_post_meta($post, 'condsdisablities_drugname_row' . $realcount, true)."</td><td>".get_post_meta($post, 'condsdisablities_drugdose_freq_row' . $realcount, true)."</td></tr>": null;                 
+                    $realcount++;
+                }
+                $i++;  
             }
         }
         $infotable .= $newinfotable ? $newinfotable.'</tbody></table>' : null ;
@@ -282,20 +286,25 @@ if( $_POST && ! isset( $_POST['edit_details']) )
          }
         
         if ($_POST['allergiesyesno'] == "Yes")
-        { 
-            for ( $i = 1; isset( $_POST['allergies_name_row' . $i] ); $i++ )
+        {
+            $i = 1;
+            $realcount = 1;
+            while ( isset( $_POST['allergies_name_row' . $i] ) )
             {
-                update_post_meta($post, 'allergies_name_row' . $i, $_POST['allergies_name_row' . $i]);
-                update_post_meta($post, 'allergies_drugname_row' . $i, $_POST['allergies_drugname_row' . $i]);
-                update_post_meta($post, 'allergies_drugdose_freq_row' . $i, $_POST['allergies_drugdose_freq_row' . $i]);
-                update_post_meta($post, 'allergies_rowcount', $i);
-                $newinfotable2 .= $newinfotable2 ? "<tr><td>".get_post_meta($post, 'allergies_name_row' . $i, true)."</td><td>".get_post_meta($post, 'allergies_drugname_row' . $i, true)."</td><td>".get_post_meta($post, 'allergies_drugdose_freq_row' . $i, true)."</td></tr>": null;
+                if ( $_POST['allergies_name_row' . $i] != '' )
+                {
+                    update_post_meta($post, 'allergies_name_row' . $realcount, $_POST['allergies_name_row' . $i]);
+                    update_post_meta($post, 'allergies_drugname_row' . $realcount, $_POST['allergies_drugname_row' . $i]);
+                    update_post_meta($post, 'allergies_drugdose_freq_row' . $realcount, $_POST['allergies_drugdose_freq_row' . $i]);
+                    update_post_meta($post, 'allergies_rowcount', $realcount);
+                    $newinfotable2 .= $newinfotable2 ? "<tr><td>".get_post_meta($post, 'allergies_name_row' . $realcount, true)."</td><td>".get_post_meta($post, 'allergies_drugname_row' . $realcount, true)."</td><td>".get_post_meta($post, 'allergies_drugdose_freq_row' . $realcount, true)."</td></tr>": null;
+                    $realcount++;
+                }
+                $i++;
             }
         }
         
         $infotable .= $newinfotable2 ? $newinfotable2.'</tbody></table>' : null;
-        
-
         
         for ( $i = 1; isset( $_POST['injuries_name_row' . $i] ); $i++ )
         {
@@ -307,8 +316,26 @@ if( $_POST && ! isset( $_POST['edit_details']) )
         }
          
         if ($_POST['injuredyesno'] == "Yes")
-        { 
-            for ( $i = 1; isset( $_POST['injuries_name_row' . $i] ); $i++ )
+        {
+            $i = 1;
+            $realcount = 1; 
+            while( isset( $_POST['injuries_name_row' . $i] ) )
+            {
+                if ( $_POST['injuries_name_row' . $i] != '' )
+                {
+                    update_post_meta($post, 'injuries_name_row' . $realcount, $_POST['injuries_name_row' . $i]);
+                    update_post_meta($post, 'injuries_when_row' . $realcount, $_POST['injuries_when_row' . $i]);
+                    update_post_meta($post, 'injuries_treatmentreceived_row' . $realcount, $_POST['injuries_treatmentreceived_row' . $i]);
+                    update_post_meta($post, 'injuries_who_row' . $realcount, $_POST['injuries_who_row' . $i]);
+                    update_post_meta($post, 'injuries_status_row' . $realcount, $_POST['injuries_status_row' . $i]);
+                    update_post_meta($post, 'injuries_rowcount', $realcount);
+                    $newinfotable3 .= $newinfotable3 ? "<tr><td>".get_post_meta($post, 'injuries_name_row' . $realcount, true)."</td><td>".get_post_meta($post, 'injuries_when_row' . $realcount, true)."</td><td>".get_post_meta($post, 'injuries_treatmentreceived_row' . $i, true)."</td><td>".get_post_meta($post, 'injuries_who_row' . $realcount, true)."</td><td>".get_post_meta($post, 'injuries_status_row' . $realcount, true)."</td></tr>": null;
+                    $realcount++;
+                }
+                $i++;
+            }
+
+            for ( $i = 1; isset( $_POST['injuries_name_row' . $i] ) && $_POST['injuries_name_row' . $i] != ''; $i++ )
             {
                 update_post_meta($post, 'injuries_name_row' . $i, $_POST['injuries_name_row' . $i]);
                 update_post_meta($post, 'injuries_when_row' . $i, $_POST['injuries_when_row' . $i]);
