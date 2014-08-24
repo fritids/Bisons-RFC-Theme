@@ -512,7 +512,8 @@ Class Wordpress_Form
         $output .= "<button type='submit'";
         $output .= $this->submit_button_classes ? " class='".implode ( ' ', $this->submit_button_classes)."'" : null;
         $output .= ">$this->submit_text</button>";
-        $output .= "<input type='hidden' name='nonce' value='".wp_create_nonce( 'wordpress_form_submit' )."' />"; 
+        $output .= "<input type='hidden' name='nonce' value='".wp_create_nonce( 'wordpress_form_submit' )."' />";
+        $output .= "<input type='hidden' name='wp_form_id' value='".$this->html_id."' />"; 
         if ( ! $this->no_form_tag ) $output .= "</form>\n";   
         if ( $echo ) echo $output;
         else return $output;
