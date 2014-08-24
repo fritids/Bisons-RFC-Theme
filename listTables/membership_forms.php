@@ -327,7 +327,8 @@ class Membership_Forms_Table extends WP_List_Table_Copy
     {
         $actions = array(
             'bulk_email'    => 'Send Email',
-            'reset_pass'    => 'Reset Passwords'
+            'reset_pass'    => 'Reset Passwords',
+            'download_csv'  => 'Download CSV'
         );
         
         return $actions;
