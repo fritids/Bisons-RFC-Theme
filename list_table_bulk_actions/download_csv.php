@@ -1,11 +1,13 @@
 <?php
 if ( isset ( $_POST['user_id'] ) )
 {
-    header('Content-type: text/csv');
-    header('Content-Disposition: attachment; filename="membership_data.csv"');
+    //header('Content-type: text/csv');
+    //header('Content-Disposition: attachment; filename="membership_data.csv"');
 
     
     $table = array();
+    
+    
     $count = 0;
     $i = 0;
     foreach ( $_POST['user_id'] as $user )
@@ -39,7 +41,7 @@ if ( isset ( $_POST['user_id'] ) )
             }
             
             $table['Allergies'][$i] = get_post_meta(get_the_id(), 'allergiesyesno', true);
-            for ( $ii = 1; get_post_meta(get_the_id(), 'allergiesyesno' . $ii, true); $ii++ )
+            for ( $ii = 1; get_post_meta(get_the_id(), 'allergies_name_row' . $ii, true); $ii++ )
             {
                 $table["Allergy ($ii)"][$i] = get_post_meta(get_the_id(), 'allergies_name_row' . $ii, true);
                 $table["Allergy Medication ($ii)"][$i] = get_post_meta(get_the_id(), 'allergies_drugname_row' . $ii, true);
@@ -60,6 +62,7 @@ if ( isset ( $_POST['user_id'] ) )
         $i++;
  
     } 
+    new dBug ($table);
     echo implode (',', array_keys($table))."\n";
     for ( $ii = 0; $ii < $i; $ii++ )
     {
