@@ -1,11 +1,21 @@
 <?php
 $formsTable = new Membership_Forms_Table(); 
 $formsTable->prepare_items();
+
 ?>
 <div class="wrap">
       <h2>Players <a class='add-new-h2' href='<?php echo admin_url( 'admin.php?page=add-player' ) ?>'>Add Player</a></h2>
       <p>The table below contains all the membership forms that have been submitted via the website this season. If it is hard to read because of the number of columns, you can turn some of them off - just click on 'screen options' (look at the top right hand corner) and choose the columns you want to see.</p>
-      <?php
+      <?php if(isset( $_POST['action'] ) && ! isset ( $_POST['confirm_action'] )) : ?>
+      <form method="post">
+          <?php foreach ($_POST as $key => $value ) : ?>
+            <input type='hidden' name='<?php echo $key ?>' value='<?php echo is_array ( $value ) ?  htmlentities( serialize( $value ) ) : $value  ?>' />
+          <?php endforeach ?>
+            <p>Are you sure you want to perform this action?</p>
+            <button class='button' type='submit' name='confirm_action' value='true'>Yes</button>
+            <button class='button' type='submit' name='confirm_action' value='false'>No</button>
+      </form>
+      <?php endif; 
       
       if ( $_POST ) 
       {

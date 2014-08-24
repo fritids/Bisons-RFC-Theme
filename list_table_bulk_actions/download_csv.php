@@ -1,6 +1,7 @@
 <?php
 if ( isset ( $_POST['user_id'] ) )
 {
+    $_POST['confirm_action'] = 'true';
     header('Content-type: text/csv');
     header('Content-Disposition: attachment; filename="membership_data.csv"');
 

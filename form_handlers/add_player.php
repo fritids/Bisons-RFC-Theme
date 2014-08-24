@@ -1,5 +1,5 @@
 <?php
-NCLUDED) exit;
+if (!INCLUDED) exit;
 
 global $admin_notice_errors;
 

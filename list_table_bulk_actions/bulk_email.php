@@ -1,5 +1,6 @@
 <?php
 if (!INCLUDED) exit;
+$_POST['confirm_action'] = 'true';
 $users = explode ( ',', $_POST['email_to']);
 $results = send_mandrill_template ( $users, 'generic-email', array('body' => wpautop( $_POST['message_body']) ), false, $_POST['message_subject'] );
 $sentcount = 0;
