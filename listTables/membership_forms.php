@@ -163,7 +163,8 @@ class Membership_Forms_Table extends WP_List_Table_Copy
 
                 $playedbefore = ( get_post_meta(get_the_id(), 'playedbefore' , true) == 'Yes' ) ? 'Yes - '.get_post_meta(get_the_id(), 'whereandseasons' , true) : 'No'; 
                 $data[] = array(
-                    'id'                 => get_the_id(),
+                    'form_id'                 => get_the_id(),
+                    'user_id'                 => get_the_author_meta('ID'), 
                     'type'                    => get_post_meta(get_the_id(), 'joiningas' , true),
                     'fullname'                => get_post_meta(get_the_id(), 'firstname', true).' '.get_post_meta(get_the_id(), 'surname', true),
                     'dob'                     => $dob,
@@ -328,7 +329,7 @@ class Membership_Forms_Table extends WP_List_Table_Copy
     
     function column_cb($item) {
         return sprintf(
-            '<input type="checkbox" name="id[]" value="%s" />', $item['id']
+            '<input type="checkbox" name="user_id[]" value="%s" />', $item['user_id']
         );    
     }
     

@@ -13,12 +13,24 @@ class Players_No_Mem_form extends WP_List_Table_Copy
         $data = array();
         foreach ( $users as $user )
         {
-            $data[] = array(
-                'name'              => $user->data->display_name,
-                'dateReg'   => $user->data->user_registered,
-                'type'              => $user->roles[0],
-                'email'             => $user->data->user_email
-            );
+          $membership_form = new WP_Query ( array (
+                     'post_type' => 'membership_form',
+                     'posts_per_page' => 1,
+                     'orderby'   => 'date',
+                     'order'     => 'ASC',
+                     'author'   => $user->data->ID
+                     ) );
+            
+            if ( ! $membership_form->have_posts() )       
+            {
+                $data[] = array(
+                    'user_id'                => $user->id,
+                    'name'              => $user->data->display_name,
+                    'dateReg'   => reformat_date( $user->data->user_registered, 'jS \o\f F Y' ),
+                    'type'              => $user->roles[0],
+                    'email'             => $user->data->user_email
+                );
+            }
         }
         $this->data = $data;
         
@@ -73,6 +85,12 @@ class Players_No_Mem_form extends WP_List_Table_Copy
             $this->items = $this->data;  
             
       }
+      
+      function column_cb($item) {
+        return sprintf(
+            '<input type="checkbox" name="user_id[]" value="%s" />', $item['user_id']
+        );    
+    }
       
     function column_default( $item, $column_name )
       {
