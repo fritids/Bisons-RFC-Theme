@@ -4,9 +4,12 @@ class Players_No_Mem_form extends WP_List_Table_Copy
 {
       private $users;
       
+      public static $singular = 'user';
+      public static $plural = 'users';
+      
       function __construct()
       {
-        // Get fixtures from Wordpress database
+        // Get users from Wordpress database
         $users = get_users();
         
         // Create table data array
@@ -35,12 +38,16 @@ class Players_No_Mem_form extends WP_List_Table_Copy
         $this->data = $data;
         
         
-        parent::__construct();
+        parent::__construct(
+            array('singular'    =>  Players_No_Mem_form::$singular,
+                  'plural'      =>  Players_No_Mem_form::$plural)
+        );
       }
       
     function get_columns()
     {
             $columns = array(
+                  'cb'  => '<input type="checkbox" />',
                   'name' => 'Name',
                   'dateReg' => 'Date Registered',
                   'type' => 'Type',
@@ -77,13 +84,33 @@ class Players_No_Mem_form extends WP_List_Table_Copy
       }
       function prepare_items()
       {
+          
+           $per_page = $this->get_items_per_page('awaiting_users_per_page', 5);;
+           $current_page = $this->get_pagenum();
+           $total_items = count($this->data);
+            usort( $this->data, array( &$this, 'usort_reorder' ) );
+           $this->found_data = array_slice($this->data,(($current_page-1)*$per_page),$per_page);
+            
+           $this->set_pagination_args( array(
+              'total_items' => $total_items,                  //WE have to calculate the total number of items
+              'per_page'    => $per_page                     //WE have to determine how many items to show on a page
+           ) );
+           $this->items = $this->found_data;
+
             $columns = $this->get_columns();
             $hidden = array();
             $sortable = $this->get_sortable_columns();
             $this->_column_headers = array($columns, $hidden, $sortable);
-            usort( $this->data, array( &$this, 'usort_reorder' ) );
-            $this->items = $this->data;  
-            
+            $this->items = $this->found_data;  
+      }
+      
+     function get_bulk_actions() {
+      $actions = array(
+        'reset_pass'    => 'Reset Password',
+        'resend_welcome'    => 'Resend Welcome Email',
+        'send_email'    => 'Send Email',
+      );
+      return $actions;
       }
       
       function column_cb($item) {

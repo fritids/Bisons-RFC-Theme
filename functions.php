@@ -1,11 +1,12 @@
 <?php 
 
+define('INCLUDED', TRUE);
+
 include_once('dBug.php');
 
 
-
 include_once('helper_functions/reset_password.php');
-include_once('init/login_css.php');
+include_once('init/modify_login_page.php');
 include_once('init/current_user.php');
 include_once('helper_functions/timer.php');
 global $timer;
@@ -31,8 +32,7 @@ include_once('classes/WP_List_table_copy.php');
 
 // List tables
 include_once('listTables/fixtures.php');
-include_once('listTables/players_no_mem_form.php');
-include_once('listTables/membership_forms.php');
+
 
 // Feeds
 include_once('feeds/ical-all.php');
@@ -99,6 +99,19 @@ include_once( 'init/better-comments.php' );
 include_once( 'init/start_sessions.php');
 
 
+// Form handlers
+if ( wp_verify_nonce( $_POST['nonce'], 'wordpress_form_submit' ) )
+    include_once('form_handlers/' . $_POST['wp_form_id']. '.php');
+
+include_once('listTables/players_no_mem_form.php');
+if ( wp_verify_nonce ( 'bulk-'.Players_No_Mem_form::$plural )  && $_POST['action'] != '-1' )
+    include_once ('list_table_bulk_actions/' . $_POST['action'] . '.php' );
+
+
+include_once('listTables/membership_forms.php');
+if ( wp_verify_nonce ( $_POST['_wpnonce'], 'bulk-'.Membership_Forms_Table::$plural ) && $_POST['action'] != '-1')
+    include_once ('list_table_bulk_actions/' . $_POST['action'] . '.php' );
+    
 
 // Fix 'insert to post' button not visible bug.
 add_filter( 'get_media_item_args', 'force_send' );

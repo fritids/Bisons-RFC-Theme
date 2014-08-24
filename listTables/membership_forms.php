@@ -7,6 +7,9 @@ class Membership_Forms_Table extends WP_List_Table_Copy
 {
       private $users;
       
+      public static $singular = 'user';
+      public static $plural = 'users';
+      
       function __construct()
       {
         // Get fixtures from Wordpress database
@@ -196,7 +199,11 @@ class Membership_Forms_Table extends WP_List_Table_Copy
         $hook = add_menu_page('My Plugin List Table', 'My List Table Example', 'activate_plugins', 'my_list_test', 'my_render_list_page');
         add_action( "load-$hook", 'add_options' );
         
-        parent::__construct();
+        parent::__construct(
+            array('singular'    =>  Membership_Forms_Table::$singular,
+                  'plural'      =>  Membership_Forms_Table::$plural)
+        );
+        
       }
       
     function get_columns()
