@@ -1,22 +1,9 @@
 <?php
-
-function emails_sent()
-    {
-    ?>
-    <div class="updated">
-        <p>Emails sent...</p>
-    </div>
-    <?php
-}
-
-if ($_POST['action'] == 'bulk_email_submit')
-{
-    add_action( 'admin_notices', 'emails_sent' );
-    
-}
+$formsTable = new Membership_Forms_Table(); 
+$formsTable->prepare_items();
 ?>
 <div class="wrap">
-      <h1>Players</h1>
+      <h2>Players <a class='add-new-h2' href='<?php echo admin_url( 'admin.php?page=add-player' ) ?>'>Add Player</a></h2>
       <p>The table below contains all the membership forms that have been submitted via the website this season. If it is hard to read because of the number of columns, you can turn some of them off - just click on 'screen options' (look at the top right hand corner) and choose the columns you want to see.</p>
       <?php
       
@@ -53,7 +40,6 @@ if ($_POST['action'] == 'bulk_email_submit')
                         $emails[] = $emailstring;
                   }
                   
-                  
                   $emails = implode ( ', ', $emails);
                   $emailform = new Wordpress_Form ( null, null, 'post', 'Send', 'emailform' );
                   $emailform->not_using_fieldsets();
@@ -71,27 +57,13 @@ if ($_POST['action'] == 'bulk_email_submit')
                   $emailform->add_textarea( null, 'message_body', 'Body', 'large-text' );
                   $emailform->form_output ( ); 
               break;
-              
-              case 'bulk_email_submit':
-                $users = explode ( ',', $_POST['email_to']);
-                new dBug($users);
-                send_mandrill_template ( $users, 'generic-email', array('body' => wpautop( $_POST['message_body']) ), false, $_POST['message_subject'] );
-              break;
-              
-              case 'reset_pass': 
-                foreach ( $_POST['id'] as $id )
-                {
-                    $user_id = get_post_field( 'post_author', $id );
-                    reset_bisons_password( $user_id );
-                }
-              break;
-          }
+                            
+
+      }
       }
       ?>
       <form method="post">
     <?php 
-    $formsTable = new Membership_Forms_Table(); 
-    $formsTable->prepare_items();
     $formsTable->display(); 
       ?>
       </form>
