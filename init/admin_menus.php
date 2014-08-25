@@ -11,9 +11,14 @@ function Membership_Forms_Table_Add_Options() {
              'option' => 'forms_per_page'
     );
     add_screen_option( $option, $args );
-    
     $membershipFormsTable = new Membership_Forms_Table;
 }
+function Membership_Forms_Table_Set_Options($status, $option, $value) 
+{
+  return $value;
+}
+add_filter('set-screen-option', 'Membership_Forms_Table_Set_Options', 10, 3);
+
 
 function Awaiting_Membership_Forms_Table_Add_Options() {
   $option = 'per_page';
@@ -24,20 +29,32 @@ function Awaiting_Membership_Forms_Table_Add_Options() {
          );
   add_screen_option( $option, $args );
 }
-
-
-function Membership_Forms_Table_Set_Options($status, $option, $value) 
-{
-  return $value;
-}
-add_filter('set-screen-option', 'Membership_Forms_Table_Set_Options', 10, 3);
-
-
 function Awaiting_Membership_Forms_Table_Set_Options($status, $option, $value) 
 {
   return $value;
 }
 add_filter('set-screen-option', 'Awaiting_Membership_Forms_Table_Set_Options', 10, 3);
+
+
+
+function Emails_Table_Add_Options() {
+  $option = 'per_page';
+  $args = array(
+         'label' => 'Emails',
+         'default' => 10,
+         'option' => 'emails_per_page'
+         );
+  add_screen_option( $option, $args );
+}
+function Emails_Table_Set_Options($status, $option, $value) 
+{
+  return $value;
+}
+add_filter('set-screen-option', 'Emails_Table_Set_Options', 10, 3);
+
+
+
+
 
 
 
@@ -47,9 +64,7 @@ function add_admin_menus()
     // Create 'players' submenu
     $membership_form_hook = add_menu_page ( 'Manage Membership Form', 'Players', 'committee_perms', 'players', 'membership_forms_callback', 'dashicons-groups', 8);
     add_action( "load-$membership_form_hook", 'Membership_Forms_Table_Add_Options' );
-
     add_submenu_page ( 'players', 'Manage Players', 'Manage Players', 'committee_perms', 'players' );
-    
 
     $awaitingmembershiphook = add_submenu_page ( 'players', 'Awaiting Membership', 'Awaiting Membership', 'committee_perms', 'awaiting-membership', 'awaiting_membership_callback');
     add_action( "load-$awaitingmembershiphook", 'Awaiting_Membership_Forms_Table_Add_Options' );
@@ -81,7 +96,8 @@ function add_admin_menus()
     
     // Create 'email' submenu
     add_menu_page ( 'Email', 'Email', 'committee_perms', 'email', 'email_menu_callback', 'dashicons-email');
-    add_submenu_page ( 'email', 'Log', 'Log', 'committee_perms', 'email' );
+    $emailpagehook =  add_submenu_page ( 'email', 'Log', 'Log', 'committee_perms', 'email' );
+    add_action( "load-$emailpagehook", 'Emails_Table_Add_Options' );
 
 
     
