@@ -2,7 +2,7 @@
 if (!INCLUDED) exit;
 $_POST['confirm_action'] = 'true';
 $users = explode ( ',', $_POST['email_to']);
-$results = send_mandrill_template ( $users, 'generic-email', array('body' => wpautop( $_POST['message_body']) ), false, $_POST['message_subject'] );
+$results = send_mandrill_template ( $users, 'generic-email', array('body' => wpautop( stripslashes( $_POST['message_body']) ) ), false, $_POST['message_subject'] );
 $sentcount = 0;
 $invalidcount = 0;
 $rejected = array();
@@ -21,6 +21,7 @@ if ( $sentcount > 0 )
     function bulk_email_update_notice() 
     {
         echo '<div class="updated">';
+        
         if ( $sentcount == 1 )
         {
             echo "<p>Email sent successfully.</p>";    

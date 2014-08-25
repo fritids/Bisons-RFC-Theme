@@ -65,6 +65,11 @@ list-style:none;
 margin-left: 5px;
 }
 
+.email_log li 
+{
+    padding-bottom:10px; 
+}
+
 .spacer {
 clear:both;
 }
