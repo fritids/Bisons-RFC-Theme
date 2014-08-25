@@ -2,13 +2,8 @@
 if (!INCLUDED) exit;
 if ( $_POST['confirm_action'] == 'true')
 {
-    
-    $action_must_confirm = false;
-    $usercount = 0;
     if ( isset ( $_POST['user_id'] ) )
     {
-        $user_ids = ( @unserialize( stripslashes( ( $_POST['user_id']) ) ) !== false )? unserialize( stripslashes( ( $_POST['user_id']) ) ) :  $_POST['user_id'];
-        foreach ($user_ids as $id) {
             $usercount++;
             
             // Generate a password if one isn't supplied
@@ -24,7 +19,7 @@ if ( $_POST['confirm_action'] == 'true')
         
             // Email the user about the password reset
             send_mandrill_template($id, 'welcome-email', $data, 'registration');
-        }
+      
         if ($usercount == 1) 
         {
             function resend_welcome_update_single_notice()
@@ -43,7 +38,7 @@ if ( $_POST['confirm_action'] == 'true')
                 echo "<p>Welcome emails were successfully sent.</p>";
                 echo '</div>';
             }
-            add_action('admin_notices', 'resend_welcome_update_single_notice');
+            add_action('admin_notices', 'resend_welcome_update_single_notice'); 
         }
     }
     else

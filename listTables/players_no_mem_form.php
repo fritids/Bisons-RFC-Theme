@@ -21,8 +21,37 @@ class Players_No_Mem_form extends WP_List_Table_Copy
                      'posts_per_page' => 1,
                      'orderby'   => 'date',
                      'order'     => 'ASC',
-                     'author'   => $user->data->ID
-                     ) );
+                     'author' => $user->data->ID
+                        ) );
+
+          $recent_emails = new WP_Query ( array (
+            'post_type' => 'email_log',
+            'posts_per_page' => 1,
+            'orderby'       => 'date',
+            'order'         => 'ASC',
+             'meta_key'   => 'user_id',
+             'meta_value' => $user->id
+          ));         
+            if ( $recent_emails->have_posts() ) 
+            {
+                $loghtml = '<ul>';
+               
+                while ( $recent_emails->have_posts() )
+                {
+                    $recent_emails->the_post();
+                    $loghtml .= "<li><strong>Template: </strong>".get_post_meta(get_the_id(), 'template', true)." <br />";
+                    $loghtml .= "<strong>Timestamp:</strong> ".get_the_date('g:i:a d/m/Y')."<br />";
+                    $loghtml .= "<strong>Status:</strong> ".ucfirst ( get_post_meta(get_the_id(), 'status', true) )."<br />";
+                    $loghtml .= get_post_meta(get_the_id(), 'reject_reason', true) ? "<strong>Reject Reason</strong> ".get_post_meta(get_the_id(), 'reject_reason', true)."<br />" : '';
+                    $loghtml .= "</li>";
+                }
+                $loghtml .= '</ul>';
+            }
+            else
+            {
+                $loghtml = 'Empty';   
+            }
+            
             
             if ( ! $membership_form->have_posts() )       
             {
@@ -31,7 +60,8 @@ class Players_No_Mem_form extends WP_List_Table_Copy
                     'name'              => $user->data->display_name,
                     'dateReg'   => reformat_date( $user->data->user_registered, 'jS \o\f F Y' ),
                     'type'              => $user->roles[0],
-                    'email'             => $user->data->user_email
+                    'email'             => $user->data->user_email,
+                    'last_email' => $loghtml
                 );
             }
         }
@@ -52,6 +82,7 @@ class Players_No_Mem_form extends WP_List_Table_Copy
                   'dateReg' => 'Date Registered',
                   'type' => 'Type',
                   'email' => 'Email',
+                  'last_email' => 'Last Email'
             );
             
             return $columns; 
@@ -109,6 +140,7 @@ class Players_No_Mem_form extends WP_List_Table_Copy
         'reset_pass'    => 'Reset Password',
         'resend_welcome'    => 'Resend Welcome Email',
         'send_email'    => 'Send Email',
+        'send_membership_due_email' => 'Membership Due Email'
       );
       return $actions;
       }
@@ -132,6 +164,12 @@ class Players_No_Mem_form extends WP_List_Table_Copy
                   default:
                         new dBug ( $item );
             }
+      }
+      
+      function column_last_email ( $item )
+      {
+          $actions = array ( 'All Emails' => sprintf('<a href="%s">All Emails</a>', admin_url('admin.php?page=email&user_id='.$item['user_id'])));
+          return sprintf('%1$s %2$s', $item['last_email'], $this->row_actions($actions) );
       }
 }
 
