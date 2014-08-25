@@ -2,7 +2,7 @@
 function fees_direct_debit_shortcode(  )
 {
    $fees = new WP_Query ( array( 'post_type' => 'membership_fee', 'order' => 'ASC', 'orderby' => 'meta_value', 'meta_key' => 'fee-order' ) ); 
-   $return = "<table class='center'><thead><thead><tr><th>Membership</th><th>Amount</th></tr></thead></thead><tbody>";
+   $return = "<table class='center'><tbody>";
    
    while ( $fees->have_posts() ) 
    {
@@ -31,7 +31,7 @@ add_shortcode('memfeesDD', 'fees_direct_debit_shortcode');
 function fees_single_payment_shortcode(  )
 {
    $fees = new WP_Query ( array( 'post_type' => 'membership_fee', 'order' => 'ASC', 'orderby' => 'meta_value', 'meta_key' => 'fee-order' ) ); 
-   $return = "<table class='center'><thead><thead><tr><th>Type</th><th>Amount</th></tr></thead></thead><tbody>";
+   $return = "<table class='center'><tbody>";
    
    while ( $fees->have_posts() ) 
    {
