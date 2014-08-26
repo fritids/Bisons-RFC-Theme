@@ -130,7 +130,8 @@ if ( ! isset ( $_POST['edit_details'] ) )
             'Weight' => 'weight',
             'How many cigarettes per day?' => 'howmanycigsperday',
             'How did you hear about the Bisons?' => 'howdidyouhear',
-            'What can you bring to the Bisons' => 'whatcanyoubring'
+            'What can you bring to the Bisons' => 'whatcanyoubring',
+            'Top Size'  => 'topsize'
 
         );
         

@@ -1,6 +1,7 @@
 <?php
     wp_enqueue_script('dynamicforms');
-    wp_enqueue_script('formvalidation');
+    
+    
    
 
 $form_user = ( isset ( $_GET['player_id'] ) && current_user_can ('committee_perms') ) 
@@ -91,10 +92,14 @@ if ( isset ( $_GET['resource_id'] ) )
   
 
 if ( ! isset ( $disabled ) )
-	$disabled = false; 
+	$disabled = false;     
 
 if ( ! isset ( $form_id ) )
-      $form_id = NULL; 
+      $form_id = NULL;
+
+if ( ! $disabled ) 
+    wp_enqueue_script('formvalidation');
+
 ?>
 
 <header>
@@ -490,6 +495,20 @@ if ( ! isset ( $form_id ) )
             <label for="whatcanyoubring">Is there anything you can bring to the Bisons?</label>
             <textarea name="whatcanyoubring" id="whatcanyoubring"<?php if ( $disabled ) { ?> disabled='true'<?php } ?>><?php if ( $current_form->have_posts() ) { echo get_post_meta($form_id, 'whatcanyoubring', true); } ?></textarea>
             <p class='forminfo'><strong>Optional</strong> The Bisons is run by a team of dedicated volunteers and we are always looking for people with useful skills that could make the team even better. This doesn't have to be rugby related, for example: perhaps you are good at numbers and might be a potential treasurer, or you have some serious marketing skills to help us get the club name out there.</p>
+        </div>
+        <div>
+            <label for="topsize">Top size</label>
+            <select class='mustselect' name='topsize'<?php if ( $disabled ) { ?> disabled='true'<?php } ?>>
+                <option></option>
+                <option<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'topsize', true) == "Small") { echo " selected='selected'"; } ?>>Small</option>
+                <option<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'topsize', true) == "Medium") { echo " selected='selected'"; } ?>>Medium</option>
+                <option<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'topsize', true) == "Large") { echo " selected='selected'"; } ?>>Large</option>
+                <option<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'topsize', true) == "X-Large") { echo " selected='selected'"; } ?>>X-Large</option>
+                <option<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'topsize', true) == "XX-Large") { echo " selected='selected'"; } ?>>XX-Large</option>
+                <option<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'topsize', true) == "XXX-Large") { echo " selected='selected'"; } ?>>XXX-Large</option>
+
+            </select>
+            <p class='forminfo'>What size would you like your exclusive Bisons social top to be?</p>
         </div>
     </fieldset>
     <?php if ( ! $current_form->have_posts() ) : ?>

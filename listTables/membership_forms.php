@@ -184,7 +184,8 @@ class Membership_Forms_Table extends WP_List_Table_Copy
                     'weight'                  => get_post_meta(get_the_id(), 'weight' , true),
                     'cardiacQues'             => $conditionsstring,
                     'howDidYouHear'           => get_post_meta(get_the_id(), 'howdidyouhear' , true),
-                    'whatCanYouBring'         => get_post_meta(get_the_id(), 'whatcanyoubring' , true)
+                    'whatCanYouBring'         => get_post_meta(get_the_id(), 'whatcanyoubring' , true),
+                    'topsize'                 => get_post_meta(get_the_id(), 'topsize' , true)
                 );
             }
         }
@@ -226,7 +227,8 @@ class Membership_Forms_Table extends WP_List_Table_Copy
                     'weight'                  => 'Weight',
                     'cardiacQues'             => 'Cardiac questionnaire',
                     'howDidYouHear'           => 'How did you hear about us',
-                    'whatCanYouBring'         => 'Skills'
+                    'whatCanYouBring'         => 'Skills',
+                    'topsize'                 => 'Top size'
             );
             
             return $columns; 
@@ -262,6 +264,7 @@ class Membership_Forms_Table extends WP_List_Table_Copy
                     'height'                  => array('height', false),
                     'weight'                  => array('weight', false),
                     'cardiacQues'             => array('cardiacQues', false),
+                    'top size'                => array('topsize', false)
                   );
             return $columns;
       }
@@ -311,6 +314,7 @@ class Membership_Forms_Table extends WP_List_Table_Copy
                     case 'cardiacQues':
                     case 'howDidYouHear':
                     case 'whatCanYouBring':
+                    case 'topsize': 
                     return $item [ $column_name ];
                   default:
                         new dBug ( $item );
