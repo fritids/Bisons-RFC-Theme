@@ -501,7 +501,6 @@ Class Wordpress_Form
 
                     $output .= $this->row_tag ? "\t\t<".$this->row_tag.">" : '';
                     $output .= $field['html'];
-                    $output .= $field['error'] ? '<p class=\'formerror\'>'.$field['error'].'</p>' : '';
                     $output .= $this->row_tag ? "\t\t</".$this->row_tag.">" : '';
 
               }
