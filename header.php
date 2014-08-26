@@ -81,3 +81,6 @@ $timer->record_execution_time('Start of header.php');
 
  
         </div>
+    <?php if ( $GLOBALS['bisons_flash_message'] ) : ?>
+        <p class="flashmessage"><?php echo $GLOBALS['bisons_flash_message'] ?></p>
+    <?php endif ?>
