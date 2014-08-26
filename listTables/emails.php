@@ -94,7 +94,6 @@ class Email_Log_Tables extends WP_List_Table_Copy
       function get_columns()
       {
           $columns = array(
-            'cb'                => '<input type="checkbox" />',
             'timestamp'         => 'Date',
             'recipient_name'    => 'Name',
             'status'            => 'Status',
@@ -149,10 +148,5 @@ class Email_Log_Tables extends WP_List_Table_Copy
               default:
                   new dBug ( $item );
           }
-      }
-
-      function column_cb ( $item )
-      {
-          return sprintf( '<input type="checkbox" name="post_id[]" value="%s" />', $item['post_id'] );      
       }
 }
