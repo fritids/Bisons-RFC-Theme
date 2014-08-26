@@ -28,7 +28,7 @@ class Players_No_Mem_form extends WP_List_Table_Copy
             'post_type' => 'email_log',
             'posts_per_page' => 1,
             'orderby'       => 'date',
-            'order'         => 'ASC',
+            'order'         => 'DESC',
              'meta_key'   => 'user_id',
              'meta_value' => $user->id
           ));         
