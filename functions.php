@@ -5,6 +5,8 @@ define('INCLUDED', TRUE);
 include_once('dBug.php');
 
 
+include_once('init/get_webhooks.php');
+
 include_once('helper_functions/reset_password.php');
 include_once('init/modify_login_page.php');
 include_once('init/current_user.php');
