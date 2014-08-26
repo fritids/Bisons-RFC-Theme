@@ -96,6 +96,7 @@ class Email_Log_Tables extends WP_List_Table_Copy
           $columns = array(
             'timestamp'         => 'Date',
             'recipient_name'    => 'Name',
+            'email_address'     => 'Email',
             'status'            => 'Status',
             'template'          => 'Template'
           );    
@@ -110,6 +111,7 @@ class Email_Log_Tables extends WP_List_Table_Copy
             $columns = array(
                     'timestamp'       => array('date', false),
                     'recipient_name'  => array('name', false),
+                    'email_address'   => array('email', false),
                     'status'          => array('status', false),
                     'template'        => array('template', false),
                   );
@@ -144,6 +146,7 @@ class Email_Log_Tables extends WP_List_Table_Copy
               case 'recipient_name':
               case 'status':
               case 'template':
+              case 'email_address':
                 return $item [ $column_name ];
               default:
                   new dBug ( $item );
