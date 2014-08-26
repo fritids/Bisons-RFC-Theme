@@ -620,6 +620,11 @@ function gocardless_environment_settings_callback ()
     echo "<p>Use the dropdown box below to switch between GoCardless PRODUCTION and SANDBOX modes.</p>";
 }
 
+function mandrill_settings_callback()
+{
+    
+}
+
 function initialise_other_settings()
 {
    
@@ -635,7 +640,8 @@ function initialise_other_settings()
             'gcl-prod-app-secret' => '',
             'gcl-prod-merchant-id' => '',
             'gcl-prod-access-token' => '',
-            'gcl-environment' => 'Sandbox'
+            'gcl-environment' => 'Sandbox',
+            'mandrill-webhook-key'  => ''
 
         );  
         add_option( 'other-settings-page', $options);
@@ -758,7 +764,31 @@ function initialise_other_settings()
         array( 'gcl-prod-access-token', 'other-settings-page')
     );
 
-      
+      add_settings_section(
+        'other-settings-mandrill',
+        'Mandrill Settings',
+        'mandrill_settings_callback',
+        'other-settings-page'
+    );
+    
+    add_settings_field(
+        'mandrill-settings-api-key',
+        'API Key',
+        'singleline_input_field',
+        'other-settings-page',
+        'other-settings-mandrill',
+        array( 'mandrill-settings-api-key', 'other-settings-page')
+    );
+
+    add_settings_field(
+        'mandrill-settings-webhook-key',
+        'Webhook Key',
+        'singleline_input_field',
+        'other-settings-page',
+        'other-settings-mandrill',
+        array( 'mandrill-settings-webhook-key', 'other-settings-page')
+    );
+    
     register_setting(
         'other-settings-page',
         'other-settings-page'
