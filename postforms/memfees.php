@@ -1,10 +1,11 @@
+<?php wp_enqueue_script('formvalidation');  ?>
 <div id='custom-form'>
     <table class="form-table">
         <tbody>
             <tr>
                 <th><label for="fee-name">Fee Name</label></th>
                 <td>
-                    <input type='text' name='fee-name' value='<?php echo get_post_meta( $post->ID, 'fee-name', true) ?>' />
+                    <input class='notempty' type='text' name='fee-name' value='<?php echo get_post_meta( $post->ID, 'fee-name', true) ?>' />
                 </td>
             </tr>
             <tr>
@@ -44,7 +45,7 @@
             <tr>
                 <th><label for="fee-description">Description</label></th>
                 <td>
-                    <textarea class="address-input small" name='fee-description'><?php echo get_post_meta( get_the_id(), 'fee-description', true) ?></textarea>
+                    <textarea class="address-input small notempty" name='fee-description'><?php echo get_post_meta( get_the_id(), 'fee-description', true) ?></textarea>
                 </td>
             </tr>
             <tr>

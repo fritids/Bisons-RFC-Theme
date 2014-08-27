@@ -1,3 +1,4 @@
+<?php wp_enqueue_script('formvalidation'); ?>
 <?php if(!$_GET['parent_post'] && $_SERVER['PHP_SELF'] == '/wp-admin/post-new.php') { ?>
 
     <p>Error: You cannot create a new match result from here - please use the button within the fixture editing screen.</p>
@@ -15,11 +16,11 @@
             <tbody>
             <tr>
                 <th><label>Our score</label></th>
-                <td><input class='small-text' type='text' name='our-score' value='<?php echo get_post_meta( $post->ID, 'our-score', true) ?>' /></td>
+                <td><input class='small-text notempty' type='text' name='our-score' value='<?php echo get_post_meta( $post->ID, 'our-score', true) ?>' /></td>
             </tr>
             <tr>
                 <th><label>Their score</label></th>
-                <td><input class='small-text' type='text' name='their-score' value='<?php echo get_post_meta( $post->ID, 'their-score', true) ?>' /></td>
+                <td><input class='small-text notempty' type='text' name='their-score' value='<?php echo get_post_meta( $post->ID, 'their-score', true) ?>' /></td>
             </tr>
             <tr>
                 <th scope="row">Visible</th>

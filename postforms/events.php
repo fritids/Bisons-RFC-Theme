@@ -1,21 +1,39 @@
 <?php
 $image_id = get_post_meta( $post->ID, 'image_id', true);
 $image_url = wp_get_attachment_url( $image_id );
+wp_enqueue_script('formvalidation');
+wp_enqueue_script('dynamicforms');
+
+
 ?>
 <div id='custom-form'>
     <table class="form-table">
         <tbody>
         <tr>
+            <th scope="row">All Day</th>
+            <td>
+            <fieldset>
+                <legend class="screen-reader-text"><span>All-Day Event</span></legend>
+                <label for="allDay">
+<input name="allDay" type="checkbox" id="allDay" value="true" <?php if( get_post_meta( $post->ID, 'allDay', true)) echo "checked='checked'"; ?>>
+All-Day Event</label>
+            </fieldset>
+               <span class="description">If you tick this box, item will appear without a time on the website and as an all-day event on the iCal feed. If you do not tick this box, you <strong>must</strong>
+ supply both a start and end time.</td>
+        </tr>
+
+        <tr>
             <th><label for="date">Starting Date</label></th>
             <td>
-                <input type='date' name='date' value='<?php echo get_post_meta( $post->ID, 'date', true) ? date('Y-m-d', get_post_meta( $post->ID, 'date', true) ) : ''; ?>' />
+                <input id='date' type='date' name='date' class='notempty' value='<?php echo get_post_meta( $post->ID, 'date', true) ? date('Y-m-d', get_post_meta( $post->ID, 'date', true) ) : ''; ?>' />
                 <span class="description">What day does the event start on?</span>
             </td>
         </tr>
-        <tr>
+        
+        <tr<?php if( get_post_meta( $post->ID, 'allDay', true)) echo " style='display:none'" ?>>
             <th><label for="time">Starting Time (optional)</label></th>
             <td>
-                <input type='time' name='time' value='<?php echo get_post_meta( $post->ID, 'time', true); ?>' />
+                <input class='notempty' type='time' id='time' name='time' value='<?php echo get_post_meta( $post->ID, 'time', true); ?>' />
                 <span class="description">What time does the event start?</span>
             </td>
         </tr>
@@ -28,10 +46,10 @@ $image_url = wp_get_attachment_url( $image_id );
         </tr>
 
               
-        <tr>
+        <tr<?php if( get_post_meta( $post->ID, 'allDay', true)) echo " style='display:none'" ?>>
             <th><label for="endtime">End Time (optional)</label></th>
             <td>
-                <input type='time' name='endtime' value='<?php echo get_post_meta( $post->ID, 'endtime', true); ?>' />
+                <input class='notempty' type='time' id='endtime' name='endtime' value='<?php echo get_post_meta( $post->ID, 'endtime', true); ?>' />
                 <span class="description">What time does the event end?</span>
             </td>
         </tr>
@@ -47,7 +65,7 @@ $image_url = wp_get_attachment_url( $image_id );
         <tr>
             <th><label for="address">Venue address</label></th>
             <td>
-                <textarea class="address-input small" name='address'><?php echo get_post_meta( $post->ID, 'address', true) ?></textarea>
+                <textarea class="address-input small notempty" name='address'><?php echo get_post_meta( $post->ID, 'address', true) ?></textarea>
                 <span class="description">Where will the event be taking place? If you put an address that can be recognised by Google maps into this field, a Google map will be included in the event post</span>
             </td>
         </tr>

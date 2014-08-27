@@ -1,3 +1,4 @@
+<?php wp_enqueue_script('formvalidation'); ?>
 <div id='custom-form'>
     <?php// wp_nonce_field( 'save_fixture_' . $_GET['post'] ) ?>
     <table class="form-table">
@@ -5,7 +6,7 @@
             <tr>
                 <th><label for="fixture-date">Date of fixture</label></th>
                 <td>
-                    <input type='date' name='fixture-date' value='<?php echo get_post_meta( $post->ID, 'fixture-date', true) ? date('Y-m-d', get_post_meta( $post->ID, 'fixture-date', true) ) : '';     ?>' />
+                    <input type='date' class='notempty' name='fixture-date' value='<?php echo get_post_meta( $post->ID, 'fixture-date', true) ? date('Y-m-d', get_post_meta( $post->ID, 'fixture-date', true) ) : '';     ?>' />
                     <span class="description">What day is the fixture on? This needs to be entered in AMERICAN date format (this is a restriction of Wordpress, unfortunately.), so YYYY-MM-DD.</span>
                 </td>
             </tr>
@@ -19,21 +20,21 @@
             <tr>
                 <th><label for="fixture-kickoff-time">Kickoff (24 hour clock)</label></th>
                 <td>
-                    <input type='time' name='fixture-kickoff-time' value='<?php echo get_post_meta( $post->ID, 'fixture-kickoff-time', true) ? get_post_meta( $post->ID, 'fixture-kickoff-time', true) : "2:30 pm"; ?>' />
+                    <input type='time' class='notempty' name='fixture-kickoff-time' value='<?php echo get_post_meta( $post->ID, 'fixture-kickoff-time', true) ? get_post_meta( $post->ID, 'fixture-kickoff-time', true) : "2:30 pm"; ?>' />
                     <span class="description">What time is the match kicking off? Please enter this in 24 hour format.</span>
                 </td>
             </tr>
             <tr>
                 <th><label for="fixture-player-arrival-time">Players to arrive (24 hour clock)</label></th>
                 <td>
-                   <input type='time' name='fixture-player-arrival-time' value='<?php echo get_post_meta( $post->ID, 'fixture-player-arrival-time', true) ? get_post_meta( $post->ID, 'fixture-player-arrival-time', true) : "12:30 pm"; ?>' />
+                   <input type='time' class='notempty' name='fixture-player-arrival-time' value='<?php echo get_post_meta( $post->ID, 'fixture-player-arrival-time', true) ? get_post_meta( $post->ID, 'fixture-player-arrival-time', true) : "12:30 pm"; ?>' />
                     <span class="description">What time should Bisons players arrive on site? Again, enter in 24 hour format.</span>
                 </td>
             </tr>   
             <tr>
                 <th><label for="fixture-opposing-team">Opposing team</label></th>
                 <td>
-                    <input type='text' class="regular-text" name='fixture-opposing-team' value='<?php echo get_post_meta( $post->ID, 'fixture-opposing-team', true) ?>' />
+                    <input type='text' class='notempty' class="regular-text" name='fixture-opposing-team' value='<?php echo get_post_meta( $post->ID, 'fixture-opposing-team', true) ?>' />
                     <span class="description">What team are we playing against?</span>
                 </td>
             </tr>
@@ -61,7 +62,7 @@
             <tr>
                 <th><label for="fixture-address">Venue address</label></th>
                 <td>
-                    <textarea class="address-input small" name='fixture-address'><?php echo get_post_meta( $post->ID, 'fixture-address', true) ?></textarea>
+                    <textarea class="address-input small notempty" name='fixture-address'><?php echo get_post_meta( $post->ID, 'fixture-address', true) ?></textarea>
                     <span class="description">What is the address of the pitch where the fixture will be taking place?</span>
                 </td>
             </tr>

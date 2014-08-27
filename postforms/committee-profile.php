@@ -1,5 +1,4 @@
-<?php
-
+<?php wp_enqueue_script('formvalidation'); 
 $players = new WP_Query (array(
     'post_type' => 'playerprofile',
     'nopaging' => 'true',
@@ -32,31 +31,31 @@ $player_id = get_post_meta ( $post->ID, 'incumbent', true);
             <tr>
                 <th><label for="posname">Position Name</label></th>
                 <td>
-                    <input class='regular-text'  type='text' name='posname' value='<?php echo get_post_meta( $post->ID, 'posname', true) ?>' />
+                    <input class='regular-text notempty'  type='text' name='posname' value='<?php echo get_post_meta( $post->ID, 'posname', true) ?>' />
                 </td>
             </tr>
             <tr>
                 <th><label for="askme">Ask me about</label></th>
                 <td>
-                    <textarea name='askme' class='small'><?php echo get_post_meta( $post->ID, 'askme', true) ?></textarea>
+                    <textarea name='askme' class='small notempty'><?php echo get_post_meta( $post->ID, 'askme', true) ?></textarea>
                 </td>
             </tr>    
             <tr>
                 <th><label for="summary">Summary</label></th>
                 <td>
-                    <textarea name='summary'><?php echo get_post_meta( $post->ID, 'summary', true) ?></textarea>
+                    <textarea class='notempty' name='summary'><?php echo get_post_meta( $post->ID, 'summary', true) ?></textarea>
                 </td>
             </tr>
             <tr>
                 <th><label for="skills">Skills Required</label></th>
                 <td>
-                    <textarea name='skills'><?php echo get_post_meta( $post->ID, 'skills', true) ?></textarea>
+                    <textarea class='notempty' name='skills'><?php echo get_post_meta( $post->ID, 'skills', true) ?></textarea>
                 </td>
             </tr>      
             <tr>
                 <th><label for="posresp">What you'll do</label></th>
                 <td>
-                    <textarea name='posresp'><?php echo get_post_meta( $post->ID, 'posresp', true) ?></textarea>
+                    <textarea class='notempty' name='posresp'><?php echo get_post_meta( $post->ID, 'posresp', true) ?></textarea>
                 </td>
             </tr>        
             <tr>

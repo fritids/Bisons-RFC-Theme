@@ -171,3 +171,11 @@ border-radius: 3px;
 background: white;
 border: 1px solid grey;
 }
+
+#custom-form p.formerror {
+margin: 0.5em 0;
+color: #D45F57;
+padding: 0.3em;
+background-color: #FAE5E3;
+border: 1px solid #D45F57;
+}
