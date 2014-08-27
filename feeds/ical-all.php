@@ -61,7 +61,7 @@ function ical_events_feed() {
                        'DTSTART'        => format_timestamp($dtstart), 
                        'DTEND'          => format_timestamp($dtend),
                        'CREATED'        => get_the_time('Ymd\THis'), 
-                       'SUMMARY'        => ical_text_escape(get_the_title()),
+                       'SUMMARY'        => ical_text_escape( html_entity_decode ( get_the_title(), ENT_QUOTES, 'UTF-8' ) ),
                        'DESCRIPTION'    => 'This is a Bisons fixture. Follow the URL for more details, or ask a committee member...',
                        'URL'            => get_the_permalink()
                        );
@@ -97,25 +97,33 @@ function ical_events_feed() {
         // All day events
         if ( get_post_meta(get_the_id(), 'allDay', true) )
         {
-            $endDate = $startDate + 86400;       
+            $startDate = format_datestamp( $startDate );
+            $endDate = format_datestamp( $endDate );
+            $microsoft = array (
+                'X-MICROSOFT-CDO-ALLDAYEVENT'           => 'TRUE',
+                'X-MICROSOFT-MSNCALENDAR-ALLDAYEVENT'   => 'TRUE'
+            );
         }
         
         // Timed events
         else
         {
-            $startDate = timestamp_from_time_date($startDate, get_post_meta(get_the_id(), 'time', true));
-            $endDate = timestamp_from_time_date($startDate, get_post_meta(get_the_id(), 'endtime', true));
+            $startDate = format_timestamp ( timestamp_from_time_date($startDate, get_post_meta(get_the_id(), 'time', true) ) );
+            $endDate = format_timestamp ( timestamp_from_time_date($endDate, get_post_meta(get_the_id(), 'endtime', true) ) );
         }
     
         // Store in array
         $event = array('UID'         => md5(get_the_id()) . "@bisonsrfc.co.uk", 
-                       'DTSTART'     => format_timestamp($startDate), 
-                       'DTEND'       => format_timestamp($endDate), 
+                       'DTSTART'     => $startDate, 
+                       'DTEND'       => $endDate, 
                        'CREATED'     => get_the_time('Ymd\THis'), 
-                       'SUMMARY'     => ical_text_escape( get_the_title() ), 
-                       'DESCRIPTION' => ical_text_escape ( wp_strip_all_tags( get_the_content() ) ), 
+                       'SUMMARY'     => ical_text_escape( html_entity_decode (get_the_title(), ENT_QUOTES, 'UTF-8' ) ), 
+                       'DESCRIPTION' => ical_text_escape ( html_entity_decode ( wp_strip_all_tags( get_the_content(), ENT_QUOTES, 'UTF-8' ) ) ), 
                        'URL'         => get_the_permalink()
                        );
+                               
+        if ( isset ( $microsoft ) )
+            array_merge( $event, $microsoft );
 
         // Add in the location if there is one
         if ($location = get_post_meta(get_the_id(), 'address', true))
@@ -157,8 +165,8 @@ function ical_events_feed() {
     $output .= "END:VCALENDAR\r\n";
 
     // Set the correct headers
-    header('Content-type: text/calendar; charset=utf-8');
-    header('Content-Disposition: inline; filename=events-all.ics');
+    //header('Content-type: text/calendar; charset=utf-8');
+    //header('Content-Disposition: inline; filename=events-all.ics');
 
     echo $output;
 }
