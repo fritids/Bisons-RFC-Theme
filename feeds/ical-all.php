@@ -172,7 +172,7 @@ function ical_events_feed() {
 }
 
 function add_ical_feed() {
-    add_feed('ical-all', 'ical_events_feed');
+    add_feed('ical', 'ical_events_feed');
 }
 
 add_action('init', 'add_ical_feed');

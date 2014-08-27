@@ -4,7 +4,7 @@ function add_custom_rewrites ( )
 {
     add_rewrite_tag( '%gallery%', '([^&]+)');
     add_rewrite_rule ( '^photos\/(\d+)\/?$', 'index.php?pagename=photoalbums&gallery=$matches[1]', 'top' );
-	add_rewrite_rule ( '^events-all\.ics$', 'index.php?feed=ical-all', 'top' );
+	add_rewrite_rule ( '^events-all\.ics$', 'index.php?feed=ical', 'top' );
 }
 add_action( 'init', 'add_custom_rewrites' );
 
