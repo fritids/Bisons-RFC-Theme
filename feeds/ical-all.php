@@ -165,8 +165,8 @@ function ical_events_feed() {
     $output .= "END:VCALENDAR\r\n";
 
     // Set the correct headers
-    //header('Content-type: text/calendar; charset=utf-8');
-    //header('Content-Disposition: inline; filename=events-all.ics');
+    header('Content-type: text/calendar; charset=utf-8');
+    header('Content-Disposition: inline; filename=events-all.ics');
 
     echo $output;
 }
