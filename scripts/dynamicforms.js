@@ -11,6 +11,27 @@ jQuery(document).ready(function() {
             }
     });
     
+    jQuery('#allDay').click(function() {
+        
+      if( jQuery(this).prop('checked') )
+      { 
+          jQuery('#time').parent().parent().hide( 400 ); 
+          jQuery('#time').val('');
+          remove_error ( jQuery ('#time') );
+          jQuery('#endtime').parent().parent().hide( 400 );  
+          jQuery('#endtime').val('');
+          remove_error ( jQuery ('#endtime') );
+          reset_submit_button( jQuery ('#endtime') );
+
+      } 
+      else
+      { 
+          jQuery('#time').parent().parent().show( "blind" ); 
+          jQuery('#endtime').parent().parent().show( "blind" );
+      }
+    });
+    
+    
     jQuery('input, select, textarea').focus(function() {
         jQuery(this).siblings('.forminfo').show();
         jQuery(this).addClass('focusedinput');
@@ -37,8 +58,6 @@ jQuery(document).ready(function() {
               jQuery('.supportersonly').hide(); 
               jQuery('#supportermempaymonthly').find('select').val( '' );
               jQuery('#supportermempaysingle').find('select').val( '' );
-
-
         }
     });
         

@@ -26,3 +26,11 @@ if ($_POST['whitebackground'] == 'true')
 {
     delete_post_meta($post, 'whitebackground');
 }
+
+if ($_POST['allDay'] == 'true')
+{
+    update_post_meta($post, 'allDay', 'true');
+} else 
+{
+    delete_post_meta($post, 'allDay');
+}
