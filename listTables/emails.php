@@ -68,7 +68,7 @@ class Email_Log_Tables extends WP_List_Table_Copy
               $data[] = array(
                 'timestamp'         => get_the_date('g:i:a, jS \o\f F Y'),
                 'post_id'           => get_the_id(),
-                'recipient_name'    => get_post_meta(get_the_id(), 'user_name', true) ? sget_post_meta(get_the_id(), 'user_name', true) : 'None given',
+                'recipient_name'    => get_post_meta(get_the_id(), 'user_name', true) ? get_post_meta(get_the_id(), 'user_name', true) : 'None given',
                 'user_id'           => get_post_meta(get_the_id(), 'user_id', true),
                 'mandrill_id'       => get_post_meta(get_the_id(), 'email_id', true),
                 'email_address'     => get_post_meta(get_the_id(), 'email', true),
