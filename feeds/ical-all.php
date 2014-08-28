@@ -1,11 +1,13 @@
 <?php
 
 // Reformat unix timestamps correctly
-function format_timestamp($timestamp) {
+function format_timestamp($timestamp) 
+{
     return date('Ymd\THis', $timestamp);
 }
 
-function format_datestamp($timestamp) {
+function format_datestamp($timestamp) 
+{
     return date('Ymd', $timestamp);
 }
 
@@ -30,112 +32,120 @@ function ical_text_escape( $string )
     return $string;
 }
 
-function ical_events_feed() {
+function ical_events_feed() 
+{
     
     // Instantiate the events array
     $ical_events = array();
-
-    // Load fixtures from Wordpress
-    $fixtures = new WP_Query( array('post_type' => 'fixture', 
-                                    'nopaging'  => 'true', 
-                                    'orderby'   => 'meta_value', 
-                                    'meta_key'  => 'fixture-date', 
-                                    'order'     => 'ASC') );
-
-    // Loop through each one
-    while ($fixtures -> have_posts()) {
-        $fixtures -> the_post();
+    
+    // If the 'of' querystring doesn't specify events only
+    if ( $_GET['of'] != 'events')
+    {
+        // Load fixtures from Wordpress
+        $fixtures = new WP_Query( array('post_type' => 'fixture', 
+                                        'nopaging'  => 'true', 
+                                        'orderby'   => 'meta_value', 
+                                        'meta_key'  => 'fixture-date', 
+                                        'order'     => 'ASC') );
         
-        // Does the user want fixtures to be set at arrival time or kickoff time?
-        $time = ( $_GET['fixtureTime'] == 'kickoff' ) ? get_post_meta(get_the_id(), 'fixture-kickoff-time', true) : get_post_meta(get_the_id(), 'fixture-player-arrival-time', true);
-
-        // Create start time and date from meta fields
-        $dtstart = timestamp_from_time_date(get_post_meta(get_the_id(), 'fixture-date', true), $time);
-        
-        
-        // End time is 100 minutes later
-        $dtend = $dtstart + 6000;
-
-        // Store in array using the correct format
-        $event = array('UID'                        => md5(get_the_id()) . "@bisonsrfc.co.uk",
-                       'DTSTART;TZID=Europe/London' => format_timestamp($dtstart), 
-                       'DTEND;TZID=Europe/London'   => format_timestamp($dtend),
-                       'CREATED'                    => get_the_time('Ymd\THis'), 
-                       'SUMMARY'                    => ical_text_escape( html_entity_decode ( get_the_title(), ENT_QUOTES, 'UTF-8' ) ),
-                       'DESCRIPTION'                => 'This is a Bisons fixture. Follow the URL for more details, or ask a committee member...',
-                       'URL'                        => get_the_permalink()
-                       );
-
-        // If modified date is different to post date, add to array
-        if (get_the_modified_date() != get_the_time())
-            $event['LAST-MODIFIED'] = get_the_modified_date('Ymd\THis');
-
-        // Add in the location if there is one
-        if ($location = get_post_meta(get_the_id(), 'fixture-address', true))
-            $event['LOCATION'] = ical_text_escape ($location);
-
-        // Add array to master array
-        array_push($ical_events, $event);
+        // Loop through each one
+        while ($fixtures -> have_posts()) 
+        {
+            $fixtures -> the_post();
+            
+            $kickOff = timestamp_from_time_date(get_post_meta(get_the_id(), 'fixture-date', true), get_post_meta(get_the_id(), 'fixture-kickoff-time', true));;
+            $playerArrival = timestamp_from_time_date(get_post_meta(get_the_id(), 'fixture-date', true), get_post_meta(get_the_id(), 'fixture-player-arrival-time', true));
+            
+            // Does the user want fixtures to be set at arrival time or kickoff time?
+            $dtstart = ( $_GET['fixtureTime'] == 'kickoff' ) ? $kickOff : $playerArrival;            
+            
+            // End time is 100 minutes later
+            $dtend = $kickOff + 6000;
+    
+            // Store in array using the correct format
+            $event = array('UID'                        => md5(get_the_id()) . "@bisonsrfc.co.uk",
+                           'DTSTART;TZID=Europe/London' => format_timestamp($dtstart), 
+                           'DTEND;TZID=Europe/London'   => format_timestamp($dtend),
+                           'CREATED'                    => get_the_time('Ymd\THis'), 
+                           'SUMMARY'                    => ical_text_escape( html_entity_decode ( get_the_title(), ENT_QUOTES, 'UTF-8' ) ),
+                           'DESCRIPTION'                => 'This is a Bisons fixture. Follow the URL for more details, or ask a committee member...',
+                           'URL'                        => get_the_permalink()
+                           );
+    
+            // If modified date is different to post date, add to array
+            if (get_the_modified_date() != get_the_time())
+                $event['LAST-MODIFIED'] = get_the_modified_date('Ymd\THis');
+    
+            // Add in the location if there is one
+            if ($location = get_post_meta(get_the_id(), 'fixture-address', true))
+                $event['LOCATION'] = ical_text_escape ($location);
+    
+            // Add array to master array
+            array_push($ical_events, $event);
+        }
     }
+
+    if ( $_GET['of'] != 'fixtures')
+    {
+        // Load all events from Wordpress database
+        $events = new WP_Query( array('post_type' => 'event', 
+                                      'nopaged'   => 'true', 
+                                      'orderby'   => 'meta_value', 
+                                      'meta_key'  => 'date', 
+                                      'order'     => 'ASC', ));
     
-    // Load all events from Wordpress database
-    $events = new WP_Query( array('post_type' => 'event', 
-                                  'nopaged'   => 'true', 
-                                  'orderby'   => 'meta_value', 
-                                  'meta_key'  => 'date', 
-                                  'order'     => 'ASC', ));
-
-
-    // Loop through each one
-    while ($events -> have_posts()) {
-        $events -> the_post();
         
-        // Get start and date from 
-        $startDate = get_post_meta(get_the_id(), 'date', true);
-        $endDate = get_post_meta(get_the_id(), 'enddate', true) ? $endDate = get_post_meta(get_the_id(), 'enddate', true) : $startDate;
-        
-        // All day events
-        if ( get_post_meta(get_the_id(), 'allDay', true) )
+        // Loop through each one
+        while ($events -> have_posts()) 
         {
-            $startDate = format_datestamp( $startDate );
-            $endDate = format_datestamp( $endDate );
-            $microsoft = array (
-                'X-MICROSOFT-CDO-ALLDAYEVENT'           => 'TRUE',
-                'X-MICROSOFT-MSNCALENDAR-ALLDAYEVENT'   => 'TRUE'
-            );
-        }
+            $events -> the_post();
+            
+            // Get start and date from 
+            $startDate = get_post_meta(get_the_id(), 'date', true);
+            $endDate = get_post_meta(get_the_id(), 'enddate', true) ? $endDate = get_post_meta(get_the_id(), 'enddate', true) : $startDate;
+            
+            // All day events
+            if ( get_post_meta(get_the_id(), 'allDay', true) )
+            {
+                $startDate = format_datestamp( $startDate );
+                $endDate = format_datestamp( $endDate );
+                $microsoft = array (
+                    'X-MICROSOFT-CDO-ALLDAYEVENT'           => 'TRUE',
+                    'X-MICROSOFT-MSNCALENDAR-ALLDAYEVENT'   => 'TRUE'
+                );
+            }
+            
+            // Timed events
+            else
+            {
+                $startDate = format_timestamp ( timestamp_from_time_date($startDate, get_post_meta(get_the_id(), 'time', true) ) );
+                $endDate = format_timestamp ( timestamp_from_time_date($endDate, get_post_meta(get_the_id(), 'endtime', true) ) );
+            }
         
-        // Timed events
-        else
-        {
-            $startDate = format_timestamp ( timestamp_from_time_date($startDate, get_post_meta(get_the_id(), 'time', true) ) );
-            $endDate = format_timestamp ( timestamp_from_time_date($endDate, get_post_meta(get_the_id(), 'endtime', true) ) );
-        }
+            // Store in array
+            $event = array('UID'                            => md5(get_the_id()) . "@bisonsrfc.co.uk", 
+                           'DTSTART;TZID=Europe/London'     => $startDate, 
+                           'DTEND;TZID=Europe/London'       => $endDate, 
+                           'CREATED'                        => get_the_time('Ymd\THis'), 
+                           'SUMMARY'                        => ical_text_escape( html_entity_decode (get_the_title(), ENT_QUOTES, 'UTF-8' ) ), 
+                           'DESCRIPTION'                    => ical_text_escape ( html_entity_decode ( wp_strip_all_tags( get_the_content(), ENT_QUOTES, 'UTF-8' ) ) ), 
+                           'URL'                            => get_the_permalink()
+                           );
+                                   
+            if ( isset ( $microsoft ) )
+                array_merge( $event, $microsoft );
     
-        // Store in array
-        $event = array('UID'                            => md5(get_the_id()) . "@bisonsrfc.co.uk", 
-                       'DTSTART;TZID=Europe/London'     => $startDate, 
-                       'DTEND;TZID=Europe/London'       => $endDate, 
-                       'CREATED'                        => get_the_time('Ymd\THis'), 
-                       'SUMMARY'                        => ical_text_escape( html_entity_decode (get_the_title(), ENT_QUOTES, 'UTF-8' ) ), 
-                       'DESCRIPTION'                    => ical_text_escape ( html_entity_decode ( wp_strip_all_tags( get_the_content(), ENT_QUOTES, 'UTF-8' ) ) ), 
-                       'URL'                            => get_the_permalink()
-                       );
-                               
-        if ( isset ( $microsoft ) )
-            array_merge( $event, $microsoft );
-
-        // Add in the location if there is one
-        if ($location = get_post_meta(get_the_id(), 'address', true))
-            $event['LOCATION'] = ical_text_escape ( $location );
-
-        // If modified date is different to post date, add to array
-        if (get_the_modified_date() != get_the_time())
-            $event['LAST-MODIFIED'] = get_the_modified_date('Ymd\THis');
-
-        // Add array to master array
-        array_push($ical_events, $event);
-
+            // Add in the location if there is one
+            if ($location = get_post_meta(get_the_id(), 'address', true))
+                $event['LOCATION'] = ical_text_escape ( $location );
+    
+            // If modified date is different to post date, add to array
+            if (get_the_modified_date() != get_the_time())
+                $event['LAST-MODIFIED'] = get_the_modified_date('Ymd\THis');
+    
+            // Add array to master array
+            array_push($ical_events, $event);
+        }
     }
 
     // Start output
@@ -164,12 +174,14 @@ function ical_events_feed() {
             . "END:VTIMEZONE\r\n";
             
     // Loop through each event
-    foreach ($ical_events as $event) {
+    foreach ($ical_events as $event) 
+    {
         // Start event
         $output .= "BEGIN:VEVENT\r\n";
 
         // Loop through each key
-        foreach ($event as $key => $value) {
+        foreach ($event as $key => $value) 
+        {
             if (is_string($key))
                 $output .= "$key:$value\r\n";
             else
@@ -190,7 +202,8 @@ function ical_events_feed() {
     echo $output;
 }
 
-function add_ical_feed() {
+function add_ical_feed() 
+{
     add_feed('ical', 'ical_events_feed');
 }
 
