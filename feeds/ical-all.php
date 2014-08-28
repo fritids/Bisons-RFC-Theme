@@ -57,13 +57,13 @@ function ical_events_feed() {
         $dtend = $dtstart + 6000;
 
         // Store in array using the correct format
-        $event = array('UID'            => md5(get_the_id()) . "@bisonsrfc.co.uk",
-                       'DTSTART'        => format_timestamp($dtstart), 
-                       'DTEND'          => format_timestamp($dtend),
-                       'CREATED'        => get_the_time('Ymd\THis'), 
-                       'SUMMARY'        => ical_text_escape( html_entity_decode ( get_the_title(), ENT_QUOTES, 'UTF-8' ) ),
-                       'DESCRIPTION'    => 'This is a Bisons fixture. Follow the URL for more details, or ask a committee member...',
-                       'URL'            => get_the_permalink()
+        $event = array('UID'                        => md5(get_the_id()) . "@bisonsrfc.co.uk",
+                       'DTSTART;TZID=Europe/London' => format_timestamp($dtstart), 
+                       'DTEND;TZID=Europe/London'   => format_timestamp($dtend),
+                       'CREATED'                    => get_the_time('Ymd\THis'), 
+                       'SUMMARY'                    => ical_text_escape( html_entity_decode ( get_the_title(), ENT_QUOTES, 'UTF-8' ) ),
+                       'DESCRIPTION'                => 'This is a Bisons fixture. Follow the URL for more details, or ask a committee member...',
+                       'URL'                        => get_the_permalink()
                        );
 
         // If modified date is different to post date, add to array
@@ -113,13 +113,13 @@ function ical_events_feed() {
         }
     
         // Store in array
-        $event = array('UID'         => md5(get_the_id()) . "@bisonsrfc.co.uk", 
-                       'DTSTART'     => $startDate, 
-                       'DTEND'       => $endDate, 
-                       'CREATED'     => get_the_time('Ymd\THis'), 
-                       'SUMMARY'     => ical_text_escape( html_entity_decode (get_the_title(), ENT_QUOTES, 'UTF-8' ) ), 
-                       'DESCRIPTION' => ical_text_escape ( html_entity_decode ( wp_strip_all_tags( get_the_content(), ENT_QUOTES, 'UTF-8' ) ) ), 
-                       'URL'         => get_the_permalink()
+        $event = array('UID'                            => md5(get_the_id()) . "@bisonsrfc.co.uk", 
+                       'DTSTART;TZID=Europe/London'     => $startDate, 
+                       'DTEND;TZID=Europe/London'       => $endDate, 
+                       'CREATED'                        => get_the_time('Ymd\THis'), 
+                       'SUMMARY'                        => ical_text_escape( html_entity_decode (get_the_title(), ENT_QUOTES, 'UTF-8' ) ), 
+                       'DESCRIPTION'                    => ical_text_escape ( html_entity_decode ( wp_strip_all_tags( get_the_content(), ENT_QUOTES, 'UTF-8' ) ) ), 
+                       'URL'                            => get_the_permalink()
                        );
                                
         if ( isset ( $microsoft ) )
@@ -142,8 +142,27 @@ function ical_events_feed() {
     $output = "BEGIN:VCALENDAR\r\n" 
             . "METHOD:PUBLISH\r\n" 
             . "VERSION:2.0\r\n" 
-            . "PRODID:-//Bisons RFC.co.uk//Events Calendar//EN\r\n";
-
+            . "PRODID:-//Bisons RFC.co.uk//Events Calendar//EN\r\n"
+            
+    // Set timezone
+            . "BEGIN:VTIMEZONE\r\n"
+            . "TZID:Europe/London\r\n"
+            . "BEGIN:DAYLIGHT\r\n"        
+            . "TZOFFSETFROM:+0000\r\n"
+            . "RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU\r\n"
+            . "DTSTART:19810329T010000\r\n"
+            . "TZNAME:GMT+01:00\r\n"
+            . "TZOFFSETTO:+0100\r\n"
+            . "END:DAYLIGHT\r\n"
+            . "BEGIN:STANDARD\r\n"
+            . "TZOFFSETFROM:+0100\r\n"
+            . "RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU\r\n"
+            . "DTSTART:19961027T020000\r\n"
+            . "TZNAME:GMT\r\n"
+            . "TZOFFSETTO:+0000\r\n"
+            . "END:STANDARD\r\n"
+            . "END:VTIMEZONE\r\n";
+            
     // Loop through each event
     foreach ($ical_events as $event) {
         // Start event
@@ -166,7 +185,7 @@ function ical_events_feed() {
 
     // Set the correct headers
     header('Content-type: text/calendar; charset=utf-8');
-    header('Content-Disposition: inline; filename=events-all.ics');
+    header('Content-Disposition: inline; filename=calendar.ics');
 
     echo $output;
 }
