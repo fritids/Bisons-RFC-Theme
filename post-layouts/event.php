@@ -21,8 +21,9 @@ $image_url = wp_get_attachment_url( $image_id );
       <div class="feature-image" href='<?php echo $image_url; ?>'>
             <img itemprop="photo"  class='alignright<?php if (get_post_meta(get_the_id(), 'whitebackground', true )) echo " noborder";  ?>' src="<?php echo $image_url; ?>" alt="image <?php echo $image_id ?>"/>
             <ul>
-                  <li class="strong">Event Details</li>
-            	<li class="datesmall"><time itemProp="startDate" datetime="<?php echo $isodate ?>"><?php echo datetime_string ( $date, $enddate, $time, $endtime ) ?></time></li>
+                <li class="strong">Event Details</li>
+            	<?php echo datetime_string ( $date, $enddate, $time, $endtime, false, $isodate ) ?>
+            	<li><h4 class='addresssmall'>Location</h4><?php echo str_replace ("\n", '<br />', $address) ?></li>
 			<?php if($fbevent) : ?><li class="facebooksmall"><a href='<?php echo $fbevent; ?>'>Facebook</a></li><?php endif ?>
                   
             </ul>

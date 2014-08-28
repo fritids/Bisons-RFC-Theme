@@ -142,10 +142,13 @@ ul.documentlist { margin: 0 0 1em 0; }
 
 .facebooksmall:before { content: '\f203'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 16px/1 'Genericons'; vertical-align: middle; margin-right:5px; }
 .address:before { content: '\f409'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 32px/1 'Genericons'; vertical-align: middle; margin-right:5px; }
-.addresssmall:before { content: '\f409'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 16px/1 'Genericons'; vertical-align: middle; margin-right:5px; }
+.addresssmall:before { content: '\f409'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 16px/1 'Genericons'; vertical-align: text-top; }
 .person:before { content: '\f304'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 32px/1 'Genericons'; vertical-align: middle; margin-right:5px; }
 .info:before { content: '\f455'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 32px/1 'Genericons'; vertical-align: middle; margin-right:5px; }
+
 .infoalert { text-align: center; padding:2em; background:#F7F7F7; line-height:2.5em; max-width:500px; margin:2em auto 3.5em auto; padding:1em; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px;}
+.infosmall:before { content: '\f455'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 16px/1 'Genericons'; vertical-align: text-top;  }
+
 .infoalert:before { content: '\f455'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 32px/1 'Genericons'; vertical-align: middle; margin-right:5px; }
 
 .listimage { float:right; max-width:40%; margin-right:2em;}
@@ -159,6 +162,10 @@ div#menu .loggedinmenu ul li { margin: 0 2px; }
 .centrebox { max-width:700px; margin:3em auto; }
 .metabox .gmap-canvas { width:50%; float:right;}
 .gmapaboutus { width:100%; height:300px; border:none; margin:0; }
+
+
+ul.postlist li:before { content: '\f308'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 16px/1 'Genericons'; vertical-align: text-top; }
+ul.postlist li{ font-size:0.8em; }
 
 td.scorecell { font-weight:bold; font-size:1.6em;} 
 
@@ -265,10 +272,9 @@ td.narrowcell { text-align:center; }
 
 div.feature-image {display:block; width:60%; float:right; position:relative; margin: 0 0 5px 5px; }
 div.feature-image img { width:100%; max-width:100%; }
-div.feature-image ul { position:absolute; margin:0; bottom:0; width:100%;}
-div.feature-image li { list-style:none; font-size:0.8em; background:black; margin:0; padding:6px; line-height:1em; color:white; -moz-opacity: 0.75; -khtml-opacity: 0.75; opacity: 0.75; -ms-filter:"progid:DXImageTransform.Microsoft.Alpha"(Opacity=75); filter: progid:DXImageTransform.Microsoft.Alpha(opacity=75); filter:alpha(opacity=75);}
-
-
+div.feature-image ul { margin:0; bottom:0; clear:both;}
+div.feature-image li { list-style:none; font-size:0.8em; background:#2E2E2E; margin:0; padding:3px 6px; line-height:1.2em; color:white; }
+#wrapper div.feature-image li h4 { color:white; }
 img.captcha { margin:0; vertical-align:middle; }
 input.captcha { width:100px; }
 
@@ -303,7 +309,6 @@ left: 0;
 right: 0;
 z-index: 150;
 }
-
 /* tables */
 table { width:100%; margin:0 0 1em 0;  border-spacing:5px; }
 th { font-size:1.4em; text-align: center;}
@@ -348,9 +353,6 @@ ol.comment-list li { background-color: #F7F7F7; margin: 20px 0 0 0; padding: 10p
 .resultslinks { font-size:0.8em; }
 .homeawaylabel { display:block; font-weight:bold; }
 
-@media screen and (max-width: 900px) {
-      div.feature-image { font-size:0.7em; }
-}
 
 ul.feeslist {
       margin-top: 1em;
@@ -368,6 +370,15 @@ label.focusedinput
 	color:#5F8C6A
 }
 
+
+ul li h4 { margin:0; padding:0; font-size:0.8em; font-style:italic; }
+table li{ margin:5px 0; line-height:1em; }
+.metalist li { margin:0 0 10px 0; line-height:1em; }
+.metalist li p { line-height:1.6em; }
+li.listimage { padding-right: 1em; }
+
+.metalist li li { list-style:none; line-height:1em; margin:0 0 10px 0;  }
+.metalist ul { margin: 0 0 1em 0; }
 /* Small screen CSS */
 @media screen  and (min-width: 801px) and (max-width: 900px) {
 	#mainheader h1 { font-size:34px; margin-top:1.1em; }
@@ -440,7 +451,7 @@ label.focusedinput
 
 @media screen and (max-width: 580px) {
 	
-      li.listimage { width: 100%; max-width:100%; }
+      li.listimage {  max-width:100%; }
 	h2 { font-size:23px; }
 	div#wrapper { padding-top:0 !important; }
 	.mobileonly { display:block; }
@@ -525,7 +536,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', end
 	{ margin-left: 0.5em; }
 	
       p { margin-bottom:0.3em; }
-	.page table td { display: block; text-align:center;  }
+	.page table td { display: block; text-align:left; margin-bottom:0.5em;}
 	.page table tr { display: block; background:#F7F7F7; }
 	
       table tr { padding: 0.5em; margin: 0 0 0.5em 0; border: 1px solid #EBEBEB; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px;}
@@ -535,7 +546,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', end
 	table.playerprofiles tr { background:none; }
 	.thecommitteetable .metalist li { text-align: left; }
 	.page table.photogallery tr, .page table.photosets tr { background:none; padding:0; margin:0; }
+	
 
+	
 	.playerprofiles td { font-size:1em; }
 	table.photogallery {border-spacing:0.4em; }
 	table.photogallery td { margin:0; padding:0; }  
