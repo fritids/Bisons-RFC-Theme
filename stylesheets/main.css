@@ -117,7 +117,7 @@ div#wrapper div.page header p { padding: 4px 8px; }
 .mobileonly { display:none; }
 
 /* Events layout */
-.metalist { list-style:none; margin-left:0; background:#F7F7F7; margin:1em auto; padding:1em; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px;}
+.metalist { list-style:none; margin-left:0; background:#F7F7F7; margin:1em auto; padding:1em; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; border: 1px solid #EBEBEB;}
 ul.metalist { margin: 1em 0 0 0; clear:both; }
 
 
