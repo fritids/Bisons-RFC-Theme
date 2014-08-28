@@ -23,6 +23,7 @@ $image_url = wp_get_attachment_url( $image_id );
             <ul>
                 <li class="strong">Event Details</li>
             	<?php echo datetime_string ( $date, $enddate, $time, $endtime, false, $isodate ) ?>
+            	<li><h4 class='addresssmall'>Location</h4><?php echo str_replace ("\n", '<br />', $address) ?></li>
 			<?php if($fbevent) : ?><li class="facebooksmall"><a href='<?php echo $fbevent; ?>'>Facebook</a></li><?php endif ?>
                   
             </ul>
