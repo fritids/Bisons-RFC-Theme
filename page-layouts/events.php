@@ -18,7 +18,7 @@ while( $events_query->have_posts( ) ):
 
     // Reformat date and convert the date and time combined into a unix time
     $unixdate = get_post_meta( get_the_id(), 'date', true );
-    $printdate = date( 'jS \o\f F Y' , $unixdate );
+    $printdate = date( 'l \t\h\e jS \o\f F Y' , $unixdate );
     $time = get_post_meta( get_the_id(), 'time', true );
     $datetime = date( 'Y:m:d' , $unixdate ). ' '. ( $time ? $time : '23:59' ).':00';
     $datetimeunix = strtotime($datetime);
@@ -28,10 +28,10 @@ while( $events_query->have_posts( ) ):
         'id'            => get_the_id(),
         'title'         =>  get_the_title(),
         'date'          =>  $printdate,
-        'enddate'       =>  get_post_meta( get_the_id(), 'enddate', true ) ? date( 'jS \o\f F Y' , (int) get_post_meta( get_the_id(), 'enddate', true ) ) : null,
+        'enddate'       =>  get_post_meta( get_the_id(), 'enddate', true ) ? date( 'l \t\h\e jS \o\f F Y' , (int) get_post_meta( get_the_id(), 'enddate', true ) ) : null,
         'permalink'     =>  get_permalink(),
         'time'          =>  $time,
-        'endtime'	      =>  get_post_meta( get_the_id(), 'endtime', true ),
+        'endtime'	    =>  get_post_meta( get_the_id(), 'endtime', true ),
         'fb-event'      =>  get_post_meta( get_the_id(), 'facebook-event', true ),
         'description'   =>  wpautop ( get_the_content() ),
         'address'       =>  get_post_meta( get_the_id(), 'address', true ),
@@ -58,7 +58,7 @@ if( $first_event ) : ?>
           
       <ul class="metalist">
         <li class='listimage'><a href="<?php echo $first_event['image_src']; ?>"><img class='left' src="<?php echo $first_event['image_src']; ?>" /></a></li>
-        <li class="date"><strong><?php echo datetime_string ( $first_event['date'], $first_event['enddate'], $first_event['time'], $first_event['endtime'] ) ?></strong></li>
+        <li     ><strong><?php echo datetime_string ( $first_event['date'], $first_event['enddate'], $first_event['time'], $first_event['endtime'] ) ?></strong></li>
         <li><?php echo $first_event['description']; ?></li>
         <?php if($future_event['address']) : ?><li class="address"><?php echo $first_event['address']; ?></li><?php endif; ?>
 
@@ -77,8 +77,8 @@ if( count($future_events) > 0)  : ?>
             <tbody>
             <?php foreach($future_events as $future_event) : ?>
             <tr>
-           	    <td><?php echo datetime_string ( $future_event['date'], $future_event['enddate'], $future_event['time'], $future_event['endtime'] ) ?></td>
-                <td><a href="<?php echo $future_event['permalink']; ?>"><?php echo $future_event['title']; ?><?php if(get_edit_post_link( $future_event['id']) ) { ?> - <a href='<?php echo get_edit_post_link( $future_event['id']) ?>'>Edit</a><?php } ?></a></td>
+                 <td><a href="<?php echo $future_event['permalink']; ?>"><?php echo $future_event['title']; ?></a></td>
+                 <td><?php echo datetime_string ( $future_event['date'], $future_event['enddate'], $future_event['time'], $future_event['endtime'] ) ?></td>
             </tr>
             <?php endforeach; ?>
             </tbody>
@@ -93,8 +93,8 @@ if( count($future_events) > 0)  : ?>
             <tbody>
             <?php foreach( $past_events  as $past_event ) : ?>
                 <tr>
-                    <td><?php echo datetime_string ( $past_event['date'], $past_event['enddate'], $past_event['time'], $past_event['endtime'] ) ?></td>
                     <td><a href="<?php echo $past_event['permalink']; ?>"><?php echo $past_event['title']; ?></a></td>
+                    <td><?php echo datetime_string ( $past_event['date'], $past_event['enddate'], $past_event['time'], $past_event['endtime'] ) ?></td>
                 </tr>
             <?php endforeach; ?>
             </body>
