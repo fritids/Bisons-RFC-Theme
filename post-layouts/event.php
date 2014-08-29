@@ -20,13 +20,16 @@ $image_url = wp_get_attachment_url( $image_id );
 
       <div class="feature-image" href='<?php echo $image_url; ?>'>
             <img itemprop="photo"  class='alignright<?php if (get_post_meta(get_the_id(), 'whitebackground', true )) echo " noborder";  ?>' src="<?php echo $image_url; ?>" alt="image <?php echo $image_id ?>"/>
+            <div class='eventMeta'>
+                <h4>Event Details <?php if($fbevent) : ?><br /><a class="fblink facebooksmall" href='<?php echo $fbevent; ?>'>Facebook Event</a><?php endif ?></h4>
             <ul>
-                <li class="strong">Event Details</li>
             	<?php echo datetime_string ( $date, $enddate, $time, $endtime, false, $isodate ) ?>
-            	<li><h4 class='addresssmall'>Location</h4><?php echo str_replace ("\n", '<br />', $address) ?></li>
-			<?php if($fbevent) : ?><li class="facebooksmall"><a href='<?php echo $fbevent; ?>'>Facebook</a></li><?php endif ?>
-                  
-            </ul>
+        	</ul>
+        	<ul>
+            	<li><h5 class='addresssmall'>Location</h5><?php echo str_replace ("\n", '<br />', $address) ?></li>
+		    </ul>
+            <div class='clear'></div>
+            </div>
       </div>
       <span itemprop="description"><?php if ( is_single() ) the_content(); else the_excerpt(); ?></span>
       <?php comments_template(); ?>
