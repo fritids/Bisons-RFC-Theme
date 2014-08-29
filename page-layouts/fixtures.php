@@ -44,7 +44,7 @@ while($getfixturequery->have_posts()) : $getfixturequery->the_post();
     // Reformat date and convert the date and time combined into a unix time
     $unixdate = get_post_meta( get_the_id(), 'fixture-date', true );
 
-    $printdate = date( 'jS \o\f F Y' , $unixdate );
+    $printdate = date( 'l \t\h\e jS \o\f F Y' , $unixdate );
     $time = get_post_meta( get_the_id(), 'fixture-kickoff-time', true );
     $datetime = date( 'Y:m:d' , $unixdate ). ' '.$time.':00';
     $datetimeunix = strtotime($datetime);
