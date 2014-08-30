@@ -281,9 +281,6 @@ function initialize_email_settings( )
         'new-user-email' => '',
         'new-user-email-replyto' => '',
         'new-user-email-subject' => '',
-        'email-css' => '',
-        'email-css-ext' => ''
-            
         );  
         add_option( 'email-settings-page', $options);
     }
@@ -304,25 +301,7 @@ function initialize_email_settings( )
         array( 'email-memsec', 'email-settings-page', 'This name can be used in any of the email templates on this page by using the tag <strong>@@membershipsecretary@@</strong>')
     );
      
-  add_settings_field(
-        'email-css',
-        'Email CSS',
-        'textarea_field',
-        'email-settings-page',
-        'email-settings-general',
-        array( 'email-css', 'email-settings-page')
-    );
 
-    
-    
-    add_settings_field(
-        'email-css-ext',
-        'Email CSS (url)',
-        'singleline_input_field',
-        'email-settings-page',
-        'email-settings-general',
-        array( 'email-css-ext', 'email-settings-page')
-    ); 
     
     add_settings_field(
         'new-user-email-replyto-name',
@@ -412,25 +391,7 @@ function initialize_email_settings( )
         array( 'contact-us-email-address-cc', 'email-settings-page' )
     );
     
-    
-    add_settings_field(
-        'contact-us-template',
-        'Email template',
-        'tinymce',
-        'email-settings-page',
-        'email-settings-contactus',
-        array( 'contact-us-template', 'email-settings-page', 'When someone uses our "Contact me" page, this email will be sent to the above address. In this field you can use the tags @@name@@, @@subject@@ and @@message@@ to reference information from the original email.')
-    );
 
-    add_settings_field(
-        'contact-us-copy-template',
-        'Copy to sender email template',
-        'tinymce',
-        'email-settings-page',
-        'email-settings-contactus',
-        array( 'contact-us-copy-template', 'email-settings-page', 'When someone uses our "contact me" page, this email will be sent to the email address that they enter into the form. In this field you can use the tags @@name@@, @@subject@@ and @@message@@ to reference information from the original email.')
-    );
-    
     add_settings_section(
         'email-settings-newuser',
         'New user emails',
@@ -438,25 +399,7 @@ function initialize_email_settings( )
         'email-settings-page'
     );
     
-    
-    add_settings_field(
-        'new-user-email-subject',
-        'Subject',
-        'singleline_input_field',
-        'email-settings-page',
-        'email-settings-newuser',
-        array( 'new-user-email-subject', 'email-settings-page')
-    );
 
-    add_settings_field(
-        'new-user-email',
-        'Content',
-        'tinymce',
-        'email-settings-page',
-        'email-settings-newuser',
-        array( 'new-user-email', 'email-settings-page', "Note that you can use HTML in this field. Also, use the tags @@username@@ and @@password@@ to insert the new user's username and password respectively.")
-    );
-    
     add_settings_section(
         'member-email-settings-section',
         'Member information emails',
@@ -473,23 +416,7 @@ function initialize_email_settings( )
         array( 'member-email-send-to-text', 'email-settings-page' )
     );
     
-    add_settings_field(
-        'member-information-email-subject',
-        'Subject',
-        'singleline_input_field',
-        'email-settings-page',
-        'member-email-settings-section',
-        array( 'newmember-information-email-subject', 'email-settings-page')
-    );
 
-    add_settings_field(
-        'member-information-email-content',
-        'Content',
-        'tinymce',
-        'email-settings-page',
-        'member-email-settings-section',
-        array( 'member-information-email-content', 'email-settings-page', "Note that you can use HTML in this field.")
-    );
 
     add_settings_section(
         'guest-nag-email-settings-section',
@@ -507,23 +434,7 @@ function initialize_email_settings( )
         array( 'guest-nag-email-initial-interval', 'email-settings-page', 'The interval (in days) after which the first email will be sent.')
     );
     
-    add_settings_field(
-        'guest-nag-email-subject',
-        'Initial email subject',
-        'singleline_input_field',
-        'email-settings-page',
-        'guest-nag-email-settings-section',
-        array( 'guest-nag-email-subject', 'email-settings-page')
-    );
 
-    add_settings_field(
-        'guest-nag-email-content',
-        'Initial email content',
-        'tinymce',
-        'email-settings-page',
-        'guest-nag-email-settings-section',
-        array( 'guest-nag-email-content', 'email-settings-page', "Note that you can use HTML in this field.")
-    );
 
     add_settings_field(
         'guest-nag-email-later-interval',
@@ -534,24 +445,6 @@ function initialize_email_settings( )
         array( 'guest-nag-email-later-interval', 'email-settings-page', 'The interval (in days) between which guest players will be sent the nag email (after the initial email has been sent).')
     );
     
-    add_settings_field(
-        'guest-nag-email-later-subject',
-        'Reminder email subject',
-        'singleline_input_field',
-        'email-settings-page',
-        'guest-nag-email-settings-section',
-        array( 'guest-nag-email-later-subject', 'email-settings-page')
-    );
-
-    add_settings_field(
-        'guest-nag-email-later-content',
-        'Reminder email content',
-        'tinymce',
-        'email-settings-page',
-        'guest-nag-email-settings-section',
-        array( 'guest-nag-email-later-content', 'email-settings-page', "Note that you can use HTML in this field.")
-    );
-
 
     register_setting(
         'email-settings-page',
@@ -799,88 +692,6 @@ add_action ( 'admin_init', 'initialise_other_settings' );
 
 
 
-
-/**
- * ********** Payment Settings *****************
- */ 
-
-
-function create_bisons_payment_settings_menu ( )
-{ 
-
-    add_submenu_page(
-        'bisons-options',
-        'Payment',
-        'Payment',
-        'manage_options',
-        'payment-settings',
-        'payment_settings_menu_callback'   
-    );
-    
-}
-
-add_action ( 'admin_menu', 'create_bisons_payment_settings_menu' );
-
-function payment_settings_menu_callback ( )
-{
-    echo '<div class="wrap">'.
-         '<h2>Payment Settings</h2>'.
-         '<form method="post" action="options.php">';
-         
-    settings_fields( 'payment-settings-page' );
-    do_settings_sections( 'payment-settings-page' );
-    submit_button();  
-         
-    echo '</div>';   
-}
-
-
-function stripe_settings_callback ()
-{
-    echo "<p>This site takes payment using a payment processor called Stripe. You will need to enter the stripe API key in the box below.</p>";
-}
-
-function membership_fees_callback ()
-{
-    echo "<p>The fees set below will be offered as options when taking payments from the membership form, as well as being included in emails to prospective members. Amounts should be entered in <strong>pence</strong> (e.g. <strong>7000 = £70</strong>).</p>";
-}
- 
- 
-function initialise_payment_settings()
-{
-   
-    if( false == get_option( 'payment-settings-page' ) )
-    {
-        $options = array ( 
-            'stripe_api_key' => '',
-
-        );  
-        add_option( 'payment-settings-page', $options);
-    }  
-
-    add_settings_section(
-        'payment-settings-stripe',
-        'Stripe Settings',
-        'stripe_settings_callback',
-        'payment-settings-page'
-    );
-
-    add_settings_field(
-        'stripe-api-key',
-        'Stripe API key',
-        'singleline_input_field',
-        'payment-settings-page',
-        'payment-settings-stripe',
-        array( 'stripe-api-key', 'payment-settings-page')
-    );
-    
-    
-    register_setting(
-        'payment-settings-page',
-        'payment-settings-page'
-    ); 
-}
-add_action ( 'admin_init', 'initialise_payment_settings' );
 
 
 
