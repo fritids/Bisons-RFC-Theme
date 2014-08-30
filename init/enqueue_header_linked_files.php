@@ -12,7 +12,7 @@ function header_css_and_js($hook) {
     wp_register_script('web_font_loader_local', get_template_directory_uri() . '/scripts/webfont.js', null, '1.0.9'); 
     wp_enqueue_script('web_font_loader_local');
     wp_register_script('dynamicforms', get_template_directory_uri() . '/scripts/dynamicforms.js', null, '1.8.0', true); 
-    wp_register_script('formvalidation', get_template_directory_uri() . '/scripts/formvalidation.js', null, '1.3.3', true); 
+    wp_register_script('formvalidation', get_template_directory_uri() . '/scripts/formvalidation.js', null, '1.3.8', true); 
     wp_register_script('stripe', 'https://js.stripe.com/v2/', false, '2.0.0', true); // Not enqueued here as not necessary on every page
     if( !is_admin()){
     	wp_deregister_script('jquery');
@@ -60,7 +60,7 @@ add_action ( 'wp_enqueue_scripts', 'header_css_and_js');
 function admin_js_and_css($hook) {
     global $post_type;
     wp_register_script('dynamicforms', get_template_directory_uri() . '/scripts/dynamicforms.js', null, '1.8.2', true); 
-    wp_register_script('formvalidation', get_template_directory_uri() . '/scripts/formvalidation.js', null, '1.3.6', true); 
+    wp_register_script('formvalidation', get_template_directory_uri() . '/scripts/formvalidation.js', null, '1.3.7  ', true); 
     wp_register_script( 'email_log_js', get_template_directory_uri() . '/scripts/emaillogscripts.js', false, '1.0.6 ', true);
     wp_register_script( 'manage_players_js', get_template_directory_uri() . '/scripts/manage_players.js', false, '1.1.6', true);
     wp_register_script( 'custom_admin_js', get_template_directory_uri() . '/scripts/adminscript.js.php?post='.(isset($_GET['post']) ? $_GET['post'] : '').'&templateurl='.urlencode( get_template_directory_uri() ), false, '1.8.5', true);
