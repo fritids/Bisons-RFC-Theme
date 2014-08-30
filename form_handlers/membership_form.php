@@ -1,5 +1,7 @@
 <?php
 if (!INCLUDED) exit;
+
+// Don't post membership form if the reason we are submitting is because we are going into edit mode
 if ( ! isset ( $_POST['edit_details'] ) )
 {
    // Setup new post array
@@ -18,7 +20,7 @@ if ( ! isset ( $_POST['edit_details'] ) )
         $post = $_POST['form_id'] ? $_POST['form_id'] : wp_insert_post( $post );
         
       // If there is no form_id, therefore it is a newly submitted form
-      if ( ! $_POST['form_id'] )
+      if ( ! $_POST['form_id'] || ( $_POST['form_id'] && ! get_post_meta($form_id, 'gcl_sub_id', true ) ) )
       {
           
           $user = array(
