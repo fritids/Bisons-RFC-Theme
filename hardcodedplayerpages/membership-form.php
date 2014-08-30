@@ -290,7 +290,7 @@ if ( ! $disabled )
             <input type="text" class="smalltextbox notempty" name="nokrelationship" id="nokrelationship"<?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value='<?php echo get_post_meta($form_id, 'nokrelationship', true) ?>'<?php } ?> />
         </div>
        <div>
-            <label class="smalllabel" for="nok">Phone Number</label>
+            <label class="smalllabel" for="nokcontactnumber">Phone Number</label>
             <input type="text" class="smalltextbox needphonenum" name="nokcontactnumber" id="nokcontactnumber"<?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value='<?php echo get_post_meta($form_id, 'nokcontactnumber', true) ?>'<?php } ?> />
         </div>
         <div>
