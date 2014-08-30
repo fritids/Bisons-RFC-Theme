@@ -6,7 +6,8 @@ if ( $_POST['confirm_action'] == 'true')
     if ( isset ( $_POST['user_id'] ) )
     {
         $user_ids = ( @unserialize( stripslashes( ( $_POST['user_id']) ) ) !== false )? unserialize( stripslashes( ( $_POST['user_id']) ) ) :  $_POST['user_id'];
-        foreach ($user_ids as $id) {
+        foreach ($user_ids as $id) 
+        {
             $usercount++;
         
             // Generate a password if one isn't supplied
