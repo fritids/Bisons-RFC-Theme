@@ -307,7 +307,7 @@ if ( ! $disabled )
                 <textarea name="nokstreetaddy notempty" id="nokstreetaddy"<?php if ( $disabled ) { ?> disabled='true'<?php } ?>><?php if ( $current_form->have_posts() ) { echo get_post_meta($form_id, 'nokstreetaddy', true); } ?></textarea>
             </div>
             <div>
-                <label  class="smalllabel" for="nokpostcode">Postcode</label>
+                <label  class="smalllabel" for="nokpostcode notempty">Postcode</label>
                 <input type="text" class="smalltextbox needpostcode" name="nokpostcode" id="nokpostcode"<?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value='<?php echo get_post_meta($form_id, 'nokpostcode', true) ?>'<?php } ?> />
             </div>
         </div>
