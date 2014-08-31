@@ -40,6 +40,7 @@ include_once( 'init/menus.php' );
 // Classes
 include_once('classes/Wordpress_Form.php');
 include_once('classes/WP_List_table_copy.php');
+include_once('classes/Form_Validator.php');
 
 // List tables
 include_once('listTables/fixtures.php');
