@@ -20,6 +20,10 @@ add_filter('show_admin_bar', '__return_false');
 add_filter('wp_mail_content_type',create_function('', 'return "text/html"; '));
 
 
+// Get flash message from querystring if there is one
+if ( wp_verify_nonce ( $_GET['nonce'], 'bisons_flashmessage_nonce') )
+    $GLOBALS['bisons_flash_message'] = stripslashes ( $_GET['flash'] );
+
 // Dependencies
 include_once('Mandrill/Mandrill.php');
 $mandrill = new Mandrill('ZzbBwttWRHJ41GL4BZmmsQ');
