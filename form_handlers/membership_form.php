@@ -1,7 +1,7 @@
 <?php
 if (!INCLUDED) exit;
 
-// Don't post membership form if the reason we are submitting is because we are going into edit mode
+// Don't post membership form if the reason we are submitting is because we are entering edit modes
 if ( ! isset ( $_POST['edit_details'] ) )
 {
    // Setup new post array
