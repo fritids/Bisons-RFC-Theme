@@ -12,6 +12,8 @@ include_once('init/modify_login_page.php');
 include_once('init/current_user.php');
 include_once('init/mw_logout.php');
 include_once('helper_functions/timer.php');
+
+include_once('helper_functions/js_redirect.php');
 global $timer;
 $timer = new ScriptTimer();
 add_filter('show_admin_bar', '__return_false');
