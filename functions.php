@@ -111,16 +111,16 @@ include_once( 'init/start_sessions.php');
 
 
 // Form handlers
-if ( wp_verify_nonce( $_POST['nonce'], 'wordpress_form_submit' ) )
+if ( wp_verify_nonce( $_POST['nonce'], 'wordpress_form_submit' ) && file_exists ( __DIR__ . '/form_handlers/' . $_POST['action'] . '.php' ) )
     include_once('form_handlers/' . $_POST['wp_form_id']. '.php');
 
 include_once('listTables/players_no_mem_form.php');
-if ( wp_verify_nonce ( 'bulk-'.Players_No_Mem_form::$plural )  && $_POST['action'] != '-1' )
+if ( wp_verify_nonce ( $_POST['nonce'],  'bulk-'.Players_No_Mem_form::$plural )  && $_POST['action'] != '-1' )
     include_once ('list_table_bulk_actions/' . $_POST['action'] . '.php' );
 
 
 include_once('listTables/membership_forms.php');
-if ( wp_verify_nonce ( $_POST['_wpnonce'], 'bulk-'.Membership_Forms_Table::$plural ) && $_POST['action'] != '-1')
+if ( file_exists ( __DIR__ . '/list_table_bulk_actions/' . $_POST['action'] . '.php' ) && wp_verify_nonce ( $_POST['_wpnonce'], 'bulk-'.Membership_Forms_Table::$plural ) && $_POST['action'] != '-1')
     include_once ('list_table_bulk_actions/' . $_POST['action'] . '.php' );
     
 

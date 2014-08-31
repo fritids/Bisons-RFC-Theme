@@ -139,7 +139,7 @@ class Players_No_Mem_form extends WP_List_Table_Copy
       $actions = array(
         'reset_pass'    => 'Reset Password',
         'resend_welcome'    => 'Resend Welcome Email',
-        'send_email'    => 'Send Email',
+        'bulk_email'    => 'Send Email',
         'send_membership_due_email' => 'Membership Due Email',
         'send_membership_followup_email' => 'Membership Followup Email'
       );
