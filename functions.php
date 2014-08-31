@@ -103,7 +103,7 @@ include_once( 'init/shortcodes.php' );
 include_once( 'init/rewrites.php' );
 include_once( 'init/createtables.php');
 include_once( 'init/dashboard.php'); 
-include_once( 'init/restricted_areas.php');
+include_once( 'init/redirects.php');
 include_once( 'init/better-comments.php' );
 include_once( 'init/start_sessions.php');
 
