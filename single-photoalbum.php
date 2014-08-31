@@ -9,7 +9,7 @@
     <?php endif ?>
         <?php if ( have_posts() ) : ?>
             <?php while (have_posts() ) : the_post(); 
-            $gallery = get_post_meta( get_the_id(), 'setid')[0];
+            $gallery = get_post_meta( get_the_id(), 'setid');
             $flikr = new Flikr ( $GLOBALS['api_settings'] );
             $photos = $flikr->photosetsGetPhotos ( $gallery, 'url_q,url_z,' )->photoset->photo;
             $photoinfo = $flikr->photosetsGetInfo( $gallery )->photoset;
