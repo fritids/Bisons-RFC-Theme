@@ -23,11 +23,11 @@ wp_enqueue_script('formvalidation');
         case 'cancelled': ?><p><strong>It looks like your Direct Debit subscription has been cancelled</strong>, either by yourself or by a member of the committee. If you would like to setup a new one, please scroll to the bottom of the page and select your new membership type.</p><?php break;
         case 'pending': case 'paid': ?><p>Details of your payment can be found below. If the payment has not yet been submitted to your bank, there will be a button below that you can use to cancel it if you wish.</p><?php break;
     } ?>
-<table>
+<table class='center'>
     <tbody>
         <tr>
             <th>Membership Type</th>
-            <td><?php echo $data['gcl_resource']->name ?></td>
+            <td class='large-cell'><?php echo $data['gcl_resource']->name ?></td>
         </tr>
         <tr>
             <th>Membership Description</th>
@@ -37,11 +37,11 @@ wp_enqueue_script('formvalidation');
         <?php if ( $data['gcl_resource_type'] == 'subscription') : ?>
         <tr>
             <th>Setup Fee</th>
-            <td><?php echo '£'.number_format ( (int) $data['gcl_resource']->setup_fee, 2 ) ?></td>
+            <td class='large-cell'><?php echo '£'.number_format ( (int) $data['gcl_resource']->setup_fee, 2 ) ?></td>
         </tr>
         <tr>
             <th>Monthly Payment</th>
-            <td><?php echo '£'.number_format ( (int) $data['gcl_resource']->amount, 2 ) ?></td>
+            <td class='large-cell'><?php echo '£'.number_format ( (int) $data['gcl_resource']->amount, 2 ) ?></td>
         </tr>
         <tr>
             <th>Subscription Status</th>
@@ -66,11 +66,11 @@ wp_enqueue_script('formvalidation');
         <?php else : ?>
         <tr>
             <th>Payment Amount</th>
-            <td><?php echo '£'.number_format ( (int) $data['gcl_resource']->amount, 2 ) ?></td>
+            <td class='large-cell'><?php echo '£'.number_format ( (int) $data['gcl_resource']->amount, 2 ) ?></td>
         </tr>
         <tr>
             <th>Payment Status</th>
-            <td>
+            <td class='large-cell'>
                 <?php if ($data['gcl_resource']->status == 'pending' && $data['gcl_resource']->can_be_cancelled == TRUE) : ?>
                     <form action='<?php echo remove_query_arg( array ('nonce', 'flash' ) ) ?>' method='post' id="#cancel">
                     <input type='hidden' name='nonce' value='<?php echo wp_create_nonce('cancel_resource_' . $data['gcl_resource']->id) ?>' />

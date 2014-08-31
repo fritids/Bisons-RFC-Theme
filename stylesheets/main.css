@@ -110,7 +110,9 @@ div#wrapper div.page header p { padding: 4px 8px; }
 #sidebar h2 { }
 #sidebar  li.tweet:before { content: '\f202'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 16px/1 'Genericons'; vertical-align: top; margin-right:5px; }
 #sidebar  li.fbpagepost:before { content: '\f203'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 16px/1 'Genericons'; vertical-align: top; margin-right:5px; }
-
+td.large-cell {
+font-size: 1.5em;
+}
 #sidebar li.tweet, #sidebar li.fbpagepost { list-style:none; font-size: 10pt; }
 #sidebar li { margin-bottom: 5px; list-style:none; }
 #sidebar ul { margin-top:0.6em;}
@@ -557,7 +559,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', end
 	.page table tr { display: block; background:#F7F7F7; }
 	
       table tr { padding: 0.5em; margin: 0 0 0.5em 0; border: 1px solid #EBEBEB; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px;}
-      table td { padding:0; border:0; }
+      table td, table th { padding:0; border:0; }
       table.thecommitteetable td { padding:1em; margin: 0.5em 0; border-top: 1px solid #EBEBEB; border-left: 1px solid #EBEBEB;}
 	table.thecommitteetable tr { padding:0; margin:0; background:none; border:0; }
 	table.playerprofiles tr { background:none; }
