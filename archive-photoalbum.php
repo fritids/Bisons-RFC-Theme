@@ -3,7 +3,10 @@ get_header();
 ?>
 <div id="wrapper">
     <div id="pagecol">
-        <div class='page'>       
+        <div class='page'>    
+<?php if ( $GLOBALS['bisons_flash_message'] ) : ?>
+        <p id="flashmessage"><?php echo $GLOBALS['bisons_flash_message'] ?></p>
+    <?php endif ?>   
 			<header>
 			    <h2><a href="<?php the_permalink() ?>">Photo Album</a></h2>
 			    <p>Courtesy of <a href='http://www.flickr.com/'>Flickr</a></p>

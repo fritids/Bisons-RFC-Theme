@@ -4,7 +4,9 @@
 <div id="wrapper">
     <div id="pagecol" class="ajaxcol">
         <div class='page'>
-            
+        <?php if ( $GLOBALS['bisons_flash_message'] ) : ?>
+                <p id="flashmessage"><?php echo $GLOBALS['bisons_flash_message'] ?></p>
+            <?php endif ?>
 <?php if (have_posts()) : while (have_posts()) : the_post();
 $timer->record_execution_time('Start of post');
 

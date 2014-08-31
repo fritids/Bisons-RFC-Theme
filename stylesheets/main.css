@@ -36,6 +36,9 @@ footer a { color: white; border-bottom:1px dashed white; }
 td h3 { margin:0; padding:0; }
 
 
+/* Flash message */ 
+#flashmessage { max-width:900px; margin: 0.5em auto; text-align:center; padding:1em; background-color: #C0FACE; border: 1px solid #5F8C6A; }
+
 /* Page header */
 #mainheader {  color:white; z-index:100; }
 #mainheader #cell { padding-top: 1em;  }
@@ -92,7 +95,7 @@ div#wrapper div.page header p { padding: 4px 8px; }
 #mainevent { background-color: #F7F7F7; }
 
 /* Page styles */
-.page { margin-top:2em }
+.page { margin-top:1em }
 .page header { margin-bottom:1em;  }
 .page img.alignleft, .page img.alignright { max-width:60% !important; height:auto; }
 .page header h2 { margin-bottom:0; text-align:left; }

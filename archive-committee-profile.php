@@ -9,6 +9,9 @@
     <div id="pagecol">
         <div class='page'>
         <header>
+        <?php if ( $GLOBALS['bisons_flash_message'] ) : ?>
+                <p id="flashmessage"><?php echo $GLOBALS['bisons_flash_message'] ?></p>
+            <?php endif ?>
         <h2>The Committee</h2>
         </header>
         <p>If you have some time to spare and would like to give back to the team, have you considered being part of the commitee? Committee positions are elected on a yearly basis during the AGM, which usually takes place during June/July. Have a look at the profiles of each position below to get a better idea where you would fit in. Note that contact details for the committee are only available for logged in players. If you would like to get in contact with a member of our committee, please use the contact form on the <a href='<?php echo $GLOBALS['blog_info']['url'] ?>/about-us/'>About Us</a> page.</p>

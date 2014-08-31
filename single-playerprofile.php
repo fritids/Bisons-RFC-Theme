@@ -10,7 +10,10 @@ $image_url_original = $image_url_original[0];
 <div id="wrapper">
 
     <div id="pagecol">
-        <div class='page'>       
+        <div class='page'> 
+<?php if ( $GLOBALS['bisons_flash_message'] ) : ?>
+        <p id="flashmessage"><?php echo $GLOBALS['bisons_flash_message'] ?></p>
+    <?php endif ?>      
 
         <?php if ( have_posts() ) : ?>
             <?php while (have_posts() ) : the_post(); ?>
