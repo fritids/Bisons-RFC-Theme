@@ -97,6 +97,8 @@ if ( ! isset ( $form_id ) )
 if ( ! $disabled ) 
     wp_enqueue_script('formvalidation');
 
+global $validator;
+
 ?>
 
 <header>
@@ -119,11 +121,7 @@ if ( ! $disabled )
 <?php else: ?>
 <p>Please take a moment to fill out the form below. Note that all the information supplied will remain completely <strong>confidential</strong>. Should you have any questions about anything on this form, please contact the <strong>membership secretary</strong> using the contact details at the top of the <a href='<?php echo home_url ('/players-area/') ?>'>players area</a>...</p>
 <?php endif; ?>
-<ul class='invalidformerrors'>
-    <?php foreach ( $errors as $error ) : ?>
-    <li><?php echo $error ?></li>
-    <?php endforeach ?>
-</ul>
+
 <form id='membershipform_payment' method="post" role="form">
     
     <?php if ($disabled) : ?>
@@ -144,6 +142,7 @@ if ( ! $disabled )
             <option value='<?php echo $user->data->ID."'"; if (  $_GET['player_id' ] == $user->data->ID ) { echo " selected='selected'"; } ?>><?php echo $user->data->display_name ?></option>
         <?php endforeach ?>
         </select>
+
     </fieldset>
     <?php endif ?>
     <fieldset>

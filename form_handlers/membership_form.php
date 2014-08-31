@@ -4,6 +4,7 @@ if (!INCLUDED) exit;
 // Don't post membership form if the reason we are submitting is because we are entering edit modes
 if ( ! isset ( $_POST['edit_details'] ) )
 {
+     
    // Setup new post array
     $post = array(
         'post_title'    => $_POST['firstname'].' '.$_POST['surname'].' '.date('Y'),
@@ -101,10 +102,10 @@ if ( ! isset ( $_POST['edit_details'] ) )
       $errors = array();
               
         $singlelinefields = array(
-            'Joining as' => 'joiningas',
-            'First Name' => 'firstname',
-            'Surname' => 'surname',
-            'Gender' => 'gender',
+            'Joining as' => array( 'joiningas', 'notempty' ),
+            'First Name' => array( 'firstname', 'notempty' ),
+            'Surname' => array( 'surname', 'notempty' ),
+            'Gender' => array( 'gender', 'notempty' ),
             'Other Gender Details'  => 'othergender',
             'Date of Birth' => array(
                 'dob-day', 'dob-month', 'dob-year'
@@ -138,6 +139,18 @@ if ( ! isset ( $_POST['edit_details'] ) )
 
         );
         
+        global $validator;
+        $validator = new Form_Validator();
+        // Validate form fields first
+        foreach ( $singlelinefields as $label => $fieldname)
+        {
+            if ( is_array ( $fieldname ) )
+            {
+                $validator->validate_field($fieldname[0], $_POST[$fieldname[0]], $fieldname[1]);
+                $singlelinefields[$label] = $fieldname[0];  
+            }
+            
+        }
 
         foreach ( $singlelinefields as $label => $fieldname)
         {
@@ -169,13 +182,19 @@ if ( ! isset ( $_POST['edit_details'] ) )
 
                 if ( $_POST[$fieldname] != ($oldfield = get_post_meta($post, $fieldname, true) ) ) 
                 {
-                    
-                    if ( $label == $email_addy) wp_update_user( array ('user_email' => $_POST['email_addy'] ) );
-                    $infotable .= "<tr><th>$label</th>";
-                    if ( $_POST['form_id'] ) $infotable .= "<td>".str_replace("\n", "<br />", $oldfield)."</td>";
-                    $infotable .= '<td>'.str_replace("\n", "<br />", $_POST[$fieldname]).'</td>';
-                    $infotable .= "</tr>";
-                    update_post_meta($post, $fieldname, $_POST[$fieldname]);
+                    if ( $validator->validation_succeeded() )
+                    {   
+                        if ( $label == $email_addy) wp_update_user( array ('user_email' => $_POST['email_addy'] ) );
+                        $infotable .= "<tr><th>$label</th>";
+                        if ( $_POST['form_id'] ) $infotable .= "<td>".str_replace("\n", "<br />", $oldfield)."</td>";
+                        $infotable .= '<td>'.str_replace("\n", "<br />", $_POST[$fieldname]).'</td>';
+                        $infotable .= "</tr>";
+                        update_post_meta($post, $fieldname, $_POST[$fieldname]);
+                    }
+                    else 
+                    {
+                        
+                    }
                 }
             }
         }
