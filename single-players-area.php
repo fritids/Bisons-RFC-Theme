@@ -11,6 +11,9 @@ $pagename = $post->post_name;
 
     <div id="pagecol">
         <div class='page'>
+<?php if ( $GLOBALS['bisons_flash_message'] ) : ?>
+        <p id="flashmessage"><?php echo $GLOBALS['bisons_flash_message'] ?></p>
+    <?php endif ?>
         <?php if ( have_posts() ) : 
                 if( file_exists( dirname( __FILE__  ) . '/hardcodedplayerpages/' . $pagename . '.php' ) ) :
                     get_template_part( 'hardcodedplayerpages/' . $pagename );

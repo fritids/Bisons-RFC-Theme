@@ -7,16 +7,24 @@ include_once('dBug.php');
 
 include_once('init/get_webhooks.php');
 
+
+include_once('init/prep_pages.php');
 include_once('helper_functions/reset_password.php');
 include_once('init/modify_login_page.php');
 include_once('init/current_user.php');
 include_once('init/mw_logout.php');
 include_once('helper_functions/timer.php');
+
+include_once('helper_functions/js_redirect.php');
 global $timer;
 $timer = new ScriptTimer();
 add_filter('show_admin_bar', '__return_false');
 add_filter('wp_mail_content_type',create_function('', 'return "text/html"; '));
 
+
+// Get flash message from querystring if there is one
+if ( wp_verify_nonce ( $_GET['nonce'], 'bisons_flashmessage_nonce') )
+    $GLOBALS['bisons_flash_message'] = stripslashes ( $_GET['flash'] );
 
 // Dependencies
 include_once('Mandrill/Mandrill.php');
@@ -97,7 +105,7 @@ include_once( 'init/shortcodes.php' );
 include_once( 'init/rewrites.php' );
 include_once( 'init/createtables.php');
 include_once( 'init/dashboard.php'); 
-include_once( 'init/restricted_areas.php');
+include_once( 'init/redirects.php');
 include_once( 'init/better-comments.php' );
 include_once( 'init/start_sessions.php');
 

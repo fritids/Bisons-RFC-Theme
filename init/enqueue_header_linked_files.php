@@ -12,20 +12,22 @@ function header_css_and_js($hook) {
     wp_register_script('web_font_loader_local', get_template_directory_uri() . '/scripts/webfont.js', null, '1.0.9'); 
     wp_enqueue_script('web_font_loader_local');
     wp_register_script('dynamicforms', get_template_directory_uri() . '/scripts/dynamicforms.js', null, '1.8.0', true); 
-    wp_register_script('formvalidation', get_template_directory_uri() . '/scripts/formvalidation.js', null, '1.3.8', true); 
+    wp_register_script('formvalidation', get_template_directory_uri() . '/scripts/formvalidation.js', null, '1.3.8  ', true); 
     wp_register_script('stripe', 'https://js.stripe.com/v2/', false, '2.0.0', true); // Not enqueued here as not necessary on every page
     if( !is_admin()){
     	wp_deregister_script('jquery');
     	wp_register_script('jquery', ("http://code.jquery.com/jquery-2.1.1.min.js"), false, '2.1.1');
     }
+    
     wp_enqueue_script('jquery');
     wp_enqueue_script('jquery-migrate', $GLOBALS['blog_info']['url'].'/wp-includes/js/jquery/jquery-migrate.min.js', false, '1.2.1', true);
     wp_register_script( 'jquery_maps_plugin', get_template_directory_uri() . '/scripts/gmap3.min.js', false, '1.0.0', true);
     wp_enqueue_script( 'jquery_maps_plugin' );
     wp_register_script( 'google_maps_api', 'http://maps.googleapis.com/maps/api/js?key=AIzaSyB5uu63Ejv1pU0TKQrZa_uzZN_BMbh7Qyo&sensor=false', false, '1.0.1', true);
     wp_enqueue_script( 'google_maps_api' );
-    wp_register_script( 'magnific_js', get_template_directory_uri() . "/magnific/magnific.min.js", null, null, true);
-    wp_enqueue_script('magnific_js');    
+        wp_register_script( 'magnific_js', get_template_directory_uri() . "/magnific/magnific.min.js", null, null, true);
+    wp_enqueue_script('magnific_js');
+  
     wp_register_script( 'main_scripts_file', get_template_directory_uri() . '/scripts/scripts.js', null, '1.7.4', true );
     wp_enqueue_script( 'main_scripts_file' );
     wp_register_script( 'ajax_scripts', get_template_directory_uri() . '/scripts/AJAX.js', null, '1.0.5', true );
@@ -45,7 +47,7 @@ function header_css_and_js($hook) {
     wp_enqueue_script('googleanalytics');
     
     // CSS
-    wp_register_style('main_css_file', $GLOBALS['blog_info']['template_url'].'/stylesheets/main.css', false, '7.0.2');
+    wp_register_style('main_css_file', $GLOBALS['blog_info']['template_url'].'/stylesheets/main.css', false, '7.0.4');
     wp_enqueue_style('main_css_file');
       
     wp_register_style( 'magnific_css', get_template_directory_uri() . '/magnific/magnific.css', false, '1.0.0');

@@ -108,7 +108,7 @@ if ( ! $disabled )
 <script type='text/javascript'> setTimeout(function(){ document.location = '<?php echo $gocardless_url ?>'; }, 3000); </script>
 
 <?php elseif ($current_form->have_posts() && ! get_post_meta($form_id, 'gcl_sub_id', true ) ) : ?>
-<p class="flashmessage">It looks like you submitted a membership form but were interrupted before you could setup a Direct Debit. Click <a href=''>here</a> to go to the GoCardless website and set it up.</p>
+<p class="flashmessage">It looks like you submitted a membership form but were interrupted before you could setup a Direct Debit. Click <a href='<?php echo home_url('players-area/payment-information/') ?>'>here</a> to set one up.</p>
 
 <?php endif ?>
 <?php if ( isset ( $confirmed_resource ) ) : ?>

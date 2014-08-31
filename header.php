@@ -63,7 +63,7 @@ $timer->record_execution_time('Start of header.php');
         <?php $timer->record_execution_time('Header: after logo'); ?>
 
 
-          
+         
           <div class="title">
 		<h1><?php echo $GLOBALS['blog_info']['name']; ?></h1>
 		<p><?php echo $GLOBALS['blog_info']['description']; ?></p>
@@ -81,6 +81,4 @@ $timer->record_execution_time('Start of header.php');
 
  
         </div>
-    <?php if ( $GLOBALS['bisons_flash_message'] ) : ?>
-        <p class="flashmessage"><?php echo $GLOBALS['bisons_flash_message'] ?></p>
-    <?php endif ?>
+  

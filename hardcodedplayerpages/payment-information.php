@@ -1,240 +1,175 @@
 <?php 
-    wp_enqueue_script('dynamicforms');
-    wp_enqueue_script('formvalidation');
 
-// Check whether a membership form has been filled out.
-$current_form = new WP_Query ( array (
-    'post_type' => 'membership_form',
-    'posts_per_page' => 1,
-    'orderby'   => 'date',
-    'order'     => 'ASC',
-    'author'    => get_current_user_id()
-));
+// Get inserted data from query
 
-while ( $current_form->have_posts() ) 
-{
-    $current_form->the_post();
-    $date = get_the_date();
-    $form_id = get_the_id();
-    $disabled = isset( $_POST['edit_details']) ? false : true; 
-} 
+$data = $wp_query->inserted_data;
+$form_id = $data['form_details']['form_id'];
+$date = $data['form_details']['date'];
+$disabled = $data['form_details']['disabled'];
 
-if ($_POST['newsub'] == 'true')
-{
-  $return_addy = "http://".$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-  
-  $user = array(
-    'first_name'            => get_post_meta( $form_id, 'firstname', true ),
-    'last_name'             => get_post_meta( $form_id, 'surname', true ),
-    'email'                 => get_post_meta( $form_id, 'email_addy', true ),
-    'billing_address1'      => get_post_meta( $form_id, 'streetaddyl1', true ),
-    'billing_address2'      => get_post_meta( $form_id, 'streetaddyl2', true ),
-    'billing_town'          => get_post_meta( $form_id, 'streetaddytown', true ),
-    'billing_postcode'      => get_post_meta( $form_id, 'postcode', true ),
-  );
 
-  switch (  $_POST['paymethod']  ) 
-  {
-       case "I've already paid":
-           break;
-       
-       case "Monthly Direct Debit":
-            $subscription_details = array(
-                'amount'           => pence_to_pounds ( get_post_meta( $_POST['membershiptypemonthly'], 'fee-amount', true ), false ),
-                'name'             => get_post_meta( $_POST['membershiptypemonthly'], 'fee-name', true ),
-                'interval_length'  => 1,
-                'interval_unit'    => 'month',
-                'currency'         => 'GBP',
-                'user'             => $user,
-                'state'            => $form_id . "+DD",
-                'redirect_uri'     => $return_addy
-            );
-           break;
-       
-       case "Single Payment":
-            $subscription_details = array(
-                'amount'           => pence_to_pounds ( get_post_meta( $_POST['membershiptypesingle'], 'fee-amount', true ), false ),
-                'name'             => get_post_meta( $_POST['membershiptypemonthly'], 'fee-name', true ),
-                'currency'         => 'GBP',
-                'user'             => $user, 
-                'state'            => $form_id . "+DD",
-                'redirect_uri'     => $return_addy
-            );
-           break;
-    }
-
-    $gocardless_url = GoCardless::new_subscription_url($subscription_details);
-}
-
-// If there is a resource_id in the querystring, it must returning from Gocardless, so confirm the payment and then save the resource information if it confirms properly
-if ( isset ( $_GET['resource_id'] ) )
-{
-    $confirm_params = array(
-      'resource_id'    => $_GET['resource_id'],
-      'resource_type'  => $_GET['resource_type'],
-      'resource_uri'   => $_GET['resource_uri'],
-      'signature'      => $_GET['signature']
-    );
-    
-    if (isset($_GET['state'])) {
-      $confirm_params['state'] = $_GET['state'];
-    }
-    
-    $confirmed_resource = GoCardless::confirm_resource($confirm_params);
-    
-    if ( $confirmed_resource )
-    {
-        $state = explode ('+', $_GET['state']);
-        $the_post = $state[0];
-        $type = $state[1];
-        $post_author = get_post_field ( 'post_author', $the_post );
-        
-        switch ( $type )
-        {
-            
-            case "DD": 
-                
-                update_post_meta($the_post, 'payment_type', "Direct Debit" ); 
-                $resource = GoCardless_Subscription::find($_GET['resource_id']);
-                update_post_meta($the_post, 'payment_status', 7 );  // DD created, not yet taken payments
-                
-            break;
-            
-            case "SP": 
-                update_post_meta($the_post, 'payment_type', "Single Payment" );
-                $resource = GoCardless_Bill::find($_GET['resource_id']);
-                update_post_meta($the_post, 'payment_status', 2 );  // Single payment pending         
-            break;
-            
-        }
-        
-        // If user is a guest player, upgrade them
-        if ( check_user_role( 'guest_player' ) )
-        {
-            $user = new WP_User($post_author);
-            $user->remove_role( 'guest_player');
-            $user->add_role( 'player');
-        }
-        
-        update_post_meta($the_post, 'gcl_sub_id', $_GET['resource_id'] );
-        update_post_meta($the_post, 'gcl_sub_uri', $_GET['resource_uri'] );
-        update_post_meta($the_post, 'mem_name', $resource->name );
-        update_post_meta($the_post, 'mem_status', 'Active' );
-    }
-}
+// Enqueue form Javascript
+wp_enqueue_script('dynamicforms');
+wp_enqueue_script('formvalidation');
 ?>
 <header>
 <h2>Payment Information</h2>
 </header>
-<?php if ($gocardless_url) : ?>
-<p class="flashmessage">In a moment, you will be redirected to a direct debit mandate form at GoCardless. Once you have finished setting up your payment information, you will be returned to this site. See you in a bit!</p>
-<script type='text/javascript'> setTimeout(function(){ document.location = '<?php echo $gocardless_url ?>'; }, 3000); </script>
+
+<?php if ( $data['has_gcl_subscription'] ) :  ?>
+    <?php switch ( $data['gcl_resource']->status )  
+    {
+        case 'active': ?><p>Details of your current Direct Debit subscription can be found below. If you want to cancel your membership, you can use the button at the bottom of this page.</p><?php break;
+        case 'cancelled': ?><p><strong>It looks like your Direct Debit subscription has been cancelled</strong>, either by yourself or by a member of the committee. If you would like to setup a new one, please scroll to the bottom of the page and select your new membership type.</p><?php break;
+        case 'pending': case 'paid': ?><p>Details of your payment can be found below. If the payment has not yet been submitted to your bank, there will be a button below that you can use to cancel it if you wish.</p><?php break;
+    } ?>
+<table class='center'>
+    <tbody>
+        <tr>
+            <th>Membership Type</th>
+            <td class='large-cell'><?php echo $data['gcl_resource']->name ?></td>
+        </tr>
+        <tr>
+            <th>Membership Description</th>
+            <td><?php echo $data['gcl_resource']->description ?></td>
+        </tr>
+        
+        <?php if ( $data['gcl_resource_type'] == 'subscription') : ?>
+        <tr>
+            <th>Setup Fee</th>
+            <td class='large-cell'><?php echo '£'.number_format ( (int) $data['gcl_resource']->setup_fee, 2 ) ?></td>
+        </tr>
+        <tr>
+            <th>Monthly Payment</th>
+            <td class='large-cell'><?php echo '£'.number_format ( (int) $data['gcl_resource']->amount, 2 ) ?></td>
+        </tr>
+        <tr>
+            <th>Subscription Status</th>
+            <td>
+                <?php if ($data['gcl_resource']->status == 'active') : ?>
+                    <form action='<?php echo remove_query_arg( array ('nonce', 'flash' ) ) ?>' method='post' id="#cancel">
+                    <input type='hidden' name='nonce' value='<?php echo wp_create_nonce('cancel_resource_' . $data['gcl_resource']->id) ?>' />
+                    <input type='hidden' name='resource_type' value='sub' />
+                    <?php if ( $_POST['cancel_membership'] == 'first_click' ) : ?>
+                        <pclass='info'>Are you sure you want to cancel your Direct Debit?</p>
+                        <button type='submit' name='cancel_membership' value='confirmed'>Yes</button>
+                        <button type='submit' name='cancel_membership' value='no'>No</button>
+                    <?php else : ?>
+                        <button type='submit' name='cancel_membership' value='first_click'>Active (Click to cancel)</button>
+                    <?php endif ?>
+                    </form>
+                <?php else : ?>
+                    Cancelled
+                <?php endif ?>
+            </td>
+        </tr>
+        <?php else : ?>
+        <tr>
+            <th>Payment Amount</th>
+            <td class='large-cell'><?php echo '£'.number_format ( (int) $data['gcl_resource']->amount, 2 ) ?></td>
+        </tr>
+        <tr>
+            <th>Payment Status</th>
+            <td class='large-cell'>
+                <?php if ($data['gcl_resource']->status == 'pending' && $data['gcl_resource']->can_be_cancelled == TRUE) : ?>
+                    <form action='<?php echo remove_query_arg( array ('nonce', 'flash' ) ) ?>' method='post' id="#cancel">
+                    <input type='hidden' name='nonce' value='<?php echo wp_create_nonce('cancel_resource_' . $data['gcl_resource']->id) ?>' />
+                    <input type='hidden' name='resource_type' value='bill' />
+                    <?php if ( $_POST['cancel_membership'] == 'first_click' ) : ?>
+                        <pclass='info'>Are you sure you want to cancel this payment?</p>
+                        <button type='submit' name='cancel_membership' value='confirmed'>Yes</button>
+                        <button type='submit' name='cancel_membership' value='no'>No</button>
+                    <?php else : ?>
+                        <button type='submit' name='cancel_membership' value='first_click'>Pending (Click to cancel)</button>
+                    <?php endif ?>
+                    </form>
+                <?php else : ?>
+                    <?php echo ucfirst ( $data['gcl_resource']->status ) ?>
+                <?php endif ?>                
+            </td>
+        </tr>
+                
+        <?php endif ?>
+    </tbody>
+</table>    
 <?php endif ?>
 
-<?php if ($confirmed_resource) : ?>
-<p class="flashmessage">Congratulations! Your direct debit (or full payment) has now been setup - you should receive an email from GoCardless (our payment processor) very shortly. 
-<?php endif ?>   
-<?php
-if ( $_POST['confirm'] == 'true')
-{
-    $sub_id = get_post_meta ( $form_id, 'gcl_sub_id', true);
-    GoCardless_Subscription::find( $sub_id )->cancel();
-    update_post_meta($form_id, 'payment_status', 9);
-    update_post_meta($form_id, 'mem_status', 'Inactive' );
-    
-    echo "<p class='flashmessage'>Your subscription has been cancelled. You can return to this page at a later stage to reinstate it. Please note that you may also need to cancel the Direct Debit with your bank</p>";
-}
-
-if ( ! $current_form->have_posts() ) : ?>
-    <p>Please take a moment to fill out our membership form (redirecting you now). Once this is done, you will be able to use this page to pay your fees.</p>
-    <script type='text/javascript'> setTimeout(function(){ document.location = 'players-area/membership-form/'; }, 3000); </script>
-    <?php else : ?>
-    <p>Should you wish to modify or cancel your payment details, please contact a member of the committee.</p>
-    <table>
-        <tbody>
-            <tr>
-                <th>Membership Type</th>
-                <td><?php echo get_post_meta ( $form_id, 'mem_name', true) ?></td>
-            </tr>
-            <tr>
-                <th>Payment Method</th>
-                <td><?php echo get_post_meta ( $form_id, 'payment_type', true) ?></td>
-            </tr>
-            <tr>
-                <th>Payment Status</th>
-                <td><?php global $payment_statuses; echo $payment_statuses[ get_post_meta($form_id, 'payment_status', true) ] ?></td>
-            </tr>
-            <tr>
-                <th>Membership Status</th>
-                <td><?php echo get_post_meta ( $form_id, 'mem_status', true) ?></td>
-            </tr>
-        </tbody>
-    </table>
-    
-    <?php if ( get_post_meta ( $form_id, 'mem_status', true) == 'Inactive' ) : ?>
-    <form method="POST">
+<?php if ( ! $data['has_gcl_subscription'] || $data['gcl_resource']->status == 'cancelled' ) : ?>
+<form method='post'>
+    <?php if ( $data['gcl_resource']->status == 'cancelled' ) : ?>
+    <p>To setup a new Direct Debit, choose a payment type from the box below followed by a membership type. <strong>When you click OK, you will be redirected to the GoCardless website to finish setting up your Direct Debit. Don&apos;t worry, they'll send you back to us afterward!</strong>
+    <?php else : ?> 
+    <p>It looks like you have submitted a membership form but have not yet finished setting up your Direct Debit. To complete this step, choose a payment type from the box below followed by a membership type. <strong>When you clik OK, you will be redirected to the GoCardless website to finish setting up your Direct Debit. Don&apos;t worry, they'll send you back to us afterward!</strong></p>
+    <?php endif ?>
     <fieldset>
-        <legend>Re-establish payment</legend>
-        <p class="info">Your membership is inactive. Either you have cancelled your membership, or payments have failed when we requested them. To re-establish a subscription, select a membership type and press the button below to be redirected to our payment processor.</p>
+        <legend>Payment</legend>
+        <p class='info'>Once you choose a payment type, the membership type box will appear.</p>
         <div>
-            <label class="smalllabel" for="paymethod">Payment Method</label>
+            <label class="smalllabel" for="paymethod">Payment Type</label>
             <select class="mustselect" name="paymethod" id="paymethod">
                 <option></option>
-                <option>I've already paid</option>
                 <option>Monthly Direct Debit</option>
                 <option>Single Payment</option>
             </select>
         </div>
-        
-        <?php 
-        $fees = new WP_Query ( array( 'post_type' => 'membership_fee' ));
-        while ( $fees->have_posts() ) 
-        {
-            $fees->the_post();
-            
-            $the_fee = array (
-                'id'    => get_the_id(),
-                'name' => get_post_meta( get_the_id(), 'fee-name', true),
-                'amount' => get_post_meta( get_the_id(), 'fee-amount', true),
-                'description' => get_post_meta( get_the_id(), 'fee-description', true)
-            );
-                
-            if ( get_post_meta( get_the_id(), 'fee-type', true) == "Monthly Direct Debit") $directdebitfees[] = $the_fee;
-            else $singlepayment[] = $the_fee;
-            
-        }
-?>
-        
-
-        <div id="mempaymonthly" style="display:none">
-            <label class="smalllabel" for="membershiptypemonthly">Membership Type</label>
-            <select class="mustselect" name="membershiptypemonthly" id="membershiptypemonthly">
+      <?php if ( get_post_meta ( $form_id, 'joiningas', true ) == 'Player' ) : ?>
+      <div id="playerfees" class='playersonly'>
+        <div id="playermempaymonthly" style="display:none" >
+            <label class="smalllabel" for="playermembershiptypemonthly">Membership Type</label>
+            <select class="mustselect" name="playermembershiptypemonthly" id="playermembershiptypemonthly">
                 <option></option>
-            <?php foreach ($directdebitfees as $fee) : ?>
-                <option value="<?php echo $fee['id'] ?> ?>"><?php echo $fee['name'] ?> - <?php echo pence_to_pounds ( $fee['amount'] ) ?> per month</option>
+            <?php foreach ($data['playerfees'][ 'direct_debits' ] as $fee) : ?>
+                <option value="<?php echo $fee['id'] ?>"><?php echo $fee['name'] ?></option>
             <?php endforeach ?>
             </select>
+             <ul class='feeslist'>
+            <?php foreach ($data['playerfees'][ 'direct_debits' ] as $fee) : ?><li><strong><?php echo $fee['name'] ?></strong><br />An initial payment of <?php echo pence_to_pounds ( $fee['initial-payment'] ) ?> and monthly payments of <?php echo pence_to_pounds ( $fee['amount'] ) ?>. <?php echo $fee['description'] ?></li><?php endforeach ?>
+             </ul>
         </div>
-        <div id="mempaysingle" style="display:none">
-            <label class="smalllabel" for="membershiptypesingle">Membership Type</label>
-            <select class="mustselect" name="membershiptypesingle" id="membershiptypesingle">
+        
+        <div id="playermempaysingle" style="display:none" >
+            <label class="smalllabel" for="playermembershiptypesingle">Membership Type</label>
+            <select class="mustselect" name="playermembershiptypesingle" id="playermembershiptypesingle">
                 <option></option>
-            <?php foreach ($singlepayment as $fee) : ?>
-                <option value="<?php echo $fee['id'] ?>"><?php echo $fee['name'] ?> - <?php echo pence_to_pounds ( $fee['amount'] ) ?></option>
+            <?php foreach ($data['playerfees'][ 'single_payments' ] as $fee) : ?>
+                <option value="<?php echo $fee['id'] ?>"><?php echo $fee['name'] ?></option>
             <?php endforeach ?>
             </select>
+           <ul class='feeslist'>
+            <?php foreach ($data['playerfees'][ 'single_payments' ] as $fee) : ?><li><strong><?php echo $fee['name'] ?></strong><br />A single payment of <?php echo pence_to_pounds ( $fee['initial-payment'] ) ?>. <?php echo $fee['description'] ?></li><?php endforeach ?>
+             </ul>
         </div>
-        <button type="submit" name="newsub" value='true'>Next</button>
-    </fieldset>
-    </form>
-    <?php elseif ( get_post_meta ( $form_id, 'payment_type', true) == "Direct Debit") : ?>
-        <form method="POST">
-            <?php if ( $_POST['cancel'] == 'true') : ?>
-            <button type='submit'>Don't Cancel</button>
-            <button type='submit' name='confirm' value='true'>Confirm Cancellation</button>
-            <?php else : ?>
-            <button type='submit' name='cancel' value='true'>Cancel Subscription</button>
-            <?php endif ?>
-        </form>
+    </div>
+    <?php else : ?>
+      <div id="supporterfees" class='supportersonly'>
+        <div id="supportermempaymonthly" style="display:none" >
+            <label class="smalllabel" for="supportermembershiptypemonthly">Membership Type</label>
+            <select class="mustselect" name="supportermembershiptypemonthly" id="supportermembershiptypemonthly">
+                <option></option>
+            <?php foreach ($data['supporterfees'][ 'direct_debits' ] as $fee) : ?>
+                <option value="<?php echo $fee['id'] ?>"><?php echo $fee['name'] ?></option>
+            <?php endforeach ?>
+            </select>
+            <ul class='feeslist'>
+            <?php foreach ($data['supporterfees'][ 'direct_debits' ] as $fee) : ?><li><strong><?php echo $fee['name'] ?></strong><br />An initial payment of <?php echo pence_to_pounds ( $fee['initial-payment'] ) ?> and monthly payments of <?php echo pence_to_pounds ( $fee['amount'] ) ?>. <?php echo $fee['description'] ?></li><?php endforeach ?>
+             </ul>
+        </div>
+        <div id="supportermempaysingle" style="display:none" >
+            <label class="smalllabel" for="supportermembershiptypesingle">Membership Type</label>
+            <select class="mustselect" name="supportermembershiptypesingle" id="supportermembershiptypesingle">
+                <option></option>
+            <?php foreach ($data['supporterfees'][ 'single_payments' ] as $fee) : ?>
+                <option value="<?php echo $fee['id'] ?>"><?php echo $fee['name'] ?></option>
+            <?php endforeach ?>
+            </select>
+            <ul class='feeslist'>
+                  <?php foreach ($data['supporterfees'][ 'single_payments' ] as $fee) : ?><li><strong><?php echo $fee['name'] ?></strong><br />A single payment of <?php echo pence_to_pounds ( $fee['initial-payment'] ) ?>. <?php echo $fee['description'] ?></li><?php endforeach ?>
+                   </ul>
+              </div>
+        </div>
     <?php endif ?>
-<?php endif ?>
+    <button type='submit'>OK</button>
+    </fieldset>
+    <input type='hidden' name='nonce' value='<?php echo wp_create_nonce( 'bisons_submit_new_dd_form_'.$form_id) ?>' />
+</form>
+<?php endif;

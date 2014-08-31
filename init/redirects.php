@@ -46,3 +46,4 @@ function redirect_restricted_areas( $query )
 }
 
 add_action ( 'pre_get_posts', 'redirect_restricted_areas' );
+

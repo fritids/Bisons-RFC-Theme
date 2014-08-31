@@ -1,7 +1,7 @@
 <?php
 if (!INCLUDED) exit;
 
-// Don't post membership form if the reason we are submitting is because we are going into edit mode
+// Don't post membership form if the reason we are submitting is because we are entering edit modes
 if ( ! isset ( $_POST['edit_details'] ) )
 {
    // Setup new post array
@@ -20,7 +20,7 @@ if ( ! isset ( $_POST['edit_details'] ) )
         $post = $_POST['form_id'] ? $_POST['form_id'] : wp_insert_post( $post );
         
       // If there is no form_id, therefore it is a newly submitted form
-      if ( ! $_POST['form_id'] || ( $_POST['form_id'] && ! get_post_meta($form_id, 'gcl_sub_id', true ) ) )
+      if ( ! $_POST['form_id'] )
       {
           
           $user = array(
@@ -63,7 +63,7 @@ if ( ! isset ( $_POST['edit_details'] ) )
                    if ( $setup_fee > 0 ) 
                    {
                        $subscription_details['setup_fee'] = $setup_fee;
-                       $subscription_details['description'] .= ' Note that your first payment will be debited as a separate payment on the same date as the one off fee, therefore your statement will show two payments totalling ' .  pence_to_pounds ( get_post_meta( $feeid, 'initial-payment', true ) ); 
+                       $subscription_details['description'] .= ' Note that your first payment will be debited as a separate payment on the same date as the one off fee' ; 
                    }
                    $gocardless_url = GoCardless::new_subscription_url($subscription_details);
 
@@ -86,6 +86,7 @@ if ( ! isset ( $_POST['edit_details'] ) )
                   
                   if ( $description = get_post_meta( $feeid, 'fee-description', true ) ) 
                         $subscription_details['description'] = $description;
+                  
                   
                    $gocardless_url = GoCardless::new_bill_url($subscription_details);
 
