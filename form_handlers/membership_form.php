@@ -20,7 +20,7 @@ if ( ! isset ( $_POST['edit_details'] ) )
         $post = $_POST['form_id'] ? $_POST['form_id'] : wp_insert_post( $post );
         
       // If there is no form_id, therefore it is a newly submitted form
-      if ( ! $_POST['form_id'] || ( $_POST['form_id'] && ! get_post_meta($form_id, 'gcl_sub_id', true ) ) )
+      if ( ! $_POST['form_id'] )
       {
           
           $user = array(
@@ -86,6 +86,7 @@ if ( ! isset ( $_POST['edit_details'] ) )
                   
                   if ( $description = get_post_meta( $feeid, 'fee-description', true ) ) 
                         $subscription_details['description'] = $description;
+                  
                   
                    $gocardless_url = GoCardless::new_bill_url($subscription_details);
 
