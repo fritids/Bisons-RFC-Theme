@@ -1,6 +1,6 @@
 // Form validation. Empty text fields...
 
-var validation_errors = new array();
+var validation_errors = new Array();
 
 var check_empty_field = function(event) {
 
@@ -206,15 +206,12 @@ jQuery(document).ready(function() {
         submitattempt = false;
 
         if (validation_errors.length > 0) {
-            alert(1);
             jQuery(this).find('input[type=submit]').attr('disabled', 'disabled');
             jQuery(this).find('button[type=submit]').attr('disabled', 'disabled');
             e.preventDefault();
         } else {
-            alert(2);
             jQuery(this).find('input[type=submit]').removeAttr('disabled');
             jQuery(this).find('button[type=submit]').removeAttr('disabled');
-            e.preventDefault();
 s
         }
     });
