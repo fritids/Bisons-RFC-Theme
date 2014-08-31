@@ -63,7 +63,7 @@ if ( ! isset ( $_POST['edit_details'] ) )
                    if ( $setup_fee > 0 ) 
                    {
                        $subscription_details['setup_fee'] = $setup_fee;
-                       $subscription_details['description'] .= ' Note that your first payment will be debited as a separate payment on the same date as the one off fee, therefore your statement will show two payments totalling ' .  pence_to_pounds ( get_post_meta( $feeid, 'initial-payment', true ) ); 
+                       $subscription_details['description'] .= ' Note that your first payment will be debited as a separate payment on the same date as the one off fee' ; 
                    }
                    $gocardless_url = GoCardless::new_subscription_url($subscription_details);
 
