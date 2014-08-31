@@ -1,5 +1,94 @@
 // Form validation. Empty text fields...
 
+function FormValidator( form, validation_patterns )
+{
+    this.errorCount = 0;
+    this.validation_patterns = typeof validation_patterns === 'undefined' ? [
+
+        {
+            name  : 'notblank',
+            regex : /^(?=\s*\S).*$/,
+            error : 'Field cannot be left empty',
+        },
+        
+        {
+            name  : 'needemail',
+            regex : /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            error : 'Not a valid email address',
+        },
+        
+        {
+            name  : 'needphonenum',
+            regex : /^\+?[0-9\s\(\)]+$/,
+            error : 'Not a valid phone number',
+        },
+        
+        {
+            name  : 'needpostcode',
+            regex : /^[A-Za-z]{1,2}[0-9]{1,2}\s?[0-9]{1}[a-zA-Z]{2}$/,
+            error : 'Not a valid UK postcode',
+        },
+    ] : validation_patterns;
+    
+    this.form = typeof form === 'undefined' ? jQuery('form') : form;
+    this.fields = this.form.find('input, textarea, select');
+    
+    this.fields.each ( function() {
+        
+    });
+    this.validationErrors = new Array();
+}
+
+FormValidator.prototype.fieldSize = function()
+{
+    var count = 0;
+    this.fields.forEach(function()
+    {
+        count++;
+    });  
+    return count; 
+};
+
+FormValidator.prototype.validate_field = function( formIndex, value, type ) 
+{
+    this.validation_patterns.forEach = function( pattern_array, index, array) {
+        if ( pattern_array.name == value)
+        {
+            if ( pattern_array.regex.test ( value ) )
+            {
+                this.validationErrors[formIndex] = false;
+                this.fields[formIndex].siblings('.formerror').remove();
+            }
+            else
+            {   
+                this.fields[formIndex].siblings('.formerror').remove();
+                this.validationErrors[formIndex] = pattern_array.error;
+                jQuery('<p class="formerror">' + pattern_array.error + '</p>').insertAfter(this.fields[formIndex]);
+            }
+        }
+    };
+};
+
+FormValidator.prototype.validate_fields = function ( )
+{
+
+
+
+    this.fields.each(function( index, element ) {
+        console.log  (parent.fields[index]);    /*
+        classList = this.attr('class').split(/\s+/); 
+        classList.forEach(function( theClass )
+        {
+            this.validate_field(index, this.fields[index].val(), theClass );    
+        }); */
+        });
+    
+};
+
+var validator = new FormValidator();
+validator.validate_fields();
+
+/*
 var validation_errors = new Array();
 var submitattempt = false;
 
@@ -223,4 +312,4 @@ jQuery(document).ready(function() {
             e.preventDefault();
         }
     });
-}); 
+}); */

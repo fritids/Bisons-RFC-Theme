@@ -1,5 +1,7 @@
 <?php
     wp_enqueue_script('dynamicforms');
+    wp_enqueue_script('formvalidation');
+
 
 $form_user = ( isset ( $_GET['player_id'] ) && current_user_can ('committee_perms') ) 
                 ? $_GET['player_id'] : get_current_user_id();
@@ -304,7 +306,7 @@ if ( ! $disabled )
                 <textarea name="nokstreetaddy notempty" id="nokstreetaddy"<?php if ( $disabled ) { ?> disabled='true'<?php } ?>><?php if ( $current_form->have_posts() ) { echo get_post_meta($form_id, 'nokstreetaddy', true); } ?></textarea>
             </div>
             <div>
-                <label  class="smalllabel" for="nokpostcode notempty">Postcode</label>
+                <label  class="smalllabel" for="nokpostcode">Postcode</label>
                 <input type="text" class="smalltextbox needpostcode" name="nokpostcode" id="nokpostcode"<?php if ( $disabled ) { ?> disabled='true'<?php } if ( $current_form->have_posts() ) { ?> value='<?php echo get_post_meta($form_id, 'nokpostcode', true) ?>'<?php } ?> />
             </div>
         </div>
