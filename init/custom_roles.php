@@ -30,9 +30,8 @@ function create_team_roles() {
     $admin->add_cap( 'manage_bisons_settings' );  
     $admin->add_cap( 'view_players_area' );  
     $admin->add_cap( 'view_committee_area' );  
-    $admin->add_cap( 'use_wiki' ); 
-
- 
+    $admin->add_cap( 'use_wiki' );
+    $admin->add_cap( 'see_dashboard' );  
 }
 
 /*
@@ -51,6 +50,8 @@ function remove_team_roles() {
     $admin->remove_cap( 'view_players_area' ); 
     $admin->remove_cap( 'view_committee_area' );
     $admin->remove_cap( 'use_wiki' );
+    $admin->remove_cap( 'see_dashboard' );
+
 
 }
 add_action('after_switch_theme', 'create_team_roles');
