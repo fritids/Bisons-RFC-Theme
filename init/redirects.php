@@ -47,3 +47,14 @@ function redirect_restricted_areas( $query )
 
 add_action ( 'pre_get_posts', 'redirect_restricted_areas' );
 
+
+function block_from_dashboard()
+{
+    if ( is_admin() && ! current_user_can( 'see_dashboard' ) && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) 
+    {
+        $url = wp_login_url( add_query_arg ( array() ) );
+        wp_redirect( $url );
+        exit ( );
+    }
+}
+add_action ( 'init', 'block_from_dashboard'); 

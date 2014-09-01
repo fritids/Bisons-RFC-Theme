@@ -47,7 +47,8 @@ $committee_perms = array(
             'modify_users'  => false,
             'modify_tools' => false, 
             'modify_options' => false,
-            'use_wiki' => true
+            'use_wiki' => true,
+            'see_dashboard' => true
 );
 
 $committee_admin_perms = array(
@@ -98,7 +99,8 @@ $committee_admin_perms = array(
             'modify_users'  => false,
             'modify_tools' => false, 
             'modify_options' => false,
-            'use_wiki' => true
+            'use_wiki' => true,
+            'see_dashboard' => true
 
 );
 
@@ -150,7 +152,9 @@ $player_perms = array(
             'modify_users'  => false,
             'modify_tools' => false, 
             'modify_options' => false,
-            'use_wiki' => false
+            'use_wiki' => false,
+            'see_dashboard' => false
+            
 
 );
 
@@ -202,6 +206,8 @@ $guest_player_perms = array(
             'modify_users'  => false,
             'modify_tools' => false, 
             'modify_options' => false,
-            'use_wiki' => false
+            'use_wiki' => false,
+            'see_dashboard' => false
+            
 
 );

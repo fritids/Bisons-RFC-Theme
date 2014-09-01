@@ -1,6 +1,5 @@
 <?php
     wp_enqueue_script('dynamicforms');
-    wp_enqueue_script('formvalidation');
 
 
 $form_user = ( isset ( $_GET['player_id'] ) && current_user_can ('committee_perms') ) 
@@ -91,7 +90,7 @@ if ( isset ( $_GET['resource_id'] ) )
   
 
 if ( ! isset ( $disabled ) )
-	$disabled = false;     
+	$disabled = false;
 
 if ( ! isset ( $form_id ) )
       $form_id = NULL;
