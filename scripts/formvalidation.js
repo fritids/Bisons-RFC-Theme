@@ -110,21 +110,32 @@ function FormValidator( form, validation_patterns )
             }
         }
         
+        var buttonText = this.form.find('input[type=submit]').attr('value') 
+            ? this.form.find('input[type=submit]').attr('value') : this.form.find('button[type=submit]').text();
+        
         if (count > 0) 
         {
             this.form.find('input[type=submit]').attr('disabled', 'disabled');
-            this.form.find('input[type=submit]').attr('value', 'Submit (Disabled - check for errors)');
             this.form.find('button[type=submit]').attr('disabled', 'disabled');
-            this.form.find('button[type=submit]').text('Submit (Disabled - check for errors)');
+            
+            if ( buttonText  == 'Submit' )
+            {
+                this.form.find('input[type=submit]').attr('value', 'Submit (Disabled - check for errors)');
+                this.form.find('button[type=submit]').text('Submit (Disabled - check for errors)');
+            }
         }
 
         // If not, re-enable form
         else 
         {
             this.form.find('input[type=submit]').removeAttr('disabled');
-            this.form.find('input[type=submit]').attr('value', 'Submit');
             this.form.find('button[type=submit]').removeAttr('disabled');
-            this.form.find('button[type=submit]').text('Submit');
+            
+            if ( buttonText  == 'Submit (Disabled - check for errors)' )
+            {
+                this.form.find('button[type=submit]').text('Submit');
+                this.form.find('input[type=submit]').attr('value', 'Submit');
+            }
         }
         return count;
     };
@@ -138,6 +149,7 @@ function FormValidator( form, validation_patterns )
         });  
         return count; 
     };
+    
     
     
     this.fields.each ( function( arrayIndex ) {
