@@ -66,6 +66,9 @@ function FormValidator( form, validation_patterns )
     
     this.validate_field = function( object, formIndex ) 
     {
+        if (object.parents(':hidden').length > 0)
+            return;
+        
         if ( object.attr('class') )
         {
             classList = object.attr('class').split(/\s+/);
@@ -90,9 +93,7 @@ function FormValidator( form, validation_patterns )
                         }
                     }
                 }); 
-            });
-            
-           
+            });  
         }
     };
 
