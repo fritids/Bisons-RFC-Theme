@@ -186,12 +186,27 @@ function FormValidator( form, validation_patterns )
         }  
     });
     
+    
+    this.validationErrors.firstErrorIndex = function()
+    {
+        var count = 0;
+        for ( var i = 0; i < parent.validationErrors.length; i++)
+        {
+            if (parent.validationErrors[i])
+            {
+                console.log(i);
+                return i;
+            }
+        }
+        return false;
+    };
+    
     this.form.submit(function(e) 
     {
         parent.validate_fields();
-        
+
         if ( parent.recount_errors() > 0 )
-        {
+        {  
             e.preventDefault();
         }
     });
