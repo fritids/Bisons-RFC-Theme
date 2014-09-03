@@ -4,6 +4,9 @@ define('INCLUDED', TRUE);
 
 include_once('dBug.php');
 
+// Load official GoCardless library
+include_once('GoCardless/init.php');
+include_once('init/payment_statuses.php');
 
 include_once('init/get_webhooks.php');
 
@@ -17,6 +20,7 @@ include_once('helper_functions/timer.php');
 
 include_once('helper_functions/js_redirect.php');
 global $timer;
+
 $timer = new ScriptTimer();
 add_filter('show_admin_bar', '__return_false');
 add_filter('wp_mail_content_type',create_function('', 'return "text/html"; '));
@@ -57,9 +61,6 @@ include_once('PHPMailer/PHPMailerAutoload.php');
 include_once('email/send_bison_mail.php');
 
 
-// Load official GoCardless library
-include_once('GoCardless/init.php');
-include_once('init/payment_statuses.php');
 
 
 // Custom shortcodes
