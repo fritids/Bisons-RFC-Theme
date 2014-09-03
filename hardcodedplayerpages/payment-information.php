@@ -26,15 +26,20 @@ wp_enqueue_script('formvalidation');
 <table class='center'>
     <tbody>
         <tr>
-            <th>Membership Type</th>
+            <th>Type</th>
             <td class='large-cell'><?php echo $data['gcl_resource']->name ?></td>
         </tr>
+
         <tr>
-            <th>Membership Description</th>
+            <th>Description</th>
             <td><?php echo $data['gcl_resource']->description ?></td>
         </tr>
-        
+
         <?php if ( $data['gcl_resource_type'] == 'subscription') : ?>
+        <tr>
+            <th>Payment Method</th>
+            <td class='large-cell'>Direct Debit</td>
+        </tr>
         <tr>
             <th>Setup Fee</th>
             <td class='large-cell'><?php echo '£'.number_format ( (int) $data['gcl_resource']->setup_fee, 2 ) ?></td>
@@ -64,6 +69,10 @@ wp_enqueue_script('formvalidation');
             </td>
         </tr>
         <?php else : ?>
+        <tr>
+            <th>Payment Method</th>
+            <td class='large-cell'>Single Payment</td>
+        </tr>
         <tr>
             <th>Payment Amount</th>
             <td class='large-cell'><?php echo '£'.number_format ( (int) $data['gcl_resource']->amount, 2 ) ?></td>
