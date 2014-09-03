@@ -180,7 +180,7 @@ form { padding:0 1em 0 0;  clear:both; }
 
 form select, form label, form input, form textarea { display:inline-block; vertical-align:middle; }
 form select { min-width:100px; padding:0.3em; text-align:center; }
-form label { margin-left:1%; margin-top:0.3em; width:200px; font-size:1.2em; padding: 0.3em 5px 0.3em 0; }
+form label { margin-left:1%; margin-top:0.3em; width:200px; padding: 0.3em 5px 0.3em 0; }
 form input { height:30px; }
 input[type=file] { background: none; border: none; vertical-align: middle; font-size:1em; }
 form input[disabled=true], form textarea[disabled=true] { color: grey; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; text-indent: 0.01px; text-overflow: '';}
