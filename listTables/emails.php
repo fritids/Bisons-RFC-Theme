@@ -64,13 +64,23 @@ class Email_Log_Tables extends WP_List_Table_Copy
               {
                   $status = ucfirst ( get_post_meta(get_the_id(), 'status', true) );    
               }
-
+              
+              if ( $clicks = get_post_meta( get_the_id(), 'clicks', true) )
+              {
+                $click_html = '<ul>';
+                foreach ( $clicks as $click )
+                    $click_html .= '<li>'.$click['url'].'</li>';     
+                $click_html .= '</ul>';
+              }
+              else $click_html = 'None';
+              
               $data[] = array(
                 'timestamp'         => get_the_date('g:i:a, jS \o\f F Y'),
                 'post_id'           => get_the_id(),
                 'recipient_name'    => get_post_meta(get_the_id(), 'user_name', true) ? get_post_meta(get_the_id(), 'user_name', true) : 'None given',
                 'user_id'           => get_post_meta(get_the_id(), 'user_id', true),
                 'mandrill_id'       => get_post_meta(get_the_id(), 'email_id', true),
+                'clicks'            => $click_html,
                 'email_address'     => get_post_meta(get_the_id(), 'email', true),
                 'status'            => $status,
                 'template'          => get_post_meta(get_the_id(), 'template', true),
@@ -98,7 +108,8 @@ class Email_Log_Tables extends WP_List_Table_Copy
             'recipient_name'    => 'Name',
             'email_address'     => 'Email',
             'status'            => 'Status',
-            'template'          => 'Template'
+            'template'          => 'Template',
+            'clicks'            => 'Clicks'
           );    
           
           if ( isset ( $_GET['user_id']) ) unset ($columns['recipient_name']);
@@ -147,6 +158,7 @@ class Email_Log_Tables extends WP_List_Table_Copy
               case 'status':
               case 'template':
               case 'email_address':
+              case 'clicks':
                 return $item [ $column_name ];
               default:
                   new dBug ( $item );
