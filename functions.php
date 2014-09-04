@@ -112,7 +112,7 @@ include_once( 'init/start_sessions.php');
 
 
 // Form handlers
-if ( wp_verify_nonce( $_POST['nonce'], 'wordpress_form_submit' ) && file_exists ( __DIR__ . '/form_handlers/' . $_POST['action'] . '.php' ) )
+if ( wp_verify_nonce( $_POST['nonce'], 'wordpress_form_submit' ) && file_exists ( __DIR__ . '/form_handlers/' . $_POST['wp_form_id'] . '.php' ) )
     include_once('form_handlers/' . $_POST['wp_form_id']. '.php');
 
 include_once('listTables/players_no_mem_form.php');
