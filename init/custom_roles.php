@@ -32,6 +32,7 @@ function create_team_roles() {
     $admin->add_cap( 'view_committee_area' );  
     $admin->add_cap( 'use_wiki' );
     $admin->add_cap( 'see_dashboard' );  
+    $admin->add_cap( 'attribute_post' );  
 }
 
 /*
@@ -51,6 +52,7 @@ function remove_team_roles() {
     $admin->remove_cap( 'view_committee_area' );
     $admin->remove_cap( 'use_wiki' );
     $admin->remove_cap( 'see_dashboard' );
+    $admin->remove_cap( 'attribute_post' );
 
 
 }

@@ -274,6 +274,19 @@ function add_custom_forms ( $post ) {
     );
     
     
+    if ( current_user_can('attribute_post' ) )
+    {
+       add_meta_box(
+        'attribute-post',
+        'Attribute Post',
+        'attribute_post',
+        'post',
+        'normal',
+        'high'
+        );
+    }
+    
+    
        add_meta_box(
         'committee-profile-edit',
         'Profile',
@@ -303,6 +316,7 @@ function results_content( $post ) { include_once( dirname(__FILE__) . '/../postf
 function committee_page_description_form( $post ) { include_once( dirname(__FILE__) . '/../postforms/com-page.php');}
 function player_page_description_form( $post ) { include_once( dirname(__FILE__) . '/../postforms/player-page.php'); }
 function fixture_link_selector ( $post ) { include_once( dirname(__FILE__) . '/../postforms/post.php'); }
+function attribute_post ( $post ) { include_once( dirname(__FILE__) . '/../postforms/post-attribute.php'); }
 function committee_profile ( $post ) { include_once( dirname(__FILE__) . '/../postforms/committee-profile.php'); } 
 function membership_fee_postform ( $post ) { include_once( dirname(__FILE__) . '/../postforms/memfees.php'); } 
 
