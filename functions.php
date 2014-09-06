@@ -1,5 +1,10 @@
 <?php 
 
+add_theme_support( 'post-thumbnails' ); 
+
+function style_bisons_editor() { add_editor_style( 'stylesheets/style-editor.css' ); }
+add_action( 'after_setup_theme', 'style_bisons_editor' );
+
 define('INCLUDED', TRUE);
 
 include_once('dBug.php');
