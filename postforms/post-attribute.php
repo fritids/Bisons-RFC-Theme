@@ -1,10 +1,8 @@
 <?php 
 $users = get_users();
-
 if ($users) : ?>
-
 <div id='custom-form'>
-    <p>Use the box below to link this post to a specific fixture/event.</p>
+    <p>Use the box below to link this post to attribute this post to a different author.</p>
     <table class="form-table">
         <tbody>
             <tr>
