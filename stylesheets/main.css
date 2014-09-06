@@ -85,7 +85,7 @@ img.noborder, div.gmap-border img { }
 .post img.alignnone, .page img.alignnone,
 .post img.alignright, .page img.alignright { float:right; margin-left:1em;  }
 #sidebar img {  }
-.post, .page { margin-bottom:2em; clear:both; }
+.post, .page { margin-top:1em; clear:both; }
 .post header a, .page header a { border-bottom:none; }
 .post ul, .page ul, ol { margin:0 0 1em 1.5em; }
 .page img { margin-bottom:1em; 9}

@@ -43,7 +43,7 @@ function header_css_and_js($hook) {
     wp_enqueue_script('googleanalytics');
     
     // CSS
-    wp_register_style('main_css_file', $GLOBALS['blog_info']['template_url'].'/stylesheets/main.css', false, '7.0.8');
+    wp_register_style('main_css_file', $GLOBALS['blog_info']['template_url'].'/stylesheets/main.css', false, '7.1.2');
     wp_enqueue_style('main_css_file');
       
     wp_register_style( 'magnific_css', get_template_directory_uri() . '/magnific/magnific.css', false, '1.0.0');
