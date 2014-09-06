@@ -4,7 +4,7 @@ function FormValidator( form, validation_patterns )
 {
     // So that callbacks can access parent class
     var parent = this;
-    
+
     // Default validation regexes. These can be passed in however
     this.validation_patterns = typeof validation_patterns === 'undefined' ? [
 
@@ -40,9 +40,12 @@ function FormValidator( form, validation_patterns )
         },
         
     ] : validation_patterns;
-    
+        
     // If a form isn't passed in, use every FORM element on the page
     this.form = typeof form === 'undefined' ? jQuery('form') : form;
+    this.submitText = this.form.find('input[type=submit]').attr('value') 
+            ? this.form.find('input[type=submit]').attr('value') : this.form.find('button[type=submit]').text();
+
     this.fields = this.form.find('input, textarea, select');
     
 
@@ -110,19 +113,13 @@ function FormValidator( form, validation_patterns )
             }
         }
         
-        var buttonText = this.form.find('input[type=submit]').attr('value') 
-            ? this.form.find('input[type=submit]').attr('value') : this.form.find('button[type=submit]').text();
-        
+                
         if (count > 0) 
         {
             this.form.find('input[type=submit]').attr('disabled', 'disabled');
             this.form.find('button[type=submit]').attr('disabled', 'disabled');
-            
-            if ( buttonText  == 'Submit' )
-            {
-                this.form.find('input[type=submit]').attr('value', 'Submit (Disabled - check for errors)');
-                this.form.find('button[type=submit]').text('Submit (Disabled - check for errors)');
-            }
+            this.form.find('input[type=submit]').attr('value', this.submitText + ' (Disabled - check for errors)');
+            this.form.find('button[type=submit]').text(this.submitText + ' (Disabled - check for errors)');
         }
 
         // If not, re-enable form
@@ -130,12 +127,8 @@ function FormValidator( form, validation_patterns )
         {
             this.form.find('input[type=submit]').removeAttr('disabled');
             this.form.find('button[type=submit]').removeAttr('disabled');
-            
-            if ( buttonText  == 'Submit (Disabled - check for errors)' )
-            {
-                this.form.find('button[type=submit]').text('Submit');
-                this.form.find('input[type=submit]').attr('value', 'Submit');
-            }
+            this.form.find('button[type=submit]').text(this.submitText);
+            this.form.find('input[type=submit]').attr('value', this.submitText);
         }
         return count;
     };
