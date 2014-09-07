@@ -43,7 +43,7 @@ class Membership_Forms_Table extends WP_List_Table_Copy
                 $address = implode ( '<br />', $address);
                 
                 
-                if ( get_post_meta(get_the_id(), 'sameaddress' , true ) )
+                if ( get_post_meta(get_the_id(), 'sameaddress' , true ) == 'Yes')
                 {
                     $nokaddress = 'Same address';
                 }
