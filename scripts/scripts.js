@@ -6,7 +6,7 @@ function loadgmaps()
         var address = jQuery(this).text();
         var addressHtml = jQuery (this).html();
         var classlist = jQuery(this).attr('class').split(/\s+/);
-        if ( ! jQuery(this).parent().hasClass('page') ) jQuery(this).parent().hide(); 
+        if ( ! jQuery(this).parent().hasClass('page') && ! jQuery(this).parent().prop('tagName') == 'td' ) jQuery(this).parent().hide(); 
         jQuery.each(classlist, function(index, item) {
               
             if(item != 'gmap-address' && address != 'TBC') {
