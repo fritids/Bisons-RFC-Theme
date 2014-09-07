@@ -6,12 +6,12 @@
 function create_post_types() {
     register_post_type( 'fixture', array(
         'labels' => array (
-            'name' => __( 'Fixtures' ),
-            'singular_name' => __( 'Fixture' ),
-            'add_new_item' => __( 'Add new fixture'),
-            'edit_item' => __( 'Edit fixture'),
-            'view_item' => __( 'View fixture'),
-            'search_item' => __( 'Search fixtures'),
+            'name' => __( 'Fixtures', 'bisonsrfc'  ),
+            'singular_name' => __( 'Fixture', 'bisonsrfc'  ),
+            'add_new_item' => __( 'Add new fixture', 'bisonsrfc' ),
+            'edit_item' => __( 'Edit fixture', 'bisonsrfc' ),
+            'view_item' => __( 'View fixture', 'bisonsrfc' ),
+            'search_item' => __( 'Search fixtures', 'bisonsrfc' ),
             ),
         'public' => true,
         'has_archive' => true,
@@ -25,12 +25,12 @@ function create_post_types() {
     
     register_post_type( 'playerprofile', array(
         'labels' => array (
-            'name' => __( 'Player Profiles' ),
-            'singular_name' => __( 'Player Profile' ),
-            'add_new_item' => __( 'Add new player profile'),
-            'edit_item' => __( 'Edit player profile'),
-            'view_item' => __( 'View player profile'),
-            'search_item' => __( 'Search player profiles'),
+            'name' => __( 'Player Profiles', 'bisonsrfc' ),
+            'singular_name' => __( 'Player Profile', 'bisonsrfc' ),
+            'add_new_item' => __( 'Add new player profile', 'bisonsrfc' ),
+            'edit_item' => __( 'Edit player profile', 'bisonsrfc' ),
+            'view_item' => __( 'View player profile', 'bisonsrfc' ),
+            'search_item' => __( 'Search player profiles', 'bisonsrfc' ),
             ),
         'public' => true,
         'show_in_menu' => false,
@@ -44,12 +44,12 @@ function create_post_types() {
       */
     register_post_type( 'event', array(
         'labels' => array (
-            'name' => __( 'Events' ),
-            'singular_name' => __( 'Event' ),
-            'add_new_item' => __( 'Add new event'),
-            'edit_item' => __( 'Edit event'),
-            'view_item' => __( 'View event'),
-            'search_item' => __( 'Search events'),
+            'name' => __( 'Events', 'bisonsrfc' ),
+            'singular_name' => __( 'Event', 'bisonsrfc' ),
+            'add_new_item' => __( 'Add new event', 'bisonsrfc' ),
+            'edit_item' => __( 'Edit event', 'bisonsrfc' ),
+            'view_item' => __( 'View event', 'bisonsrfc' ),
+            'search_item' => __( 'Search events', 'bisonsrfc' ),
             ),
         'public' => true,
         'has_archive' => true,
@@ -65,12 +65,12 @@ function create_post_types() {
     register_post_type( 'result', array(
         
         'labels' => array (
-            'name' => __( 'Results' ),
-            'singular_name' => __( 'Result' ),
-            'add_new_item' => __( 'Add new result'),
-            'edit_item' => __( 'Edit result'),
-            'view_item' => __( 'View result'),
-            'search_item' => __( 'Search results'),
+            'name' => __( 'Results', 'bisonsrfc' ),
+            'singular_name' => __( 'Result', 'bisonsrfc' ),
+            'add_new_item' => __( 'Add new result', 'bisonsrfc' ),
+            'edit_item' => __( 'Edit result', 'bisonsrfc' ),
+            'view_item' => __( 'View result', 'bisonsrfc' ),
+            'search_item' => __( 'Search results', 'bisonsrfc' ),
             ),
         'public' => true,
         'show_in_menu' => false,
@@ -91,12 +91,12 @@ function create_post_types() {
     register_post_type( 'player-page', array(
 
         'labels' => array (
-            'name' => __( 'Player Pages' ),
-            'singular_name' => __( 'Player Page' ),
-            'add_new_item' => __( 'Add new player page'),
-            'edit_item' => __( 'Edit player page'),
-            'view_item' => __( 'View player page'),
-            'search_item' => __( 'Search player page'),
+            'name' => __( 'Player Pages', 'bisonsrfc' ),
+            'singular_name' => __( 'Player Page', 'bisonsrfc' ),
+            'add_new_item' => __( 'Add new player page', 'bisonsrfc' ),
+            'edit_item' => __( 'Edit player page', 'bisonsrfc' ),
+            'view_item' => __( 'View player page', 'bisonsrfc' ),
+            'search_item' => __( 'Search player page', 'bisonsrfc' ),
             ),
         'public' => true,
         'rewrite'=> array('slug' => 'players-area'),
@@ -116,12 +116,12 @@ function create_post_types() {
     register_post_type( 'committee-page', array(
         
         'labels' => array (
-            'name' => __( 'Committee Pages' ),
-            'singular_name' => __( 'Committee Page' ),
-            'add_new_item' => __( 'Add new committee page'),
-            'edit_item' => __( 'Edit committee page'),
-            'view_item' => __( 'View committee page'),
-            'search_item' => __( 'Search committee page'),
+            'name' => __( 'Committee Pages', 'bisonsrfc' ),
+            'singular_name' => __( 'Committee Page', 'bisonsrfc' ),
+            'add_new_item' => __( 'Add new committee page', 'bisonsrfc' ),
+            'edit_item' => __( 'Edit committee page', 'bisonsrfc' ),
+            'view_item' => __( 'View committee page', 'bisonsrfc' ),
+            'search_item' => __( 'Search committee page', 'bisonsrfc' ),
             ),
         'taxonomies' => array('page group'),
         'public' => true,
@@ -136,12 +136,12 @@ function create_post_types() {
     register_post_type( 'committee-profile', array(
         
         'labels' => array (
-            'name' => __( 'Committee Profile' ),
-            'singular_name' => __( 'Committee Profile' ),
-            'add_new_item' => __( 'Add new Committee Profile'),
-            'edit_item' => __( 'Edit Committee Profile'),
-            'view_item' => __( 'View Committee Profile'),
-            'search_item' => __( 'Search Committee Profile'),
+            'name' => __( 'Committee Profile', 'bisonsrfc' ),
+            'singular_name' => __( 'Committee Profile', 'bisonsrfc' ),
+            'add_new_item' => __( 'Add new Committee Profile', 'bisonsrfc' ),
+            'edit_item' => __( 'Edit Committee Profile', 'bisonsrfc' ),
+            'view_item' => __( 'View Committee Profile', 'bisonsrfc' ),
+            'search_item' => __( 'Search Committee Profile', 'bisonsrfc' ),
             ),
         'public' => true,
         'show_in_menu' => false,
@@ -174,12 +174,12 @@ function create_post_types() {
     
     register_post_type ( 'membership_fee', array(
         'labels' => array (
-            'name' => __( 'Membership Fees' ),
-            'singular_name' => __( 'Membership Fee' ),
-            'add_new_item' => __( 'Add new fee'),
-            'edit_item' => __( 'Edit fee'),
-            'view_item' => __( 'View fee details'),
-            'search_item' => __( 'Search membership fees'),
+            'name' => __( 'Membership Fees', 'bisonsrfc' ),
+            'singular_name' => __( 'Membership Fee', 'bisonsrfc' ),
+            'add_new_item' => __( 'Add new fee', 'bisonsrfc' ),
+            'edit_item' => __( 'Edit fee', 'bisonsrfc' ),
+            'view_item' => __( 'View fee details', 'bisonsrfc' ),
+            'search_item' => __( 'Search membership fees', 'bisonsrfc' ),
             ),
 
         'public' => true, 

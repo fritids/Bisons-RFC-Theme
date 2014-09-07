@@ -11,15 +11,15 @@ function custom_taxonomies() {
         array(
             'hierarchical' => false,
             'labels' => array(
-            'name' => _x( 'Seasons', 'taxonomy general name' ),
-            'singular_name' => _x( 'Season', 'taxonomy singular name' ),
-            'search_items' =>  __( 'Search Seasons' ),
-            'all_items' => __( 'All Seasons' ),
-            'edit_item' => __( 'Edit Season' ),
-            'update_item' => __( 'Update Season' ),
-            'add_new_item' => __( 'Add New Season' ),
-            'new_item_name' => __( 'New Season Name' ),
-            'menu_name' => __( 'Seasons' ),
+            'name' => _x( 'Seasons', 'taxonomy general name', 'bisonsrfc'  ),
+            'singular_name' => _x( 'Season', 'taxonomy singular name', 'bisonsrfc'  ),
+            'search_items' =>  __( 'Search Seasons', 'bisonsrfc'  ),
+            'all_items' => __( 'All Seasons', 'bisonsrfc'  ),
+            'edit_item' => __( 'Edit Season', 'bisonsrfc'  ),
+            'update_item' => __( 'Update Season', 'bisonsrfc'  ),
+            'add_new_item' => __( 'Add New Season', 'bisonsrfc'  ),
+            'new_item_name' => __( 'New Season Name', 'bisonsrfc'  ),
+            'menu_name' => __( 'Seasons', 'bisonsrfc'  ),
             )
         )
     );
@@ -35,15 +35,15 @@ function custom_taxonomies() {
         array(
             'hierarchical' => false,
             'labels' => array(
-                'name' => _x( 'Page Groups', 'taxonomy general name' ),
-                'singular_name' => _x( 'Page Group', 'taxonomy singular name' ),
-                'search_items' =>  __( 'Search Page Groups' ),
-                'all_items' => __( 'All Page Groups' ),
-                'edit_item' => __( 'Edit Page Group' ),
-                'update_item' => __( 'Update Page Group' ),
-                'add_new_item' => __( 'Add New Page Group' ),
-                'new_item_name' => __( 'New Page Group Name' ),
-                'menu_name' => __( 'Page Groups' ),
+                'name' => _x( 'Page Groups', 'taxonomy general name', 'bisonsrfc'  ),
+                'singular_name' => _x( 'Page Group', 'taxonomy singular name', 'bisonsrfc'  ),
+                'search_items' =>  __( 'Search Page Groups', 'bisonsrfc'  ),
+                'all_items' => __( 'All Page Groups', 'bisonsrfc'  ),
+                'edit_item' => __( 'Edit Page Group', 'bisonsrfc'  ),
+                'update_item' => __( 'Update Page Group', 'bisonsrfc'  ),
+                'add_new_item' => __( 'Add New Page Group', 'bisonsrfc'  ),
+                'new_item_name' => __( 'New Page Group Name', 'bisonsrfc'  ),
+                'menu_name' => __( 'Page Groups', 'bisonsrfc'  ),
             )
         )
     );
@@ -53,15 +53,15 @@ function custom_taxonomies() {
         array(
             'hierarchical' => false,
             'labels' => array(
-                'name' => _x( 'Page Groups', 'taxonomy general name' ),
-                'singular_name' => _x( 'Page Group', 'taxonomy singular name' ),
-                'search_items' =>  __( 'Search Page Groups' ),
-                'all_items' => __( 'All Page Groups' ),
-                'edit_item' => __( 'Edit Page Group' ),
-                'update_item' => __( 'Update Page Group' ),
-                'add_new_item' => __( 'Add New Page Group' ),
-                'new_item_name' => __( 'New Page Group Name' ),
-                'menu_name' => __( 'Page Groups' ),
+                'name' => _x( 'Page Groups', 'taxonomy general name', 'bisonsrfc'  ),
+                'singular_name' => _x( 'Page Group', 'taxonomy singular name', 'bisonsrfc'  ),
+                'search_items' =>  __( 'Search Page Groups', 'bisonsrfc'  ),
+                'all_items' => __( 'All Page Groups', 'bisonsrfc'  ),
+                'edit_item' => __( 'Edit Page Group', 'bisonsrfc'  ),
+                'update_item' => __( 'Update Page Group', 'bisonsrfc'  ),
+                'add_new_item' => __( 'Add New Page Group', 'bisonsrfc'  ),
+                'new_item_name' => __( 'New Page Group Name', 'bisonsrfc'  ),
+                'menu_name' => __( 'Page Groups', 'bisonsrfc'  ),
             )
         )
     );
