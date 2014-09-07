@@ -93,6 +93,7 @@ img.noborder, div.gmap-border img { }
 div#wrapper div.page header p { padding: 4px 8px; }
 
 #mainevent { background-color: #F7F7F7; }
+#wrapper td.tbcscore { font-size: 1em; color: #E6E6E6;}
 
 /* Page styles */
 .page { margin-top:1em }
@@ -103,8 +104,10 @@ div#wrapper div.page header p { padding: 4px 8px; }
 .pagecontent p { margin-bottom:0; }
 .gallerymeta { -webkit-box-shadow: 0px 0px 15px 0px #D6D6D6; -moz-box-shadow: 0px 0px 15px 0px #D6D6D6; box-shadow: 0px 0px 15px 0px #D6D6D6; margin-top: 0.3em; max-width: 100%; padding:1em; max-width:400px; margin:0 auto;  }
 .gallerymeta li { text-align:left; }
-
-
+tr.nextfixturemeta td  { vertical-align:top; }
+td li { margin-bottom:12px; }
+	ul.edit-links { list-style: none; margin:10px 0 0 0; padding:0;  }
+	ul.edit-links li { font-size:0.6em;  }
 /* Sidebar */
 #sidebar { padding-top:3%; overflow:hidden; display:table-cell; width:35%; padding:2%; background-color:#f7f7f7; border-left: 1px solid #E6E6E6; border-right: 1px solid #E6E6E6; }
 #sidebar h2 { }
@@ -125,6 +128,7 @@ font-size: 1.5em;
 .metalist { list-style:none; margin-left:0; background:#F7F7F7; margin:1em auto; padding:1em; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; border: 1px solid #EBEBEB;}
 ul.metalist { margin: 1em 0 0 0; clear:both; }
 
+th ul.postlist { font-size:0.7em; list-style:none; }
 
 /* Genericons */
 .phone:before  { content: '\f437'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 32px/1 'Genericons'; vertical-align: middle; margin-right:5px; }
@@ -140,7 +144,9 @@ ul.metalist { margin: 1em 0 0 0; clear:both; }
 .commentsmall:before { content: '\f108'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 16px/1 'Genericons'; vertical-align: top; }
 .link:before { content: '\f107'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 32px/1 'Genericons'; vertical-align: middle;} { }
 .pagelink:before { content: '\f443'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 32px/1 'Genericons'; vertical-align: middle;} { }
+.feedsmall:before { content: '\f413'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 16px/1 'Genericons'; vertical-align: text-bottom;} { }
 
+h2 .ical { font-size:0.4em; margin-left:1em; }
 ul.documentlist li:before { content: '\f443'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 32px/1 'Genericons'; vertical-align: middle; margin-right:5px; }
 ul.documentlist li { list-style:none; }
 ul.documentlist { margin: 0 0 1em 0; }
@@ -263,8 +269,6 @@ table.photosets .photosetsMeta { border:1px solid #B3B3B3; background:#F7F7F7; -
 .photosets li { line-height:1.4em; margin-bottom:0.3em; }
 table.playerprofiles td, table.photosets td { text-align:left; border:0; }
 
-a.mobilethumb { display:none; }
-a.desktopthumb { display:inline; }
 
 
 td.narrowcell { text-align:center; }
@@ -333,12 +337,17 @@ right: 0;
 z-index: 150;
 }
 /* tables */
-table { width:100%; margin:0 0 1em 0;  border-spacing:5px; }
+table { width:100%; margin:0 0 1em 0;  border-spacing:3px; }
 th { font-size:1.4em; text-align: center;}
 td { text-align:left } 
-td, th { padding: 0.5em; background:#F7F7F7; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; line-height:1.2em; border: 1px solid #EBEBEB;}
+td, th { padding: 0.5em; background:#F7F7F7;  line-height:1.2em; border: 1px solid #EBEBEB;}
 td li { line-height:1.2em; }
 td ul { margin: 0 !important; list-style:none; }
+th li {
+list-style: none;
+margin: 0;
+font-size: 0.6em;
+}
 table .metalist { text-align:left; padding:0 !important;  }
 .thecommitteetable td { vertical-align:top; }
 .thecommitteetable .metalist { background:none; border:0; }
@@ -497,6 +506,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', end
 		-moz-box-shadow: 1px 1px 5px 0px rgba(50, 50, 50, 0.75);
 		box-shadow: 1px 1px 5px 0px rgba(50, 50, 50, 0.75);
 	}
+	
 	form input, form textarea { width: 95%; }
 	header p { text-align:left; }
 	#sidebar { display:none; }
@@ -531,7 +541,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', end
 		top: -16px;
 		left: 114px;
 	}
-	#wrapper table.center td, #wrapper table.center th {  display: block; }
 	.stickybar { position:fixed;  }
 	.stickybar .current-menu-item {-webkit-border-radius:0 !important; -webkit-border-radius: 0 !important; -moz-border-radius: 0 !important; border-radius: 0 !important;  }
 	
@@ -553,47 +562,44 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', end
 	{ margin-left: 0.5em; }
 	.post img.alignleft, .page img.alignright
 	{ margin-left: 0.5em; }
-	
+	table td.hometeam-col, table td.oppteam-col { width: 35%; }
       p { margin-bottom:0.3em; }
-	.page table td { display: block; text-align:left; }
-	.page table tr { display: block; background:#F7F7F7; }
-	
-      table tr { padding: 0.5em; margin: 0 0 0.5em 0; border: 1px solid #EBEBEB; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px;}
-      table td, table th { padding:0; border:0; }
+	.resultstable th { padding:10px; }
+	.resultstable tr { border:0; }
+      table tr { padding: 0.5em; margin: 0 0 0.5em 0; border: 1px solid #EBEBEB; }
+      table td, table th { padding:7px; }
       table.thecommitteetable td { padding:1em; margin: 0.5em 0; border-top: 1px solid #EBEBEB; border-left: 1px solid #EBEBEB;}
 	table.thecommitteetable tr { padding:0; margin:0; background:none; border:0; }
 	table.playerprofiles tr { background:none; }
 	.thecommitteetable .metalist li { text-align: left; }
 	.page table.photogallery tr, .page table.photosets tr { background:none; padding:0; margin:0; }
-	
-
-	
+	td.editlinks-col { display: block; float: left; width: 100%; background: none; 	}
+	td.linkedposts-col { float: left; }
+	td.hometeam-col, td.oppteam-col { vertical-align:top; }
 	.playerprofiles td { font-size:1em; }
 	table.photogallery {border-spacing:0.4em; }
 	table.photogallery td { margin:0; padding:0; }  
 	table { table-layout:auto; }
 	td.thumbs, td.thumbs img  { width:100%; }
-      #wrapper table td img { margin:0; padding:0; }
-	.resultstable td {display:block; font-size:inherit; }
+	#wrapper td.date-col { display:block; float:left; width:100%;  }
+    #wrapper table td img { margin:0; padding:0; }
 	td.scorecell { font-size:2em; }
 	.resultstable td.date-col, .resultstable td.resultslinks-col {display:table-cell; }
-	table.resultstable tr { background:none; padding:1em; }
 	table td.date-col { font-weight:bold; }
 	table td.date-col, table td.resultslinks-col { background:none; }
 	ul.resultslinks li { float: left; margin-right:10px; }
-	span.homeawaylabel, .page table td.nolinkedposts { display: none; }
-	table.resultstable .hometeam-col {padding-top:20px; }
-	table.resultstable tr { margin-bottom: 1.5em; }
-	table.resultstable .oppteam-col, table.resultstable .linkedposts-col {padding-bottom:20px; }
+	#wrapper table td.clearcell { height:0; width:0; clear:both; padding:0; margin:0; }
+	tr.nextfixturemeta td { font-size: 0.8em; vertical-align: top; }
+
 	form .inlinediv { display:block; }
 	form .inlinediv select { min-width:0;  }
-	a.mobilethumb { display:inline; }
-	a.desktopthumb { display:none; }
 	.post img.alignleft, .page img.alignright { margin-left:0; } 
 	thead {display:none; }
 	form label { font-size:1em; text-align:left; width:100%; margin-bottom:3px; }
       div.feature-image { width:100%; }
       div.post img { width:100%; }
+      #wrapper table td p, #wrapper table td h4 { margin:0; padding:0; }
+      table.photogallery td { float:left;}
 	} 
 @media screen and (max-width: 360px) {
       #mainheader h1 { padding: 1.3em 0 0 0.7em; white-space:initial; }

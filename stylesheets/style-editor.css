@@ -1,5 +1,5 @@
 @font-face { font-family: 'BisonsFont'; src: url(../fonts/BlairMdITCTTMedium.ttf) }
-body { font-weight:300; font-size: 1em; line-height:1.6em; font-family: 'Ubuntu', serif;}
+body#tinymce { font-weight:300; font-size: 1em; line-height:1.6em; font-family: 'Ubuntu', serif; }
 h1 { font-family: 'BisonsFont', sans-serif; text-align:center; font-size:40px; }
 h1 {  font-size:40px; }
 h2 {  font-size: 1.8em; line-height:1.3em; 	margin-bottom:1%; font-weight:normal;}

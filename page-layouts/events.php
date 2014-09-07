@@ -1,5 +1,5 @@
 <header class='header'>
-    <h2><?php the_title(); ?></h2>
+    <h2><?php the_title(); ?><a class='ical feedsmall' href='<?php echo str_replace ( 'http://', 'webcal://', site_url('/calendar.ics?of=events')) ?>'>iCal (events)<a/><a  class='ical feedsmall' href='<?php echo str_replace ( 'http://', 'webcal://', site_url('/calendar.ics')) ?>'>iCal (all)</a></h2>
 </header>
 
 <?php
@@ -58,7 +58,7 @@ if( $first_event ) : ?>
           
       <ul class="metalist">
         <li class='listimage'><a href="<?php echo $first_event['image_src']; ?>"><img class='left' src="<?php echo $first_event['image_src']; ?>" /></a></li>
-        <li><h4 class='infosmall'>Title</h4><strong><?php echo $first_event['title']; ?></strong><?php if(get_edit_post_link( $first_event['id']) ) { ?> - <a href='<?php echo get_edit_post_link( $first_event['id']) ?>'>Edit</a><?php } ?></li>
+        <li><strong><?php echo $first_event['title']; ?></strong><?php if(get_edit_post_link( $first_event['id']) ) { ?> - <a href='<?php echo get_edit_post_link( $first_event['id']) ?>'>Edit</a><?php } ?></li>
         <li><strong><?php echo datetime_string ( $first_event['date'], $first_event['enddate'], $first_event['time'], $first_event['endtime'], false ) ?></strong></li>
         <li><?php echo $first_event['description']; ?></li>
         <?php if($future_event['address']) : ?><li class="address"><?php echo $first_event['address']; ?></li><?php endif; ?>
@@ -75,11 +75,11 @@ if( count($future_events) > 0)  : ?>
     <section class='clearsection'>
         <h3>Other upcoming events</h3>
         <p>For more details about an event, click on the event title.</p>
-        <table>
+        <table class='center'>
             <tbody>
             <?php foreach($future_events as $future_event) : ?>
             <tr>
-                 <td><a href="<?php echo $future_event['permalink']; ?>"><?php echo $future_event['title']; ?></a></td>
+                 <th><a href="<?php echo $future_event['permalink']; ?>"><?php echo $future_event['title']; ?></a></th>
                  <td><?php echo datetime_string ( $future_event['date'], $future_event['enddate'], $future_event['time'], $future_event['endtime'] ) ?></td>
             </tr>
             <?php endforeach; ?>
@@ -136,11 +136,11 @@ if( count($past_events) > 0)  : ?>
     <section class='clearsection'>
         <h3>Previous Events</h3>
         <p>For more details about an event, click on the event title.</p>
-        <table>
+        <table class='center'>
             <tbody>
             <?php foreach( $past_events  as $past_event ) : ?>
                 <tr>
-                    <td><a href="<?php echo $past_event['permalink']; ?>"><?php echo $past_event['title']; ?></a>
+                    <th><a href="<?php echo $past_event['permalink']; ?>"><?php echo $past_event['title']; ?></a>
                         
                     <?php if ( isset ( $past_event['linked_posts'] ) ) : ?>
                         <ul class='postlist'>
@@ -149,7 +149,7 @@ if( count($past_events) > 0)  : ?>
                             <?php endforeach ?>        
                         </ul>
                     <?php endif ?>
-                    </td>
+                    </th>
                     <td><?php echo datetime_string ( $past_event['date'], $past_event['enddate'], $past_event['time'], $past_event['endtime'] ) ?></td>
                 </tr>
             <?php endforeach; ?>

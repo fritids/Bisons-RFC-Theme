@@ -69,7 +69,6 @@ margin-left: 5px;
 {
     padding-bottom:10px; 
 }
-
 .spacer {
 clear:both;
 }
