@@ -17,7 +17,7 @@ function FormValidator( form, validation_patterns )
         
         {
             name  : 'notempty',
-            regex : /^(?=\s*\S).*$/,
+            regex : /^(?=\s*\S).*$/m,
             error : 'Field cannot be left empty',
         },
         
