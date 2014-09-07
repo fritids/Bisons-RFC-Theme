@@ -302,7 +302,7 @@ if ( ! $disabled )
         <div id="nokaddygroup"<?php if ( $current_form->have_posts() && get_post_meta($form_id, 'sameaddress', true) == "No") { ?> style="display:block"<?php } ?>>
             <div>
                 <label for="nokstreetaddy">Street address</label>
-                <textarea name="nokstreetaddy notempty" id="nokstreetaddy"<?php if ( $disabled ) { ?> disabled='true'<?php } ?>><?php if ( $current_form->have_posts() ) { echo get_post_meta($form_id, 'nokstreetaddy', true); } ?></textarea>
+                <textarea class='notempty' name="nokstreetaddy" id="nokstreetaddy"<?php if ( $disabled ) { ?> disabled='true'<?php } ?>><?php if ( $current_form->have_posts() ) { echo get_post_meta($form_id, 'nokstreetaddy', true); } ?></textarea>
             </div>
             <div>
                 <label  class="smalllabel" for="nokpostcode">Postcode</label>
