@@ -32,7 +32,7 @@ $ppform->add_text_input ( 'theinterview', 'possessions', 'What is your most trea
 $ppform->add_text_input ( 'theinterview', 'notholiday', 'Where is the one place you would never go on holiday?');
 
 $ppform->add_text_input ( 'theinterview', 'movielife', 'In the movie of your life, who would you be played by?');
-$ppform->add_text_input ( 'theinterview', 'growingup', 'When you were growing up, who did you want to be?');
+$ppform->add_text_input ( 'theinterview', 'growingup', 'When you were growing up, what did you want to be?');
 $ppform->add_text_input ( 'theinterview', 'filmcry', 'Name the last film that made you cry?');
 $ppform->add_text_input ( 'theinterview', 'eventfromhistory', 'If you could turn back time and witness one event from history, what would it be?');
 $ppform->add_text_input ( 'theinterview', 'sigdish', 'What is your signature dish?');
