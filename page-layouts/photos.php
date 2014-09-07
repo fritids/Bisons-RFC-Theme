@@ -32,7 +32,7 @@ foreach ( $photos as $photo ) :
     
 
     if ($i == 0 ) echo "<tr>";
-    echo "<td><a class='image-link desktopthumb' href='$photo->url_z'><img src='$photo->url_q' /></a><a class=\"image-link mobilethumb\" href='$photo->url_z'><img src='$photo->url_m' /></a></td>";
+    echo "<td><a class=\"image-link mobilethumb\" href='$photo->url_z'><img src='$photo->url_m' /></a></td>";
     if ($i == $cols - 1) : echo "</tr>"; $i = 0;
     else : $i++; 
     endif;
@@ -62,7 +62,7 @@ foreach ( $photosets as $set ) :
     $primary_src = $set->primary_photo_extras->url_q;
     $bigger_src = $set->primary_photo_extras->url_m; ?>
 <tr>
-    <td class="thumbs"><a class="desktopthumb" href='?gallery=<?php echo $id ?>'><img src='<?php echo $primary_src ?>' /></a><a class="mobilethumb" href='?gallery=<?php echo $id ?>'><img src='<?php echo $bigger_src ?>' /></a></td>
+    <td class="thumbs"><a class="desktopthumb" href='?gallery=<?php echo $id ?>'><img src='<?php echo $primary_src ?>' /></a></td>
     <td><h3><a href='?gallery=<?php echo $id ?>'><?php echo $title ?></a></h3>
         <ul class="metalist">
             <?php if ($description) : ?><li><strong>Description</strong>: <?php echo $description ?></li><?php endif ?>
