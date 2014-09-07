@@ -19,7 +19,6 @@ $image_url_original = $image_url_original[0];
             <?php while (have_posts() ) : the_post(); ?>
                 <header>
                     <h2>Player Profile - <?php the_title(); ?></h2>
-                    <p>Profile posted at <?php the_time('g:ia') ?> on the <?php the_time('jS \o\f F Y') ?><?php edit_post_link( 'Edit profile', ' - '); ?></p> 
                 </header>
                 <?php if($image_id) : ?>
                 <a class="image-link" href='<?php echo $image_url_original?>'>
