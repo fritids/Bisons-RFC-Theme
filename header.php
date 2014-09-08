@@ -1,14 +1,8 @@
-<?php
-global $timer; 
-$timer->record_execution_time('Start of header.php');
-
-?>
 <!DOCTYPE HTML>
 <html>
 	<head>
        
 		<title><?php wp_title('-',true,'right'); ?> <?php echo $GLOBALS['blog_info']['name']; ?></title>
-        <?php $timer->record_execution_time('Header: after title'); ?>
          <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	 	 <meta name="viewport" content="width=device-width, minumum-scale=1.0, maximum-scale=1.0">
  
@@ -17,7 +11,6 @@ $timer->record_execution_time('Start of header.php');
         <!--[if lt IE 9]>+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
             <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
         <![endif]-->
-        <?php $timer->record_execution_time('Header: after HTML5shiv'); ?>
         
         <!-- ****** The below are all courtesy of favicon.com ****** -->
         <link rel="shortcut icon" href="<?php echo $GLOBALS['blog_info']['template_url']; ?>/images/favicons/favicon.ico">
@@ -40,12 +33,10 @@ $timer->record_execution_time('Start of header.php');
         <meta name="msapplication-config" content="<?php echo $GLOBALS['blog_info']['template_url']; ?>/images/favicons/browserconfig.xml">
 
         <link rel="shortcut icon" type="image/x-icon" href="<?php echo $GLOBALS['blog_info']['template_url']; ?>/images/favicon.ico" />
-        <?php $timer->record_execution_time('Header: after favicons'); ?>
 
 		<?php if ( is_singular() ) wp_enqueue_script( 'comment-reply' ); ?>
 		<link rel="pingback" href="echo $GLOBALS['blog_info']['pingback_url']; ?>" />
 		<?php wp_head(); ?>
-        <?php $timer->record_execution_time('Header: after wp_head()'); ?>
 
 	</head>
 	<body>
@@ -60,7 +51,6 @@ $timer->record_execution_time('Start of header.php');
           </a>
             <img id='showmenu' src='<?php echo get_template_directory_uri(); ?>/images/menu.svg' alt='showmenu'>
 
-        <?php $timer->record_execution_time('Header: after logo'); ?>
 
 
          
@@ -74,10 +64,8 @@ $timer->record_execution_time('Start of header.php');
 
 	</header>
         <div id="menu">
-        <?php $timer->record_execution_time('Header: before menu'); ?>
 
         <?php get_template_part('menu'); ?>
-        <?php $timer->record_execution_time('Header: after menu/end of header.php'); ?>
 
  
         </div>

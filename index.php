@@ -1,5 +1,3 @@
-<?php $timer->record_execution_time('Start of index.php'); ?>
-
 <?php get_header(); ?>
 
 <div id="wrapper">
@@ -18,7 +16,6 @@
     
     <?php if ( have_posts() ) : ?>
 	   <?php while (have_posts() ) : the_post(); ?> 
-	       <?php $timer->record_execution_time('Start of post'); ?>
 
     		    
     				<?php
@@ -28,10 +25,7 @@
                         get_template_part( 'post-layouts/post' );
                     endif; 
                     ?>
-           <?php $timer->record_execution_time('End of post'); ?>
-
 	<?php endwhile; ?>
-	<?php $timer->record_execution_time('After posts'); ?>
 
     	<section class="pagination">
     		<ul>
@@ -51,7 +45,6 @@
   
 	</div>
 </div>
-<?php $timer->record_execution_time('Before footer.php'); ?>
 
 <?php get_footer(); ?>
 

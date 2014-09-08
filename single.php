@@ -1,6 +1,3 @@
-<?php
-$timer->record_execution_time('Start of index.php');
-?>
 <?php get_header(); ?>
 
 <div id="wrapper">
