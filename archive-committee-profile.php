@@ -1,4 +1,3 @@
-<?php $timer->record_execution_time('Start of page.php'); 
 
  if (! current_user_can ('view_players_area') ) $loggedin = true; 
 
@@ -21,7 +20,6 @@
             
                 $incumbent = get_post_meta( get_the_id(), 'incumbent', true );
                 $photourl = wp_get_attachment_image_src( get_post_meta( $incumbent, 'image_id', true), 'large' );
-                $timer->record_execution_time('Start of post'); 
                 $posemail = get_post_meta( get_the_id(), 'posemail', true);
                 $posphone = get_post_meta( get_the_id(), 'posphone', true);
                 $name = get_post_meta( get_post_meta( get_the_id(), 'incumbent', true ), 'name', true);
@@ -35,7 +33,6 @@
                 <?php echo get_post_meta(get_the_id(), 'skills', true) ?>
                 <h4>Main responsibilities:</h4>
                 <?php echo get_post_meta(get_the_id(), 'posresp', true) ?>
-                <?php $timer->record_execution_time(); ?>
                 <?php if ( ( $posphone || $posemail) && $loggedin ) : ?>
                 <h4>Get in touch</h4>
                 <ul>
