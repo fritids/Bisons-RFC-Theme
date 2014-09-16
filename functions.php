@@ -89,4 +89,4 @@ function force_send($args){
     $args['send'] = true;
     return $args;
 }
-$timer->record_execution_time('End of functions.php');
+
