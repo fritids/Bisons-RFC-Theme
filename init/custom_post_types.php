@@ -157,9 +157,12 @@ function create_post_types() {
      * Used to index flickr galleries, give them a freindly name and add them to the blog
      * 
      */
-    register_post_type( 'photoalbum', array(
-	    
-	    'public' => false,
+    register_post_type( 'photos', array(
+        'labels' => array(
+            'name' => __( 'photos', 'bisonsrfc' ),
+            'singular_name' => __( 'photo', 'bisonsrfc' ),
+        ),
+	    'public' => true,
 	    'exclude_from_search' => false,
 	    'has_archive' => true
 	    )
