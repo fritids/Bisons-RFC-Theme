@@ -11,33 +11,33 @@ function FormValidator( form, validation_patterns )
         {
             name  : 'mustselect',
             regex : /^.+$/,
-            error : 'You must make a selection',
+            error : 'You must make a selection'
             
         },
         
         {
             name  : 'notempty',
             regex : /^(?=\s*\S).*$/m,
-            error : 'Field cannot be left empty',
+            error : 'Field cannot be left empty'
         },
         
         {
             name  : 'needemail',
             regex : /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-            error : 'Not a valid email address',
+            error : 'Not a valid email address'
         },
         
         {
             name  : 'needphonenum',
             regex : /^\+?[0-9\s\(\)]+$/,
-            error : 'Not a valid phone number',
+            error : 'Not a valid phone number'
         },
         
         {
             name  : 'needpostcode',
             regex : /^[A-Za-z]{1,2}[0-9]{1,2}\s?[0-9]{1}[a-zA-Z]{2}$/,
-            error : 'Not a valid UK postcode',
-        },
+            error : 'Not a valid UK postcode'
+        }
         
     ] : validation_patterns;
         
