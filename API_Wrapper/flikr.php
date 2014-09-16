@@ -54,6 +54,12 @@ class Flikr extends API_Wrapper {
         return $this->request ( 'flickr.photosets.getInfo', $parameters );
     }
     
+    public function photosGetSizes ( $photo_id )
+    {
+        $parameters = array ( 'photo_id' => $photo_id );
+        return $this->request ( 'flickr.photos.getSizes', $parameters );
+    }
+    
     public function photosetsGetList ( $user_id = false, $page = false, $per_page = false, $primary_photo_extras = false )
     {
         $parameters = array();
