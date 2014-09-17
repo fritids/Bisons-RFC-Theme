@@ -1,6 +1,7 @@
 <?php
 function remove_menus(){
   
+  /*
   if ( ! current_user_can ( 'modify_themes' ) )
   {
       remove_menu_page( 'themes.php' );                 
@@ -24,6 +25,6 @@ function remove_menus(){
   if ( ! current_user_can ( 'modify_options' ) )
   {
       remove_menu_page( 'options-general.php' );
-  }
+  } */
 }
 add_action( 'admin_menu', 'remove_menus' );
