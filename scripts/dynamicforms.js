@@ -1,13 +1,16 @@
 jQuery(document).ready(function() {
     
     jQuery('#committeeSelectPlayer').change(function() {
+        
+            var pathArray = window.location.pathname.split('?');
+            var baseUrl = pathArray[0];
             if ( jQuery(this).val() == 'me' )
             {
-                document.location = '/membership-form/';
+                window.location = baseUrl;
             }
             else
             {
-                document.location = '/membership-form/?player_id=' + jQuery(this).val();
+                window.location = baseUrl + '?player_id=' + jQuery(this).val();
             }
     });
     

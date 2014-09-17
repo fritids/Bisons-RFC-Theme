@@ -14,6 +14,24 @@ wp_enqueue_script('formvalidation');
 <header>
 <h2>Payment Information</h2>
 </header>
+<?php if  ( current_user_can ('committee_perms') ) : ?>
+<fieldset>
+    <legend>Select Player</legend>
+    <?php if ( is_numeric ( $_GET['player_id' ] ) ) : ?>
+    <p class='info'>This is NOT YOUR MEMBERSHIP form. You can fill in someone else's form below or use the dropdown box below to return to your membership form.</p>
+    <input type='hidden' name='form_belongs_to' value='<?php echo $_GET['player_id' ] ?>' />
+    <?php else : ?>
+    <p class='info'>This is your own membership form. As a committee member, you can use the dropdown box below to select and edit the membership form of another player.</p>
+    <?php endif ?>
+    <select id='committeeSelectPlayer'>
+        <option value='me'>Me</option>
+    <?php $users = get_users(); foreach ($users as $user) : ?>
+        <option value='<?php echo $user->data->ID."'"; if (  $_GET['player_id' ] == $user->data->ID ) { echo " selected='selected'"; } ?>><?php echo $user->data->display_name ?></option>
+    <?php endforeach ?>
+    </select>
+</fieldset>
+<?php endif ?>
+
 
 <?php if ( $data['has_gcl_subscription'] ) :  ?>
     <?php switch ( $data['gcl_resource']->status )  
@@ -109,6 +127,8 @@ wp_enqueue_script('formvalidation');
     <?php else : ?> 
     <p>It looks like you have submitted a membership form but have not yet finished setting up your Direct Debit. To complete this step, choose a payment type from the box below followed by a membership type. <strong>When you clik OK, you will be redirected to the GoCardless website to finish setting up your Direct Debit. Don&apos;t worry, they'll send you back to us afterward!</strong></p>
     <?php endif ?>
+    
+
     <fieldset>
         <legend>Payment</legend>
         <p class='info'>Once you choose a payment type, the membership type box will appear.</p>
@@ -148,7 +168,9 @@ wp_enqueue_script('formvalidation');
              </ul>
         </div>
     </div>
-    <?php else : ?>
+    <?php else :
+    
+     ?>
       <div id="supporterfees" class='supportersonly'>
         <div id="supportermempaymonthly" style="display:none" >
             <label class="smalllabel" for="supportermembershiptypemonthly">Membership Type</label>
