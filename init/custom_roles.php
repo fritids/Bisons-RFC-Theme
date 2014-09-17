@@ -1,6 +1,6 @@
 <?php
 function create_team_roles() {
-    include_once('permissions.php');
+    include('permissions.php');
     add_role(
         'committee_member',
         'Committee Member',
