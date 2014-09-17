@@ -17,3 +17,4 @@ table { width:100%; margin:0 0 1em 0;  border-spacing:5px; }
 th { font-size:1.4em; text-align: center;}
 td { text-align:left } 
 td, th { padding: 0.5em; background:#F7F7F7; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; line-height:1.2em; border: 1px solid #EBEBEB;}
+ol, ul { margin-left: 1em; margin-bottom: 1em;}
