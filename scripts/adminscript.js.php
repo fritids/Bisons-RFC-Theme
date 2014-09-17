@@ -29,7 +29,6 @@ function embed_map(input, canvas) {
 jQuery(document).ready(function() {
     
     
-
     
     var input = '.address-input';
     var canvas = '.map-row';
@@ -59,7 +58,8 @@ jQuery(document).ready(function() {
         jQuery('.image_canvas_description').text('');
         window.send_to_editor = window.send_to_editor_default;
 
-    }
+    };
+    
     jQuery('.custom-image-upload-button').click(function() {
         window.send_to_editor = window.attach_image;
         tb_show('', 'media-upload.php?post_id=<?php echo $_GET['post'] ?>&amp;type=image&amp;TB_iframe=true');
