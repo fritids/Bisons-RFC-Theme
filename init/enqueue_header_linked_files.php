@@ -11,8 +11,8 @@ function header_css_and_js($hook) {
     wp_enqueue_script('web_font_loader');
     wp_register_script('web_font_loader_local', get_template_directory_uri() . '/scripts/webfont.js', null, '1.0.9'); 
     wp_enqueue_script('web_font_loader_local');
-    wp_register_script('dynamicforms', get_template_directory_uri() . '/scripts/dynamicforms.js', null, '1.8.0', true); 
-    wp_register_script('formvalidation', get_template_directory_uri() . '/scripts/formvalidation.min.js', null, '1.4.1', true); 
+    wp_register_script('dynamicforms', get_template_directory_uri() . '/scripts/dynamicforms.js', null, '1.8.3', true); 
+    wp_register_script('formvalidation', get_template_directory_uri() . '/scripts/formvalidation.js', null, '1.4.3', true); 
     wp_register_script('stripe', 'https://js.stripe.com/v2/', false, '2.0.0', true); // Not enqueued here as not necessary on every page
     if( !is_admin()){
     	wp_deregister_script('jquery');
@@ -43,7 +43,7 @@ function header_css_and_js($hook) {
     wp_enqueue_script('googleanalytics');
     
     // CSS
-    wp_register_style('main_css_file', $GLOBALS['blog_info']['template_url'].'/stylesheets/main.css', false, '7.1.2');
+    wp_register_style('main_css_file', $GLOBALS['blog_info']['template_url'].'/stylesheets/main.css', false, '7.1.4');
     wp_enqueue_style('main_css_file');
       
     wp_register_style( 'magnific_css', get_template_directory_uri() . '/magnific/magnific.css', false, '1.0.0');
@@ -57,7 +57,7 @@ add_action ( 'wp_enqueue_scripts', 'header_css_and_js');
 // Admin area
 function admin_js_and_css($hook) {
     global $post_type;
-    wp_register_script('dynamicforms', get_template_directory_uri() . '/scripts/dynamicforms.js', null, '1.8.2', true); 
+    wp_register_script('dynamicforms', get_template_directory_uri() . '/scripts/dynamicforms.js', null, '1.8.3', true); 
     wp_register_script('formvalidation', get_template_directory_uri() . '/scripts/formvalidation.js', null, '1.3.8  ', true); 
     wp_register_script( 'email_log_js', get_template_directory_uri() . '/scripts/emaillogscripts.js', false, '1.0.6 ', true);
     wp_register_script( 'manage_players_js', get_template_directory_uri() . '/scripts/manage_players.js', false, '1.1.6', true);
