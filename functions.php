@@ -1,7 +1,8 @@
 <?php 
 define('INCLUDED', TRUE);
-
+include_once('dBug.php');
 add_theme_support( 'post-thumbnails' ); 
+set_post_thumbnail_size( 400, 400 );
 add_filter('show_admin_bar', '__return_false');
 add_filter('wp_mail_content_type',create_function('', 'return "text/html"; '));
 
