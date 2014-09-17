@@ -76,7 +76,7 @@ font-size: 0.8em;
 .post header p span, .page header p span { margin-right: 0.5em; }
 .post a img, .page a img {   max-width:60%; height:auto;}
 table a img { max-width:100% !important;}
-.post img, .page img, #sidebar img {}
+.post img, .page img, #sidebar img, .mobileonly img { height:auto;}
 img.noborder, div.gmap-border img { }
 { } 
 .post .metalist	{ }
@@ -580,7 +580,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', end
 	.hidesmallscreen, .Twitter_Widget {display:none; }
 	#mainheader { padding: 0.1em; position:fixed; width:100%; top:0; margin:0; left:0; }
 	footer { background:#000 !important; }
-	div#menu { background-color:black;  display: none; position: fixed; z-index: 101; top: 80px !important; right: 10px; width: 150px; -webkit-box-shadow: 1px 1px 3px 0px rgba(50, 50, 50, 0.75); -moz-box-shadow: 1px 1px 3px 0px rgba(50, 50, 50, 0.75); box-shadow: 1px 1px 3px 0px rgba(50, 50, 50, 0.75); width: 150px;  -moz-opacity: 0.90; -khtml-opacity: 0.90; opacity: 0.90; -ms-filter:"progid:DXImageTransform.Microsoft.Alpha"(Opacity=90); filter: progid:DXImageTransform.Microsoft.Alpha(opacity=90); filter:alpha(opacity=90); }
+	div#menu { background-color:black;  display: none; position: fixed; z-index: 101; top: 80px !important; right: 10px; -webkit-box-shadow: 1px 1px 3px 0px rgba(50, 50, 50, 0.75); -moz-box-shadow: 1px 1px 3px 0px rgba(50, 50, 50, 0.75); box-shadow: 1px 1px 3px 0px rgba(50, 50, 50, 0.75); width: 200px;  -moz-opacity: 0.90; -khtml-opacity: 0.90; opacity: 0.90; -ms-filter:"progid:DXImageTransform.Microsoft.Alpha"(Opacity=90); filter: progid:DXImageTransform.Microsoft.Alpha(opacity=90); filter:alpha(opacity=90); }
 	#menu:before {
 		content: '';
 		position: absolute;
@@ -591,7 +591,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', end
 		width: 0;
 		z-index: 0;
 		top: -17px;
-		left: 114px;
+		left: 160px;
 	}
 	#menu:after {
 		content: '';
@@ -603,7 +603,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', end
 		width: 0;
 		z-index: 1;
 		top: -16px;
-		left: 114px;
+		left: 160px;
 	}
 	.stickybar { position:fixed;  }
 	.stickybar .current-menu-item {-webkit-border-radius:0 !important; -webkit-border-radius: 0 !important; -moz-border-radius: 0 !important; border-radius: 0 !important;  }
@@ -611,7 +611,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', end
 	#mainheader .title { margin-top:0; }
 	#mainheader .title p { display:none;  }
 	#mainheader h1 { font-size:18px; padding:1.9em 0 0 0.7em; width:200px; font-size:14px; }
-	#menu li { font-size:0.8em; padding:2px 14px 3px 2px; margin: 0; display:block; text-align:right;}
+	#menu li { font-size:1.5em; padding:2px 14px 3px 2px; margin: 0; display:block; text-align:right;}
 	#menu .current-menu-item, #menu li:hover { background:white;-webkit-border-radius: 0; -moz-border-radius: 0; border-radius: 0; }
 
 	#mainheader #col { padding:0 0 0 0; }
