@@ -66,11 +66,14 @@ function FormValidator( form, validation_patterns )
         });
     };
     
-    
     this.validate_field = function( object, formIndex ) 
     {
         if (object.parents(':hidden').length > 0)
+        {
+            delete parent.validationErrors[formIndex];
+            object.siblings('.formerror').remove();
             return;
+        }
         
         if ( object.attr('class') )
         {
