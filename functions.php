@@ -66,7 +66,7 @@ include_once('API_Wrapper/flikr.php');
 // Custom widgets built into this theme
 include_once('widgets/twitter.php');
 include_once('widgets/facebook.php');
-include_once('widgets/mobiletext.php');
+include_once('widgets/welcometext.php');
 
 
 
