@@ -1,5 +1,5 @@
 <?php get_header(); ?>
-
+<!--email_off-->  
 <div id="wrapper">
     <div id="pagecol" class='ajaxcol'>
         <div class='page'>   
@@ -84,7 +84,7 @@
         </div>
     </div>
 </div>
-
+<!--/email_off-->  
 <?php get_footer(); ?>
 
 
