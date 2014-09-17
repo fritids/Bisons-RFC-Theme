@@ -1,12 +1,20 @@
 <?php
 
+
+
+$data = &$the_query->query['bisons_data'];
+
+$form_user = ( isset ( $_GET['player_id'] ) && current_user_can ('committee_perms') ) 
+                ? $_GET['player_id'] : get_current_user_id();
+
+
 // Check whether a membership form has been filled out.
 $current_form = new WP_Query ( array (
     'post_type' => 'membership_form',
     'posts_per_page' => 1,
     'orderby'   => 'date',
     'order'     => 'ASC',
-    'author'    => get_current_user_id()
+    'author'    => $form_user
 ));
 
 // If a membership form exists, load it from Wordpress
@@ -224,39 +232,39 @@ if ( $current_form->have_posts() )
         {
             
             // Looks like we do have a GCL resource attached, so lets get it and send it to the template
-            $query->inserted_data['has_gcl_subscription'] = true;
+            $data['has_gcl_subscription'] = true;
             
             if ( get_post_meta ($form_id, 'gcl_res_type', true) == 'bill')
             {
                 $bill = GoCardless_Bill::find( get_post_meta ($form_id, 'gcl_sub_id', true) );   
-                $query->inserted_data['gcl_resource'] = $bill; 
-                $query->inserted_data['gcl_resource_type'] = 'bill';
+                $data['gcl_resource'] = $bill; 
+                $data['gcl_resource_type'] = 'bill';
             }
             else 
             {
                 $subscription = GoCardless_Subscription::find( get_post_meta ($form_id, 'gcl_sub_id', true), true );
-                $query->inserted_data['gcl_resource'] = $subscription; 
-                $query->inserted_data['gcl_resource_type'] = 'subscription';
+                $data['gcl_resource'] = $subscription; 
+                $data['gcl_resource_type'] = 'subscription';
             }
         }
-        else $query->inserted_data['has_gcl_subscription'] = false;
+        else $data['has_gcl_subscription'] = false;
 
         
         /***************************************************************
          ********No GoCardless Subscription or User Cancelled **********
          ***************************************************************/        
-                        
-        if ( ! get_post_meta($form_id, 'gcl_sub_id', true ) || $query->inserted_data['gcl_resource']->status == 'cancelled' )
+    
+        if ( ! get_post_meta($form_id, 'gcl_sub_id', true ) || $data['gcl_resource']->status == 'cancelled' )
         {
             // Looks like we don't have a GCL subscription or it's been cancelled. Give the template the fees list so the user can create a new DD
 
             
             // Load a list of membership fees from Wordpress
             $fees = new WP_Query ( array( 'post_type' => 'membership_fee', 'nopaging' => true ) );
-            
             // Loop through each one
             while ( $fees->have_posts() ) 
             {
+                
                 $fees->the_post();
                 
                 $the_fee = array (
@@ -284,16 +292,18 @@ if ( $current_form->have_posts() )
                 else if ( get_post_meta( get_the_id(), 'supporter-player', true) == 'Player' && get_post_meta( get_the_id(), 'fee-type', true) != "Monthly Direct Debit")
                 {
                     $playerfees[ 'single_payments' ] [ ] = $the_fee;
-                }
+                }   
             }
-            $query->inserted_data['supporterfees'] = $supporterfees;
-            $query->inserted_data['playerfees'] = $playerfees;   
+            $data['supporterfees'] = $supporterfees;
+            $data['playerfees'] = $playerfees;  
+
             
         }
        
         
         // Insert form details into query for the template
-        $query->inserted_data['form_details'] = $form;
+        $data['form_details'] = $form;
+        
     }
 }
 else

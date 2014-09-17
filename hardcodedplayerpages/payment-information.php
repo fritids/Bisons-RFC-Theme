@@ -1,8 +1,7 @@
 <?php 
 
 // Get inserted data from query
-
-$data = $wp_query->inserted_data;
+$data = $wp_query->query['bisons_data'];
 $form_id = $data['form_details']['form_id'];
 $date = $data['form_details']['date'];
 $disabled = $data['form_details']['disabled'];
