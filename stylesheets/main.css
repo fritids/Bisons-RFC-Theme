@@ -546,6 +546,7 @@ html .albumThumb img
 	h2 { font-size:23px; }
 	div#wrapper { padding-top:0 !important; }
 	.mobileonly { display:block; }
+	.mobileonly img { width:100%; }
 	.playerprofiles td { float:left; clear:both; }
 	.playerprofiles .metalist { padding:0 !important; }
 	#maincol p, #sidebar p, #pagecol p, td, li { line-height: 1.4em;}

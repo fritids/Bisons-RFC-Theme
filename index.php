@@ -10,9 +10,10 @@
         <p id="flashmessage"><?php echo $GLOBALS['bisons_flash_message'] ?></p>
     <?php endif ?>
     <header class="mobileonly">
-	<h2>Welcome</h2>    
+    <?php $options = get_option('club-info-settings-page'); ?>
+	<h2><?php echo $options['welcome-title'] ?></h2>
 	</header>
-	<p class="mobileonly">Welcome to the mobile home for the South-west's only inclusive rugby team. Have a read of the blog (below), or press the menu button above to learn more about the team.</p>
+	<section class="mobileonly"><?php echo wpautop( $options['welcome-text'] ) ?></section>
     
     <?php if ( have_posts() ) : ?>
 	   <?php while (have_posts() ) : the_post(); ?> 

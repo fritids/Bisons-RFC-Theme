@@ -67,8 +67,8 @@ function initialise_club_info_settings()
     if( false == get_option( 'club-info-settings-page' ) )
     {
         $options = array ( 
-            'mission-statement' => '',
-            'who-are-we' => '',
+            'welcome-text' => '',
+            'welcome-title' => '',
             'home-address' => ''
         );  
         add_option( 'club-info-settings-page', $options);
@@ -87,23 +87,23 @@ function initialise_club_info_settings()
         'club-info-settings-page'
     );
 
-
    add_settings_field(
-        'mission-statement', 
-        'Mission Statement',
-        'textarea_field',
+        'welcome-title', 
+        'Welcome Title',
+        'singleline_input_field',
         'club-info-settings-page',
         'club-information-content',
-        array ( 'mission-statement', 'club-info-settings-page' ) );  
-     
+        array ( 'welcome-title', 'club-info-settings-page' ) );  
 
    add_settings_field(
-        'who-are-we', 
-        'Who are we?',
-        'textarea_field',
+        'welcome-text', 
+        'Welcome Text',
+        'tinymce',
         'club-info-settings-page',
         'club-information-content',
-        array ( 'who-are-we', 'club-info-settings-page' ) );  
+        array ( 'welcome-text', 'club-info-settings-page' ) );
+          
+
         
    add_settings_field(
         'home-address', 

@@ -10,10 +10,10 @@ class Mobile_Text_Widget extends WP_Widget {
     function __construct() {
         $widget_ops = array(
         'classname' => 'Mobile_Text_Widget',
-        'description' => 'Exactly like a text widget except will be visible when theme reduces to mobile.'
+        'description' => 'Welcome text, displayed in sidebar and mobile header.'
         );
 
-        parent::__construct('Mobile_Text_Widget', 'Text Widget', $widget_ops);
+        parent::__construct('Mobile_Text_Widget', 'Welcome Text', $widget_ops);
     }
 
     /**
@@ -30,10 +30,10 @@ class Mobile_Text_Widget extends WP_Widget {
 
         echo $before_widget;
         
-        $title = empty($instance['title']) ? ' ' : apply_filters('widget_title', $instance['title']);
-        $text = $instance['text'];
-        echo $before_title . $title . $after_title;
-        echo $text;
+        $options = get_option('club-info-settings-page');
+        
+        echo $before_title . $options['welcome-title'] . $after_title;
+        echo wpautop( $options['welcome-text'] );
         echo $after_widget;
     }
 
@@ -48,8 +48,7 @@ class Mobile_Text_Widget extends WP_Widget {
         $text = $instance['text'];
 
         ?>
-        <p><label for="<?php echo $this->get_field_id('title'); ?>">Title: <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" value="<?php echo esc_attr($title); ?>" /></label></p>
-        <textarea class="widefat" id="<?php echo $this->get_field_id('text'); ?>" name="<?php echo $this->get_field_name('text'); ?>"><?php echo esc_attr($text) ?> </textarea>
+        <p>The content for this widget is defined in the <a href='<?php echo admin_url ( 'admin.php?page=club-info-settings' ) ?>'>club info</a> settings page.</p>
     <?php
     }
 
