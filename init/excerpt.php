@@ -19,7 +19,7 @@ if ( '' == $text ) {
     $text = apply_filters('the_content', $text);
     $text = str_replace(']]>', ']]&gt;', $text);
      
-    $allowed_tags = '<p>,<a>,<img>,<em>,<strong>'; 
+    $allowed_tags = '<p>,<a>,<img>,<em>,<strong><li><ul>'; 
     $text = strip_tags($text, $allowed_tags);
      
     $excerpt_word_count = 150;
