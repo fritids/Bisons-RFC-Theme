@@ -89,8 +89,16 @@ img.noborder, div.gmap-border img { }
 .post header a, .page header a { border-bottom:none; }
 .post ul, .page ul, ol { margin:0 0 1em 1.5em; }
 .page img { margin-bottom:1em; 9}
-#wrapper header p { background-color: #2E2E2E;  padding: 4px; color: white; }
+#wrapper header p { background-color: #2E2E2E;  padding: 7px; color: white; font-size:0.8em;}
+#wrapper header p span.authorsmall:before  { content: '\f304'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 20px/1 'Genericons'; vertical-align: top; }
+#wrapper header p span.timesmall:before  { content: '\f303'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 20px/1 'Genericons'; vertical-align: top; }
+#wrapper header p span.datesmall:before  { content: '\f306'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 20px/1 'Genericons'; vertical-align: top; }
+#wrapper header p span.commentsmall:before  { content: '\f108'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 20px/1 'Genericons'; vertical-align: top; }
+#wrapper header p .commentsmall:before  { content: '\f108'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 20px/1 'Genericons'; vertical-align: top; }
+#wrapper header p .post-edit-link:before  { content: '\f411'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 20px/1 'Genericons'; vertical-align: top; }
 img.wp-post-image { float:right; margin-left:1em; max-width:60%; height:auto;}
+
+
 div#wrapper div.page header p { padding: 4px 8px; }
 
 #mainevent { background-color: #F7F7F7; }
@@ -145,7 +153,13 @@ th ul.postlist { font-size:0.7em; list-style:none; }
 .commentsmall:before { content: '\f108'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 16px/1 'Genericons'; vertical-align: top; }
 .link:before { content: '\f107'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 32px/1 'Genericons'; vertical-align: middle;} { }
 .pagelink:before { content: '\f443'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 32px/1 'Genericons'; vertical-align: middle;} { }
-.feedsmall:before { content: '\f413'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 16px/1 'Genericons'; vertical-align: text-bottom;} { }
+.feedsmall:before { content: '\f413'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 16px/1 'Genericons'; vertical-align: text-bottom;} 
+
+#wrapper ul.feedlist { margin:0;}
+#wrapper ul.feedlist li { list-style:none; }
+#wrapper ul.feedlist li:before { content: '\f413'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 16px/1 'Genericons'; vertical-align: text-bottom; margin-right:5px;} 
+.post ul , .page ul  { margin-left: 1em; margin-bottom:1em;  }
+ol {margin-left: 1em; margin-bottom: 1em;}
 
 h2 .ical { font-size:0.4em; margin-left:1em; }
 ul.documentlist li:before { content: '\f443'; display: inline-block; -webkit-font-smoothing: antialiased; font: normal 32px/1 'Genericons'; vertical-align: middle; margin-right:5px; }
@@ -341,7 +355,7 @@ z-index: 150;
 table { width:100%; margin:0 0 1em 0;  border-spacing:3px; }
 th { font-size:1.4em; text-align: center;}
 td { text-align:left } 
-td, th { padding: 0.5em; background:#F7F7F7;  line-height:1.2em; border: 1px solid #EBEBEB;}
+td, th { padding:0.5em; background:#F7F7F7;  line-height:1.2em; border: 1px solid #EBEBEB;}
 td li { line-height:1.2em; }
 td ul { margin: 0 !important; list-style:none; }
 th li {
